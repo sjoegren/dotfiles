@@ -1,0 +1,16 @@
+set editing-mode emacs
+set bell-style visible
+set visible-stats on
+set colored-stats on   # bash >= 4.3
+
+"\C-x\C-r": re-read-init-file
+
+"\C-d": backward-kill-word
+"\C-g": kill-whole-line
+
+# Jump words back/forward M-h/M-l
+"\eh": backward-word
+"\el": forward-word
+
+# Completion
+"\C-i": menu-complete
