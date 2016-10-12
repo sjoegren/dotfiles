@@ -1,0 +1,4 @@
+# ~/.bash_profile, executed for login shells
+
+# Source .bashrc for login shells too
+. ~/.bashrc

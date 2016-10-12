@@ -1,0 +1,113 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+DOTFILES=~/.dotfiles
+
+# Include color definitions
+source $DOTFILES/bash/colors.bash
+
+# Solarized dircolors
+eval `dircolors $DOTFILES/bash/dircolors-solarized/dircolors.ansi-dark`
+
+# ---------------------------------
+# Functions
+# ---------------------------------
+
+# Usage: grepfilter PATTERN [file]
+# Show contents of a file, but use grep to highlight a pattern
+grepfilter() {
+    if [ -e "$2" ]; then
+        grep --color -E "$1|" $2
+    else
+        grep --color -E "$1|"
+    fi
+}
+
+# return 0 (ok) if xclip is installed and a display is connected
+_xclip_ok() {
+    [ -n "$DISPLAY" ] || return 1
+    /usr/bin/which xclip 1> /dev/null 2>&1 && return 0 || return 1
+}
+
+# Copy output of mktemp to clipboard (if xclip is available)
+_mktemp_copy_filename() {
+    if _xclip_ok; then
+        out=$(/bin/mktemp --tmpdir $USER.XXX "$@")
+        echo -n $out | xclip -in    # Strip newline from output
+        echo $out
+        echo "[copied to clipboard]"
+        unset out
+    else
+        \mktemp --tmpdir $USER.XXX "$@"
+    fi
+}
+alias mktemp='_mktemp_copy_filename'
+
+# Copy output of which to clipboard (if xclip is available)
+_which_capture_output() {
+    _xclip_ok
+    if [ $? -ne 0 -o -n "$2" ]; then    # no xclip or several which arguments
+        \which "$@"
+        return
+    fi
+    out=$(\which "$@")
+    [ $? -eq 0 ] || return
+    echo -n $out | xclip -in
+    echo $out
+    echo "[copied to clipboard]"
+    unset out
+}
+alias which='_which_capture_output'
+
+abspath() {
+    if ! _xclip_ok; then
+        _abspath.py "$@"
+        return
+    fi
+    _abspath.py -n "$@" | xclip -in -filter
+    echo -e "\n[copied to clipboard]"
+}
+
+alias .....='cd ../../../..'
+alias ....='cd ../../..'
+alias ...='cd ../..'
+alias ..='cd ..'
+# copy last command in history to clipboard
+alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | xclip -in'
+alias d='dirs'
+alias dutop='du -s * | sort -nrk1,1 | head'
+alias hist='git hist -10'
+alias less='less --RAW-CONTROL-CHARS'
+alias l='less'
+alias ls="ls --color=auto"
+alias ll="ls -lh --time-style=long-iso"
+alias mv='mv -i'
+alias o='popd'
+alias p='pushd'
+alias pd='perldoc'
+alias pf='perldoc -f'
+alias rm='rm -I'
+alias tree='tree -C'
+alias treefull='tree -Cfi'
+alias v='vim -R'
+alias vimbackup='vim --cmd "set backup"'
+
+EDITOR=vim
+GIT_EDITOR=$EDITOR
+GREP_OPTIONS='--color=auto'
+export EDITOR GIT_EDITOR GREP_OPTIONS
+
+shopt -s checkwinsize
+
+export PATH=`$DOTFILES/bin/mergepaths.pl $PATH $DOTFILES/bin`
+
+export HISTIGNORE='&:ls:ll:history*:cphist'
+export HISTCONTROL='ignoreboth'
+export HISTTIMEFORMAT="[%F %T] "
+
+if [ -f ~/.bashrc_local ]; then
+    source ~/.bashrc_local
+fi
