@@ -21,6 +21,9 @@ filetype plugin indent on
 " Enable syntax highlighting
 syntax on
 
+" Specific settings for different filetypes
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
+
 "------------------------------------------------------------
 " jedi-vim settings
 "------------------------------------------------------------
