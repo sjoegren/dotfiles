@@ -18,5 +18,5 @@ Create symlinks for the config files needed, e.g:
 
 # License
 
-Released under The Unlicense license (see [LICENSE.md][LICENSE.md] for details).
+Released under The Unlicense license (see [UNLICENSE](UNLICENSE) for details).
 Some scripts, with explicit license info included are released under the MIT license.
