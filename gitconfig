@@ -9,3 +9,5 @@
 	alias = !git config --global --list | grep ^alias
 [include]
 	path = ~/.gitconfig_local
+[push]
+	default = simple
