@@ -1,0 +1,11 @@
+# vim: ft=gitconfig noet ts=8 sts=8
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=short
+	amend = commit --all --amend
+	alias = !git config --global --list | grep ^alias
+[include]
+	path = ~/.gitconfig_local
