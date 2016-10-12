@@ -111,3 +111,6 @@ export HISTTIMEFORMAT="[%F %T] "
 if [ -f ~/.bashrc_local ]; then
     source ~/.bashrc_local
 fi
+
+# Use liquidprompt
+source $DOTFILES/bash/liquidprompt/liquidprompt

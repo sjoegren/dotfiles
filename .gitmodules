@@ -16,3 +16,6 @@
 [submodule "bash/dircolors-solarized"]
 	path = bash/dircolors-solarized
 	url = https://github.com/seebi/dircolors-solarized.git
+[submodule "bash/liquidprompt"]
+	path = bash/liquidprompt
+	url = https://github.com/nojhan/liquidprompt.git
