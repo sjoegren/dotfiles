@@ -79,6 +79,7 @@ alias ..='cd ..'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | xclip -in'
 alias d='dirs'
 alias dutop='du -s * | sort -nrk1,1 | head'
+alias grep='grep --color=auto'
 alias hist='git hist -10'
 alias less='less --RAW-CONTROL-CHARS'
 alias l='less'
@@ -97,7 +98,6 @@ alias vimbackup='vim --cmd "set backup"'
 
 EDITOR=vim
 GIT_EDITOR=$EDITOR
-GREP_OPTIONS='--color=auto'
 export EDITOR GIT_EDITOR GREP_OPTIONS
 
 shopt -s checkwinsize
