@@ -47,7 +47,6 @@ let g:jedi#show_call_signatures = 0
 set hidden
 
 set wildmenu        " Better command-line completion
-let mapleader=","   " change the mapleader to ,
 set number          " always show line numbers
 set shiftwidth=4    " number of spaces to use for autoindenting
 set softtabstop=4   " what happens when pressing <TAB>
@@ -66,6 +65,7 @@ set textwidth=0     " Disable auto line-breaks
 set ruler           " Display cursor position in status bar
 set laststatus=2    " Always display status line
 set directory=~/tmp/vim,.   " Swap files
+let mapleader=","
 
 " Use case insensitive search, except when using capital letters
 set ignorecase
@@ -127,7 +127,6 @@ endif
 " which is the default
 map Y y$
 
-inoremap jj <ESC>
 " Enable swedish characters in insert mode
 noremap! <Leader>å å
 noremap! <Leader>Å Å
@@ -135,19 +134,25 @@ noremap! <Leader>ä ä
 noremap! <Leader>Ä Ä
 noremap! <Leader>ö ö
 noremap! <Leader>Ö Ö
+
 " Map swedish keys to something more useful
-noremap! å `
-noremap å `
-noremap! Å $
-noremap Å $
-noremap! ö [
-noremap ö [
-noremap! ä ]
-noremap ä ]
-noremap! Ö {
-noremap Ö {
-noremap! Ä }
-noremap Ä }
+map! å `
+map å `
+map! Å $
+map Å $
+map! ö [
+map ö [
+map! ä ]
+map ä ]
+map! Ö {
+map Ö {
+map! Ä }
+map Ä }
+
+" Yank/put to clipboard
+nnoremap <Leader>p "*p
+nnoremap <Leader>P "*P
+noremap <Leader>y "*y
 
 map <silent> <C-N> :se invhlsearch<CR>  " Turn hlsearch off/on with CTRL-N
 nmap <Leader>n :set nonumber!<CR>       " Toggle line numbers
