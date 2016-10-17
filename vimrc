@@ -63,6 +63,9 @@ set nohlsearch      " turn off highlight searches
 set mouse-=a
 set updatetime=250  " Update vim-gitgutter faster
 set textwidth=0     " Disable auto line-breaks
+set ruler           " Display cursor position in status bar
+set laststatus=2    " Always display status line
+set directory=~/tmp/vim,.   " Swap files
 
 " Use case insensitive search, except when using capital letters
 set ignorecase
@@ -79,13 +82,6 @@ set autoindent
 " While this behaviour deviates from that of Vi, it does what most users
 " coming from other editors would expect.
 set nostartofline
-
-" Display the cursor position on the last line of the screen or in the status
-" line of a window
-set ruler
-
-" Always display the status line, even if only one window is displayed
-set laststatus=2
 
 " Set the command window height to 2 lines, to avoid many cases of having to
 " "press <Enter> to continue"
@@ -131,6 +127,28 @@ endif
 " Map Y to act like D and C, i.e. to yank until EOL, rather than act as yy,
 " which is the default
 map Y y$
+
+inoremap jj <ESC>
+" Enable swedish characters in insert mode
+noremap! <Leader>å å
+noremap! <Leader>Å Å
+noremap! <Leader>ä ä
+noremap! <Leader>Ä Ä
+noremap! <Leader>ö ö
+noremap! <Leader>Ö Ö
+" Map swedish keys to something more useful
+noremap! å `
+noremap å `
+noremap! Å $
+noremap Å $
+noremap! ö [
+noremap ö [
+noremap! ä ]
+noremap ä ]
+noremap! Ö {
+noremap Ö {
+noremap! Ä }
+noremap Ä }
 
 map <silent> <C-N> :se invhlsearch<CR>  " Turn hlsearch off/on with CTRL-N
 nmap <Leader>n :set nonumber!<CR>       " Toggle line numbers
