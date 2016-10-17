@@ -5,7 +5,7 @@
 	path = bash/liquidprompt
 	url = https://github.com/nojhan/liquidprompt.git
 [submodule "dotbot"]
-	path = dotbot
+	path = .dotbot
 	url = https://github.com/anishathalye/dotbot
 [submodule "fzf"]
 	path = fzf
