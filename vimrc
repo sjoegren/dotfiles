@@ -97,7 +97,6 @@ set ignorecase smartcase
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
-set isfname-=-
 set isfname-==
 
 set background=dark
