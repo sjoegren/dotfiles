@@ -3,10 +3,16 @@
 set nocompatible
 
 "------------------------------------------------------------
-" pathogen plugin manager
+" plug.vim plugin manager (Install with :PlugInstall)
 "------------------------------------------------------------
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-execute pathogen#infect()
+call plug#begin()
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'davidhalter/jedi-vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf', { 'dir': '~/.dotfiles/fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+call plug#end()
 
 "------------------------------------------------------------
 " Features
