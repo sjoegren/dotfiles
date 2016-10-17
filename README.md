@@ -1,17 +1,18 @@
 # dotfiles
 
-My config files, featuring bash, tmux, vim, dotbot and others.
+My configs, featuring bash with [liquidprompt], tmux, vim, [fzf], [dotbot] and others.
 
 # Installation
 
-Clone repo and install using [dotbot][dotbot]:
+Clone repo and install using [dotbot]:
 
     cd && git clone https://github.com/akselsjogren/dotfiles.git && dotfiles/install
 
 # License
 
-Released under The Unlicense license (see [UNLICENSE][license] for details).
-Some scripts, with explicit license info included are released under the MIT license.
+[The Unlicense][license]
 
+[liquidprompt]: https://github.com/nojhan/liquidprompt
 [dotbot]: https://github.com/anishathalye/dotbot
+[fzf]: https://github.com/junegunn/fzf
 [license]: UNLICENSE
