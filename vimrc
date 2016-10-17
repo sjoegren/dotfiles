@@ -10,7 +10,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'davidhalter/jedi-vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf', { 'dir': '~/.dotfiles/fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '~/.dotfiles/fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 call plug#end()
 
@@ -154,9 +154,6 @@ vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 nmap <TAB> :bn<CR>
 nmap <S-TAB> :bp<CR>
 
-" Select buffer prompt
-nnoremap <Leader>b :ls<CR>:buffer<Space>
-
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
@@ -172,6 +169,14 @@ inoremap <F11> <C-O>za
 nnoremap <F11> za
 onoremap <F11> <C-C>za
 vnoremap <F11> zf
+
+" fzf.vim
+nnoremap <silent> <C-p> :Files<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>m :Marks<CR>
+nnoremap <Leader>h :History<CR>
+nnoremap <Leader>f :History/<CR>
+nnoremap <Leader>g :GFiles<CR>
 
 "------------------------------------------------------------
 " Macros
