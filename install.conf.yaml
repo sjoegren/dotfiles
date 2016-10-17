@@ -18,3 +18,4 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - mkdir -p -m 0700 ~/tmp/vim
