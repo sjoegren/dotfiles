@@ -4,7 +4,7 @@ case $- in
       *) return;;
 esac
 
-DOTFILES=~/.dotfiles
+DOTFILES=$HOME/.dotfiles
 
 # Include color definitions
 source $DOTFILES/bash/colors.bash
@@ -96,9 +96,8 @@ alias treefull='tree -Cfi'
 alias v='vim -R'
 alias vimbackup='vim --cmd "set backup"'
 
-EDITOR=vim
-GIT_EDITOR=$EDITOR
-export EDITOR GIT_EDITOR GREP_OPTIONS
+export EDITOR=vim
+export GIT_EDITOR=$EDITOR
 
 shopt -s checkwinsize
 
@@ -107,6 +106,19 @@ export PATH=`$DOTFILES/bin/mergepaths.pl $PATH $DOTFILES/bin`
 export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth'
 export HISTTIMEFORMAT="[%F %T] "
+
+# Setup fzf - https://github.com/junegunn/fzf
+# ---------------------------------------------------------
+export PATH=`mergepaths.pl $PATH $DOTFILES/fzf/bin`
+_CUSTOM_MANPATH=`mergepaths.pl $MANPATH $DOTFILES/fzf/man`
+export MANPATH=":$_CUSTOM_MANPATH"  # With ':' append to system manpath
+
+# Auto-completion
+[[ $- == *i* ]] && source "$DOTFILES/fzf/shell/completion.bash" 2> /dev/null
+
+# Key bindings
+source "$DOTFILES/fzf/shell/key-bindings.bash"
+# ---------------------------------------------------------
 
 if [ -f ~/.bashrc_local ]; then
     source ~/.bashrc_local
