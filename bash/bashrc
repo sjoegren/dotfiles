@@ -118,6 +118,17 @@ export MANPATH=":$_CUSTOM_MANPATH"  # With ':' append to system manpath
 
 # Key bindings
 source "$DOTFILES/fzf/shell/key-bindings.bash"
+
+# Ctrl-xf to find files in home directory
+__fzf_find_in_home() {
+    FZF_CTRL_T_COMMAND="find ~/"
+    fzf-file-widget
+}
+bind -x '"\C-xf": "__fzf_find_in_home"'
+
+# Make Alt-C find directories in home directory
+FZF_ALT_C_COMMAND="command find -L ~ \\( -path '*/\\.*' -o -fstype 'dev' -o -fstype 'proc' \\) -prune \
+    -o -type d -print 2> /dev/null | sed 1d"
 # ---------------------------------------------------------
 
 if [ -f ~/.bashrc_local ]; then
