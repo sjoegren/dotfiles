@@ -14,6 +14,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.dotfiles/fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
+Plug 'bronson/vim-trailing-whitespace'
 call plug#end()
 
 "------------------------------------------------------------
@@ -110,11 +111,6 @@ hi String ctermfg=DarkMagenta
 " Highlight ColorColumn
 set colorcolumn=99
 
-" Highlight trailing whitespace
-highlight ExtraWhitespace ctermbg=red guibg=red
-" Show trailing whitespace and spaces before a tab:
-match ExtraWhitespace /\s\+$\| \+\ze\t/
-
 if has("gui_running")
   " GUI is running or is about to start.
   " Maximize gvim window
@@ -209,9 +205,3 @@ nnoremap <Leader>g :GFiles<CR>
 
 " Insert TODO comment with timestamp
 let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
-
-" Disable (comment out) a line
-let @c='I# disabled at =strftime("%Y-%m-%d") # '
-
-" Remove above comment
-let @r='0V:s/# disabled at .\{-10,30} # //'
