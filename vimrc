@@ -156,7 +156,8 @@ nnoremap <Leader>p "*p
 nnoremap <Leader>P "*P
 noremap <Leader>y "*y
 
-map <silent> <C-N> :se invhlsearch<CR>  " Turn hlsearch off/on with CTRL-N
+nmap <C-n> :NERDTreeToggle<CR>
+nmap <Leader>hl :set invhlsearch<CR>    " Toggle hlsearch
 nmap <Leader>n :set nonumber!<CR>       " Toggle line numbers
 set pastetoggle=<F2>                    " toggle :set paste/nopaste in insert mode
 
