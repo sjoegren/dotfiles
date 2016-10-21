@@ -15,6 +15,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'Glench/Vim-Jinja2-Syntax'
 call plug#end()
 
 "------------------------------------------------------------
