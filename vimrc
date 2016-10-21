@@ -199,6 +199,8 @@ nnoremap <Leader>m :Marks<CR>
 nnoremap <Leader>h :History<CR>
 nnoremap <Leader>f :History/<CR>
 nnoremap <Leader>g :GFiles<CR>
+nnoremap <Leader>t :BTags<CR>
+nnoremap <Leader>tg :Tags<CR>
 
 "------------------------------------------------------------
 " Macros
