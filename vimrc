@@ -202,6 +202,10 @@ nnoremap <Leader>g :GFiles<CR>
 nnoremap <Leader>t :BTags<CR>
 nnoremap <Leader>tg :Tags<CR>
 
+" NERDCommenter
+vmap cc <plug>NERDCommenterAlignLeft
+vmap cu <plug>NERDCommenterUncomment
+
 "------------------------------------------------------------
 " Macros
 "------------------------------------------------------------
