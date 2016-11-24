@@ -50,6 +50,7 @@ let g:jedi#show_call_signatures = 0
 " saving, and swap files will keep you safe if your computer crashes.
 set hidden
 
+set cursorline      " Highlight line of cursor
 set wildmenu        " Better command-line completion
 set number          " always show line numbers
 set shiftwidth=4    " number of spaces to use for autoindenting
