@@ -1,5 +1,5 @@
 set editing-mode emacs
-set bell-style visible
+set bell-style none
 set visible-stats on
 
 "\C-x\C-r": re-read-init-file
