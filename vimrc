@@ -104,6 +104,7 @@ set ignorecase smartcase
 " Useful for <C-W> f, <C-X> <C-F>
 set isfname-==
 
+set t_Co=16             " Set vim support to 16 colors
 set background=dark
 colorscheme solarized
 

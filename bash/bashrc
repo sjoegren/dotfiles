@@ -6,6 +6,10 @@ esac
 
 DOTFILES=$HOME/.dotfiles
 
+if [ -z "$TMUX" ]; then
+    export TERM=xterm-16color
+fi
+
 # Include color definitions
 source $DOTFILES/bash/colors.bash
 
