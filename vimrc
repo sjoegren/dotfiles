@@ -136,20 +136,6 @@ noremap! <Leader>Ä Ä
 noremap! <Leader>ö ö
 noremap! <Leader>Ö Ö
 
-" Map swedish keys to something more useful
-map! å `
-map å `
-map! Å $
-map Å $
-map! ö [
-map ö [
-map! ä ]
-map ä ]
-map! Ö {
-map Ö {
-map! Ä }
-map Ä }
-
 " Yank/put to clipboard
 nnoremap <Leader>p "*p
 nnoremap <Leader>P "*P
