@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# vim: fileencoding=utf-8
+#!/usr/bin/env python
 
 # This is free and unencumbered software released into the public domain.
 #
@@ -37,6 +36,7 @@ Useful for example to "copy" the absolute path of a file in current dir,
 to refer to somewhere else.
 """
 
+from __future__ import print_function
 import argparse
 import os
 import sys
