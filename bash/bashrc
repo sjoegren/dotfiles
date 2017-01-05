@@ -36,43 +36,40 @@ _xclip_ok() {
     /usr/bin/which xclip 1> /dev/null 2>&1 && return 0 || return 1
 }
 
+_in_tmux() {
+    [ -n "$TMUX" ] && return 0 || return 1
+}
+
+# Run command $1 and copy output to tmux buffer and x-clipboard if available
+_capture_output() {
+    out=$($1)
+    msg=''
+    if _in_tmux; then
+        echo -n "$out" | tmux load-buffer -
+        msg="tmux"
+    fi
+    if _xclip_ok; then
+        echo -n "$out" | xclip -in
+        msg="$msg xclip"
+    fi
+    echo $out
+    [ -n "$msg" ] && echo "[output in $msg]"
+}
+
 # Copy output of mktemp to clipboard (if xclip is available)
 _mktemp_copy_filename() {
-    if _xclip_ok; then
-        out=$(/bin/mktemp --tmpdir $USER.XXX "$@")
-        echo -n $out | xclip -in    # Strip newline from output
-        echo $out
-        echo "[copied to clipboard]"
-        unset out
-    else
-        \mktemp --tmpdir $USER.XXX "$@"
-    fi
+    _capture_output "mktemp --tmpdir $USER.XXX $*"
 }
 alias mktemp='_mktemp_copy_filename'
 
 # Copy output of which to clipboard (if xclip is available)
 _which_capture_output() {
-    _xclip_ok
-    if [ $? -ne 0 -o -n "$2" ]; then    # no xclip or several which arguments
-        \which "$@"
-        return
-    fi
-    out=$(\which "$@")
-    [ $? -eq 0 ] || return
-    echo -n $out | xclip -in
-    echo $out
-    echo "[copied to clipboard]"
-    unset out
+    _capture_output "which $*"
 }
 alias which='_which_capture_output'
 
 abspath() {
-    if ! _xclip_ok; then
-        _abspath.py "$@"
-        return
-    fi
-    _abspath.py -n "$@" | xclip -in -filter
-    echo -e "\n[copied to clipboard]"
+    _capture_output "_abspath.py -n $@"
 }
 
 alias .....='cd ../../../..'
