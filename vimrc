@@ -194,12 +194,6 @@ nnoremap <Leader>tg :Tags<CR>
 vmap cc <plug>NERDCommenterAlignLeft
 vmap cu <plug>NERDCommenterUncomment
 
-" GitGutter
-nnoremap <Leader>gn :GitGutterNextHunk
-nnoremap <Leader>gp :GitGutterPrevHunk
-nnoremap <Leader>gu :GitGutterUndoHunk
-nnoremap <Leader>gs :GitGutterStageHunk
-
 "------------------------------------------------------------
 " Macros
 "------------------------------------------------------------
