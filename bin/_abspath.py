@@ -31,7 +31,7 @@ Print absolute path of file(s).
 Usage: abspath.py [FILES...]
 
 For each file specified, print the absolute path of that file, but don't
-resolve links (unline `readlink -f`).
+resolve links (unlike `readlink -f`).
 Useful for example to "copy" the absolute path of a file in current dir,
 to refer to somewhere else.
 """
