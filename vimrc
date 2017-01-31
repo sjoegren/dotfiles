@@ -128,18 +128,13 @@ endif
 " which is the default
 map Y y$
 
-" Enable swedish characters in insert mode
-noremap! <Leader>å å
-noremap! <Leader>Å Å
-noremap! <Leader>ä ä
-noremap! <Leader>Ä Ä
-noremap! <Leader>ö ö
-noremap! <Leader>Ö Ö
-
 " Yank/put to clipboard
 nnoremap <Leader>p "*p
 nnoremap <Leader>P "*P
 noremap <Leader>y "*y
+
+" Kill line from cursor and return to insert
+imap <C-k> <esc>C
 
 nmap <C-n> :NERDTreeToggle<CR>
 nmap <Leader>hl :set invhlsearch<CR>    " Toggle hlsearch
