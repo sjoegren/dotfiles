@@ -134,7 +134,7 @@ nnoremap <Leader>P "*P
 noremap <Leader>y "*y
 
 " Kill line from cursor and return to insert
-imap <C-k> <esc>C
+imap <C-k> <esc>lC
 
 nmap <C-n> :NERDTreeToggle<CR>
 nmap <Leader>hl :set invhlsearch<CR>    " Toggle hlsearch
