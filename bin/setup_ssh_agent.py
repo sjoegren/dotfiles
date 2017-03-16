@@ -32,11 +32,11 @@ to use that agent. Otherwise, start a new one.
 
 """
 
-import sys
-import os
 import argparse
 import logging
+import os
 import subprocess
+import sys
 
 sys.dont_write_bytecode = True
 
@@ -46,47 +46,50 @@ def main(shell):
 
     # Check if agent env vars are set
     if 'SSH_AUTH_SOCK' in os.environ:
-        logging.info("Found SSH_AUTH_SOCK (%s) :" % os.environ['SSH_AUTH_SOCK'])
+        logging.info("Found SSH_AUTH_SOCK: %s", os.environ['SSH_AUTH_SOCK'])
         if os.path.exists(os.environ['SSH_AUTH_SOCK']):
             # Ok, socket exists, use that one
             ssh_agent_pid = subprocess.check_output(['pgrep', '-u', os.environ['USER'],
-                                                     'ssh-agent'])
+                                                     '-o', 'ssh-agent'])
+            if not ssh_agent_pid.strip().isdigit():
+                logging.error("Invalid ssh-agent pid, pgrep output: %r", ssh_agent_pid)
+                return False
             set_env(shell, 'SSH_AGENT_PID', ssh_agent_pid)
             socket_exists = True
         else:
-            # Socket doesn't exist, remove env vars then
+            # Socket doesn't exist, remove invalid environment
             unset_env(shell, 'SSH_AGENT_PID', 'SSH_AUTH_SOCK')
 
     # If we didn't get socket from environment, try to find it on disk
     if not socket_exists:
         logging.info("SSH_AUTH_SOCK not found, try to locate on disk")
         try:
-            p = subprocess.Popen(
-                "/bin/find /tmp/ -type s -user {} -name 'agent.*'".format(
-                    os.environ['USER']),
-                shell=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                )
-            socket = p.communicate()[0]
+            cmd = "/bin/find /tmp/ -type s -user {} -name 'agent.*'".format(os.environ['USER'])
+            logging.debug("Run: %s", cmd)
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            socket, stderr = p.communicate()
+            logging.debug("stdout: %r, stderr: %r", socket, stderr)
 
             if socket:
-                logging.info("Found socket at %s" % socket)
+                logging.info("Found socket at %s", socket)
                 set_env(shell, 'SSH_AUTH_SOCK', socket)
                 ssh_agent_pid = subprocess.check_output(
-                    ['pgrep', '-u', os.environ['USER'], 'ssh-agent'])
+                    ['pgrep', '-u', os.environ['USER'], '-o', 'ssh-agent'])
+                if not ssh_agent_pid.strip().isdigit():
+                    logging.error("Invalid ssh-agent pid, pgrep output: %r", ssh_agent_pid)
+                    return False
                 set_env(shell, 'SSH_AGENT_PID', ssh_agent_pid)
             else:
                 logging.info("No socket found, start new ssh-agent")
                 print("eval `ssh-agent`;")
 
         except OSError as e:
-            logging.error("ERROR: while running find: {}".format(e.message))
+            logging.error("Failed while finding agent, command: %r, error: %s", cmd, e)
             return False
 
 
 def unset_env(shell, *args):
-    """ Print shell commands to remove an environment variable.
+    """Print shell commands to remove an environment variable.
 
     :param shell: Shell type
     :param args: Names of environment variables
@@ -97,11 +100,13 @@ def unset_env(shell, *args):
             'tcsh': "unsetenv {name};",
             'bash': "unset {name};",
         }
-        print(format_str[shell].format(name=var_name))
+        out = format_str[shell].format(name=var_name)
+        logging.info(out)
+        print(out)
 
 
 def set_env(shell, var_name, var_value):
-    """ Print shell commands to set an environment variable.
+    """Print shell commands to set an environment variable.
 
     :param shell: Shell type
     :param var_name: Environment variable name
@@ -112,12 +117,12 @@ def set_env(shell, var_name, var_value):
         'tcsh': "setenv {name} {value};",
         'bash': "export {name}={value};",
     }
-    print(format_str[shell].format(name=var_name, value=var_value.strip()))
+    out = format_str[shell].format(name=var_name, value=var_value.strip())
+    logging.info(out)
+    print(out)
 
 
 def _init():
-    """ Initialize program, get cli arguments. """
-
     user_shell = os.path.basename(os.environ['SHELL'])
 
     parser = argparse.ArgumentParser(
