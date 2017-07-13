@@ -6,40 +6,29 @@ set nocompatible
 " plug.vim plugin manager (Install with :PlugInstall)
 "------------------------------------------------------------
 call plug#begin()
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'davidhalter/jedi-vim'
-Plug 'altercation/vim-colors-solarized'
-Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf', { 'dir': '~/.dotfiles/fzf', 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
-Plug 'bronson/vim-trailing-whitespace'
 Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'airblade/vim-gitgutter'
+Plug 'altercation/vim-colors-solarized'
+Plug 'bps/vim-textobj-python'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'kana/vim-textobj-user'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'w0rp/ale'
 call plug#end()
 
 "------------------------------------------------------------
 " Features
 "------------------------------------------------------------
 
-" These options and commands enable some very useful features in Vim, that
-" no user should have to live without.
-
-" Enable file type detection.
 filetype plugin indent on
-
-" Enable syntax highlighting
 syntax on
-
-" Specific settings for different filetypes
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
-
-"------------------------------------------------------------
-" jedi-vim settings
-"------------------------------------------------------------
-let g:jedi#use_tabs_not_buffers = 0     " use buffers for jedi-jumping
-"let g:jedi#force_py_version = 3        " need vim with +python3 support
-let g:jedi#show_call_signatures = 0
 
 "------------------------------------------------------------
 " Settings
@@ -51,6 +40,7 @@ let g:jedi#show_call_signatures = 0
 set hidden
 
 set cursorline      " Highlight line of cursor
+set colorcolumn=120
 set wildmenu        " Better command-line completion
 set number          " always show line numbers
 set shiftwidth=4    " number of spaces to use for autoindenting
@@ -63,7 +53,6 @@ set showcmd         " Show command I'm typing
 set ttyfast         " assume a fast terminal connection
 set visualbell      " Try to flash instead
 set t_vb=           " Turn off flashing too :-)
-set nohlsearch      " turn off highlight searches
 set mouse-=a
 set updatetime=250  " Update vim-gitgutter faster
 set textwidth=0     " Disable auto line-breaks
@@ -72,7 +61,9 @@ set laststatus=2    " Always display status line
 set directory=~/tmp/vim,.   " Swap files
 let mapleader=","
 
-" Use case insensitive search, except when using capital letters
+" Searching
+set hlsearch
+set incsearch
 set ignorecase
 set smartcase
 
@@ -88,17 +79,8 @@ set autoindent
 " coming from other editors would expect.
 set nostartofline
 
-" Set the command window height to 2 lines, to avoid many cases of having to
-" "press <Enter> to continue"
-"set cmdheight=2
-
-" Incremental search
-set incsearch
-
-" If you have a pattern with at least one uppercase character,
-" the search becomes case sensitive (:h usr_27)
-set ignorecase
-set ignorecase smartcase
+" Scan current buffer, buffers in other windows and tags for <C-N> completion
+set complete=.,w,t
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
@@ -108,44 +90,35 @@ set t_Co=16             " Set vim support to 16 colors
 set background=dark
 colorscheme solarized
 
-" Overwrite colors from theme
-hi String ctermfg=DarkMagenta
-
-" Highlight ColorColumn
-set colorcolumn=99
-
 if has("gui_running")
   " GUI is running or is about to start.
   " Maximize gvim window
   set lines=999 columns=999
 endif
 
+" Specific settings for different filetypes
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
+
+let g:ale_set_loclist = 0
+
 "------------------------------------------------------------
 " Mappings
 "------------------------------------------------------------
+
+" Easier completion commands (from :help ins-completion)
+inoremap <C-]> <C-X><C-]>
+inoremap <C-F> <C-X><C-F>
+inoremap <C-D> <C-X><C-D>
+inoremap <C-L> <C-X><C-L>
 
 " Map Y to act like D and C, i.e. to yank until EOL, rather than act as yy,
 " which is the default
 map Y y$
 
-" Yank/put to clipboard
-nnoremap <Leader>p "*p
-nnoremap <Leader>P "*P
-noremap <Leader>y "*y
-
 " Kill line from cursor and return to insert
 imap <C-k> <esc>lC
 
 nmap <C-n> :NERDTreeToggle<CR>
-nmap <Leader>hl :set invhlsearch<CR>    " Toggle hlsearch
-nmap <Leader>n :set nonumber!<CR>       " Toggle line numbers
-set pastetoggle=<F2>                    " toggle :set paste/nopaste in insert mode
-
-" Search for sub routine under cursor: ,x
-nmap <leader>x yiw/^\s*\(sub\<bar>def\<bar>function\)\s\+<C-R>"<CR>
-
-" Search for function definitions: ,f
-nmap <leader>f /^\s*\(sub\<bar>def\<bar>function\)\s\+\w<CR>
 
 " Search for word under cursor in new split-window
 " ,w / ,W
@@ -155,43 +128,21 @@ nnoremap <Leader>W :let @/='\<'.expand("<cword>").'\>'<Bar>split<Bar>normal n<CR
 " Search for visually highlighted text incl spec chars
 vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
-" Buffers - next/previous
-nmap <TAB> :bn<CR>
-nmap <S-TAB> :bp<CR>
-
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
+" edit/source vimrc
+nmap <silent> <leader>ev :split $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
-" Easy window navigation (provided by plugin)
-"map <C-h> <C-w>h
-"map <C-j> <C-w>j
-"map <C-k> <C-w>k
-"map <C-l> <C-w>l
-
-" Folding: create/toggle folds
-inoremap <F11> <C-O>za
-nnoremap <F11> za
-onoremap <F11> <C-C>za
-vnoremap <F11> zf
-
-" fzf.vim
-nnoremap <silent> <C-p> :Files<CR>
-nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>m :Marks<CR>
-nnoremap <Leader>h :History<CR>
-nnoremap <Leader>f :History/<CR>
-nnoremap <Leader>g :GFiles<CR>
-nnoremap <Leader>t :BTags<CR>
-nnoremap <Leader>tg :Tags<CR>
 
 " NERDCommenter
 vmap cc <plug>NERDCommenterAlignLeft
 vmap cu <plug>NERDCommenterUncomment
 
-"------------------------------------------------------------
-" Macros
-"------------------------------------------------------------
+nmap <leader>gg yiw:Glgrep <C-R>"<CR>
+
+" trick to override mappings after plugins are loaded
+autocmd VimEnter * nmap [x <Plug>(ale_previous)
+autocmd VimEnter * nmap ]x <Plug>(ale_next)
 
 " Insert TODO comment with timestamp
 let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
+
+source ~/.vimrc_local
