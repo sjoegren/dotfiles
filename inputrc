@@ -1,6 +1,7 @@
 set editing-mode emacs
 set bell-style none
 set visible-stats on
+set completion-ignore-case on
 
 "\C-x\C-r": re-read-init-file
 
@@ -16,3 +17,10 @@ TAB: complete           # tab
 "\e[Z": menu-complete   # shift-tab
 
 "\eu": 'cd ..\015'      # Alt-u
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\C-p": history-search-backward
+"\C-n": history-search-forward
+
+$include ~/.inputrc_local
