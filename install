@@ -11,4 +11,12 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${BASEDIR}"
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
+# Windows workaround: Remove Windows-built python from PATH
+if [ "$(python -c 'import sys; print(sys.platform)')" == "win32" ]; then
+    python_bin=$(which python)
+    python_path=$(dirname $python_bin)
+    PATH=${PATH/$python_path:/} "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+    exit
+fi
+
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
