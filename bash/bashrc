@@ -4,10 +4,15 @@ case $- in
       *) return;;
 esac
 
-DOTFILES=$HOME/.dotfiles
+if [ "$OS" == "Windows_NT" ]; then
+    # symlinks doesn't work on Windows
+    DOTFILES=$HOME/dotfiles
+else
+    DOTFILES=$HOME/.dotfiles
+fi
 
 if [ -z "$TMUX" ]; then
-    export TERM=xterm-16color
+    export TERM=xterm
 fi
 
 # Include color definitions
@@ -72,30 +77,22 @@ abspath() {
     _capture_output "_abspath.py -n $@"
 }
 
-alias .....='cd ../../../..'
-alias ....='cd ../../..'
-alias ...='cd ../..'
-alias ..='cd ..'
 # copy last command in history to clipboard
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | xclip -in'
 alias d='dirs'
 alias dutop='du -s * | sort -nrk1,1 | head'
 alias grep='grep --color=auto'
-alias hist='git hist -10'
-alias less='less --RAW-CONTROL-CHARS'
-alias l='less'
+alias hist='git hist -20'
+alias l='less --RAW-CONTROL-CHARS'
 alias ls="ls --color=auto"
 alias ll="ls -lh --time-style=long-iso"
 alias mv='mv -i'
 alias o='popd'
 alias p='pushd'
-alias pd='perldoc'
-alias pf='perldoc -f'
 alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
-alias vimbackup='vim --cmd "set backup"'
 
 export EDITOR=vim
 export GIT_EDITOR=$EDITOR
@@ -112,5 +109,9 @@ if [ -f ~/.bashrc_local ]; then
     source ~/.bashrc_local
 fi
 
-# Use liquidprompt
-source $DOTFILES/bash/liquidprompt/liquidprompt
+# If a custom prompt is defined (like at work), use it instead of liquidprompt.
+if [ -f ~/.bashrc_prompt ]; then
+    source ~/.bashrc_prompt
+else
+    source $DOTFILES/bash/liquidprompt/liquidprompt
+fi
