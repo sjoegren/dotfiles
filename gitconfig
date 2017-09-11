@@ -11,5 +11,12 @@
 	autoSquash = true
 [push]
 	default = simple
+[core]
+	autocrlf = input
+[grep]
+	lineNumber = true
+	patternType = perl
+[merge]
+	conflictStyle = diff3
 [include]
 	path = ~/.gitconfig_local
