@@ -98,6 +98,7 @@ export EDITOR=vim
 export GIT_EDITOR=$EDITOR
 
 shopt -s checkwinsize
+shopt -s globstar
 
 export PATH=`$DOTFILES/bin/mergepaths.pl $PATH $DOTFILES/bin`
 
