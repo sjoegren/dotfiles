@@ -21,6 +21,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'w0rp/ale'
+Plug 'sjl/gundo.vim'
 call plug#end()
 
 "------------------------------------------------------------
@@ -144,5 +145,7 @@ autocmd VimEnter * nmap ]x <Plug>(ale_next)
 
 " Insert TODO comment with timestamp
 let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
+
+nnoremap <leader>u :GundoToggle<CR>
 
 source ~/.vimrc_local
