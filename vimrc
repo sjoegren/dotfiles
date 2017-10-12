@@ -22,6 +22,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'w0rp/ale'
 Plug 'sjl/gundo.vim'
+Plug 'mfukar/robotframework-vim'
 call plug#end()
 
 "------------------------------------------------------------
