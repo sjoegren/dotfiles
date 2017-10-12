@@ -1,5 +1,3 @@
-" Set 'nocompatible' to ward off unexpected things that your distro might
-" have made, as well as sanely reset options when re-sourcing .vimrc
 set nocompatible
 
 "------------------------------------------------------------
@@ -29,8 +27,12 @@ call plug#end()
 " Features
 "------------------------------------------------------------
 
-filetype plugin indent on
-syntax on
+if has('autocmd')
+  filetype plugin indent on
+endif
+if has('syntax') && !exists('g:syntax_on')
+  syntax enable
+endif
 
 "------------------------------------------------------------
 " Settings
@@ -41,6 +43,7 @@ syntax on
 " saving, and swap files will keep you safe if your computer crashes.
 set hidden
 
+set autoread
 set cursorline      " Highlight line of cursor
 set colorcolumn=120
 set wildmenu        " Better command-line completion
@@ -82,11 +85,28 @@ set autoindent
 set nostartofline
 
 " Scan current buffer, buffers in other windows and tags for <C-N> completion
-set complete=.,w,t
+set complete-=i
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
 set isfname-==
+
+if !&scrolloff
+  set scrolloff=1
+endif
+if !&sidescrolloff
+  set sidescrolloff=5
+endif
+
+set display+=lastline
+
+if &listchars ==# 'eol:$'
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+endif
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
 
 set t_Co=16             " Set vim support to 16 colors
 set background=dark
@@ -150,3 +170,5 @@ let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
 nnoremap <leader>u :GundoToggle<CR>
 
 source ~/.vimrc_local
+
+" vim: set ft=vim et sw=2
