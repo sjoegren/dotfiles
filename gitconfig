@@ -1,12 +1,13 @@
 # vim: ft=gitconfig
 [alias]
-	st = status
+	alias = !git config --global --list | grep ^alias
+	amend = commit --all --amend
+	br = branch
 	ci = commit
 	co = checkout
-	br = branch
+	ctags = !.git/hooks/ctags
 	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=short
-	amend = commit --all --amend
-	alias = !git config --global --list | grep ^alias
+	st = status
 [rebase]
 	autoSquash = true
 [push]
@@ -18,5 +19,7 @@
 	patternType = perl
 [merge]
 	conflictStyle = diff3
+[init]
+	templatedir = ~/.dotfiles/git_template
 [include]
 	path = ~/.gitconfig_local
