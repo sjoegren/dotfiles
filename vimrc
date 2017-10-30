@@ -21,6 +21,8 @@ Plug 'tpope/vim-unimpaired'
 Plug 'w0rp/ale'
 Plug 'sjl/gundo.vim'
 Plug 'mfukar/robotframework-vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 "------------------------------------------------------------
@@ -111,6 +113,9 @@ endif
 set t_Co=16             " Set vim support to 16 colors
 set background=dark
 colorscheme solarized
+
+let g:airline_theme='solarized'
+let g:airline#extensions#branch#enabled = 0
 
 if has("gui_running")
   " GUI is running or is about to start.
