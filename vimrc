@@ -128,6 +128,9 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
 
 let g:ale_set_loclist = 0
 
+" python.vim
+let python_highlight_all = 1
+
 "------------------------------------------------------------
 " Mappings
 "------------------------------------------------------------
