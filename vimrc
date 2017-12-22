@@ -87,7 +87,7 @@ set autoindent
 set nostartofline
 
 " Scan current buffer, buffers in other windows and tags for <C-N> completion
-set complete-=i
+set complete=.,w
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
@@ -152,8 +152,8 @@ nmap <C-n> :NERDTreeToggle<CR>
 
 " Search for word under cursor in new split-window
 " ,w / ,W
-nnoremap <Leader>w :let @/=expand("<cword>")<Bar>split<Bar>normal n<CR>
-nnoremap <Leader>W :let @/='\<'.expand("<cword>").'\>'<Bar>split<Bar>normal n<CR>
+nnoremap <Leader>w :let @/='\<'.expand("<cword>").'\>'<Bar>split<Bar>normal n<CR>
+nnoremap <Leader>W :let @/=expand("<cWORD>")<Bar>split<Bar>normal n<CR>
 
 " Search for visually highlighted text incl spec chars
 vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
