@@ -51,6 +51,7 @@ set colorcolumn=120
 set wildmenu        " Better command-line completion
 set number          " always show line numbers
 set shiftwidth=4    " number of spaces to use for autoindenting
+set tabstop=4
 set softtabstop=4   " what happens when pressing <TAB>
 set expandtab       " Expand tabs to spaces
 set shiftround      " use multiple of shiftwidth when indenting with '<' and '>'
