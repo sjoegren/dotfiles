@@ -88,7 +88,7 @@ set autoindent
 set nostartofline
 
 " Scan current buffer, buffers in other windows and tags for <C-N> completion
-set complete=.,w
+set complete=.,w,i
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
