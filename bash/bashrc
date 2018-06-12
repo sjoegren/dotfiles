@@ -29,9 +29,9 @@ eval `dircolors $DOTFILES/bash/dircolors-solarized/dircolors.ansi-dark`
 # Show contents of a file, but use grep to highlight a pattern
 grepfilter() {
     if [ -e "$2" ]; then
-        grep --color -E "$1|" $2
+        grep --color=always -E "$1|" $2
     else
-        grep --color -E "$1|"
+        grep --color=always -E "$1|"
     fi
 }
 
@@ -81,7 +81,6 @@ abspath() {
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | xclip -in'
 alias d='dirs'
 alias dutop='du -s * | sort -nrk1,1 | head'
-alias grep='grep --color=auto'
 alias hist='git hist -20'
 alias l='less --RAW-CONTROL-CHARS'
 alias ls="ls --color=auto"
@@ -94,6 +93,7 @@ alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
 
+export GREP_OPTIONS='--color=auto'
 export EDITOR=vim
 export GIT_EDITOR=$EDITOR
 
