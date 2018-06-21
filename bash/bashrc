@@ -36,52 +36,50 @@ grepfilter() {
 }
 
 # return 0 (ok) if xclip is installed and a display is connected
-_xclip_ok() {
+_have_xclip() {
     [ -n "$DISPLAY" ] || return 1
-    /usr/bin/which xclip 1> /dev/null 2>&1 && return 0 || return 1
+    command -pv xclip &> /dev/null
 }
 
-_in_tmux() {
-    [ -n "$TMUX" ] && return 0 || return 1
-}
-
-# Run command $1 and copy output to tmux buffer and x-clipboard if available
+# Copy stdin to tmux buffer and x-clipboard if available
+# Usage: command | _capture_output [-q]
 _capture_output() {
-    out=$($1)
-    msg=''
-    if _in_tmux; then
+    read out
+    local msg=''
+    if [ -n "$TMUX" ]; then
         echo -n "$out" | tmux load-buffer -
         msg="tmux"
     fi
-    if _xclip_ok; then
+    if _have_xclip; then
         echo -n "$out" | xclip -in
         msg="$msg xclip"
     fi
+    [ -n "$1" ] && return   # no echo with -q
     echo $out
     [ -n "$msg" ] && echo "[output in $msg]"
 }
 
 # Copy output of mktemp to clipboard (if xclip is available)
 _mktemp_copy_filename() {
-    _capture_output "mktemp --tmpdir $USER.XXX $*"
+    command -p mktemp --tmpdir $USER.XXX $* | _capture_output
 }
 alias mktemp='_mktemp_copy_filename'
 
 # Copy output of which to clipboard (if xclip is available)
 _which_capture_output() {
-    _capture_output "which $*"
+    command which $* | _capture_output
 }
 alias which='_which_capture_output'
 
+# Print absolute path to files
 abspath() {
-    _capture_output "_abspath.py -n $@"
+    _abspath.py -n "$@" | _capture_output
 }
 
 # copy last command in history to clipboard
-alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | xclip -in'
+alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output -q'
 alias d='dirs'
-alias dutop='du -s * | sort -nrk1,1 | head'
-alias hist='git hist -20'
+alias hist='git hist -10'
 alias l='less --RAW-CONTROL-CHARS'
 alias ls="ls --color=auto"
 alias ll="ls -lh --time-style=long-iso"
