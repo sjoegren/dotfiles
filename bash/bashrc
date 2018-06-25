@@ -76,6 +76,17 @@ abspath() {
     _abspath.py -n "$@" | _capture_output
 }
 
+
+# Concatenate files with filename header between files
+cath() {
+    for file in "$@"; do
+        echo "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+        echo "::  $file"
+        echo "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+        cat $file || return
+    done
+}
+
 # copy last command in history to clipboard
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output -q'
 alias d='dirs'
