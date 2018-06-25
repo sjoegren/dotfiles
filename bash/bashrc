@@ -25,13 +25,13 @@ eval `dircolors $DOTFILES/bash/dircolors-solarized/dircolors.ansi-dark`
 # Functions
 # ---------------------------------
 
-# Usage: grepfilter PATTERN [file]
+# Usage: grepfilter PATTERN [files...]
 # Show contents of a file, but use grep to highlight a pattern
 grepfilter() {
     if [ -e "$2" ]; then
-        grep --color=always -E "$1|" $2
+        command grep --color=always -E "$1|" "${@:2}"
     else
-        grep --color=always -E "$1|"
+        command grep --color=always -E "$1|"
     fi
 }
 
