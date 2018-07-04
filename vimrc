@@ -113,7 +113,6 @@ if v:version > 703 || v:version == 703 && has("patch541")
   set formatoptions+=j " Delete comment character when joining commented lines
 endif
 
-set t_Co=16             " Set vim support to 16 colors
 set background=dark
 colorscheme solarized
 
@@ -128,8 +127,6 @@ endif
 
 " Specific settings for different filetypes
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
-
-let g:ale_set_loclist = 0
 
 " python.vim
 let python_highlight_all = 1
@@ -171,9 +168,8 @@ vmap cu <plug>NERDCommenterUncomment
 
 nmap <leader>gg yiw:Glgrep <C-R>"<CR>
 
-" trick to override mappings after plugins are loaded
-autocmd VimEnter * nmap [x <Plug>(ale_previous)
-autocmd VimEnter * nmap ]x <Plug>(ale_next)
+nmap <silent> [v <Plug>(ale_previous_wrap)
+nmap <silent> ]v <Plug>(ale_next_wrap)
 
 " Insert TODO comment with timestamp
 let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
