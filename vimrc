@@ -12,6 +12,7 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
@@ -114,9 +115,8 @@ if v:version > 703 || v:version == 703 && has("patch541")
 endif
 
 set background=dark
-colorscheme solarized
+colorscheme gruvbox
 
-let g:airline_theme='solarized'
 let g:airline#extensions#branch#enabled = 0
 
 if has("gui_running")

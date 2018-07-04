@@ -11,10 +11,6 @@ else
     DOTFILES=$HOME/.dotfiles
 fi
 
-if [ -z "$TMUX" ]; then
-    export TERM=xterm
-fi
-
 # Include color definitions
 source $DOTFILES/bash/colors.bash
 
