@@ -7,3 +7,6 @@
 [submodule "dotbot"]
 	path = .dotbot
 	url = https://github.com/anishathalye/dotbot
+[submodule ".tmux-themepack"]
+	path = .tmux-themepack
+	url = https://github.com/jimeh/tmux-themepack.git
