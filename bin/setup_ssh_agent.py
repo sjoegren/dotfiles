@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# vim: fileencoding=utf-8
+# coding: utf-8
 
 # MIT License
 #
@@ -32,6 +32,8 @@ to use that agent. Otherwise, start a new one.
 
 """
 
+from __future__ import print_function, unicode_literals
+
 import argparse
 import logging
 import os
@@ -49,8 +51,8 @@ def main(shell):
         logging.info("Found SSH_AUTH_SOCK: %s", os.environ['SSH_AUTH_SOCK'])
         if os.path.exists(os.environ['SSH_AUTH_SOCK']):
             # Ok, socket exists, use that one
-            ssh_agent_pid = subprocess.check_output(['pgrep', '-u', os.environ['USER'],
-                                                     '-o', 'ssh-agent'])
+            ssh_agent_pid = subprocess.check_output(
+                ['pgrep', '-u', os.environ['USER'], '-o', 'ssh-agent'], universal_newlines=True)
             if not ssh_agent_pid.strip().isdigit():
                 logging.error("Invalid ssh-agent pid, pgrep output: %r", ssh_agent_pid)
                 return False
@@ -66,15 +68,22 @@ def main(shell):
         try:
             cmd = "/bin/find /tmp/ -type s -user {} -name 'agent.*'".format(os.environ['USER'])
             logging.debug("Run: %s", cmd)
-            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            socket, stderr = p.communicate()
-            logging.debug("stdout: %r, stderr: %r", socket, stderr)
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                 universal_newlines=True)
+            stdout, stderr = p.communicate()
+            logging.debug("stdout: %r, stderr: %r", stdout, stderr)
+
+            lines = stdout.strip().splitlines()
+            logging.debug('lines: %s', lines)
+            socket = lines[0]
+            if len(lines) > 1:
+                logging.warning('Found %d ssh-agent sockets, using %r', len(lines), lines[0])
 
             if socket:
                 logging.info("Found socket at %s", socket)
                 set_env(shell, 'SSH_AUTH_SOCK', socket)
                 ssh_agent_pid = subprocess.check_output(
-                    ['pgrep', '-u', os.environ['USER'], '-o', 'ssh-agent'])
+                    ['pgrep', '-u', os.environ['USER'], '-o', 'ssh-agent'], universal_newlines=True)
                 if not ssh_agent_pid.strip().isdigit():
                     logging.error("Invalid ssh-agent pid, pgrep output: %r", ssh_agent_pid)
                     return False
