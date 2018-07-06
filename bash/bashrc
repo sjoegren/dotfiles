@@ -86,6 +86,7 @@ cath() {
 # copy last command in history to clipboard
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output -q'
 alias d='dirs'
+alias grep='grep --color=auto'
 alias hist='git hist -10'
 alias l='less --RAW-CONTROL-CHARS'
 alias ls="ls --color=auto"
@@ -98,7 +99,6 @@ alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
 
-export GREP_OPTIONS='--color=auto'
 export EDITOR=vim
 export GIT_EDITOR=$EDITOR
 
