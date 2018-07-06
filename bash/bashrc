@@ -113,9 +113,13 @@ export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 
-if [ -f ~/.bashrc_local ]; then
-    source ~/.bashrc_local
-fi
+_nullglob_setting=$(shopt -p nullglob)
+shopt -s nullglob
+for rcfile in ~/.bashrc.d/*.bash; do
+    . $rcfile
+done
+$_nullglob_setting  # restore
+
 
 # If a custom prompt is defined (like at work), use it instead of liquidprompt.
 if [ -f ~/.bashrc_prompt ]; then
