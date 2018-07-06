@@ -75,7 +75,11 @@ def main(shell):
 
             lines = stdout.strip().splitlines()
             logging.debug('lines: %s', lines)
-            socket = lines[0]
+            try:
+                socket = lines[0]
+            except IndexError:
+                socket = None
+
             if len(lines) > 1:
                 logging.warning('Found %d ssh-agent sockets, using %r', len(lines), lines[0])
 
