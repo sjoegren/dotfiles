@@ -145,9 +145,6 @@ inoremap <C-L> <C-X><C-L>
 " which is the default
 map Y y$
 
-" Kill line from cursor and return to insert
-imap <C-k> <esc>lC
-
 nmap <C-n> :NERDTreeToggle<CR>
 
 " Search for word under cursor in new split-window
@@ -173,6 +170,7 @@ nmap <silent> ]v <Plug>(ale_next_wrap)
 
 " Insert TODO comment with timestamp
 let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
+let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
 nnoremap <leader>u :GundoToggle<CR>
 
