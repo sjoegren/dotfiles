@@ -37,7 +37,9 @@ if has('syntax') && !exists('g:syntax_on')
   syntax enable
 endif
 
-packadd! matchit
+if exists(':packadd')
+    packadd! matchit
+endif
 
 "------------------------------------------------------------
 " Settings
