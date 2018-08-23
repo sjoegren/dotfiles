@@ -170,12 +170,17 @@ nmap <leader>gg yiw:Glgrep <C-R>"<CR>
 nmap <silent> [v <Plug>(ale_previous_wrap)
 nmap <silent> ]v <Plug>(ale_next_wrap)
 
-" Insert TODO comment with timestamp
-let @o="# TODO:  @ =strftime(\"%Y-%m-%d\")2Bhi"
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
 nnoremap <leader>u :GundoToggle<CR>
 
 source ~/.vimrc_local
+
+function! InsertTodoComment()
+    let git_user = systemlist('git config --get user.name')[0]
+    let c = split(&commentstring, '%s')[0] . " TODO(" . git_user . "): "
+    return c
+endfunction
+let @c="=InsertTodoComment()a"
 
 " vim: set ft=vim et sw=2
