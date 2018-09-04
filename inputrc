@@ -6,6 +6,7 @@ set visible-stats on
 
 "\C-d": backward-kill-word
 "\C-g": kill-whole-line
+"\C-xk": kill-line
 
 # Jump words back/forward M-h/M-l
 "\eh": backward-word
