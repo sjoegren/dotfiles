@@ -9,7 +9,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'altercation/vim-colors-solarized'
 Plug 'bps/vim-textobj-python'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
@@ -137,6 +136,11 @@ let python_highlight_all = 1
 "------------------------------------------------------------
 " Mappings
 "------------------------------------------------------------
+
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
 
 " Easier completion commands (from :help ins-completion)
 inoremap <C-]> <C-X><C-]>
