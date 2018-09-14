@@ -8,9 +8,10 @@ set visible-stats on
 "\C-g": kill-whole-line
 "\C-xk": kill-line
 
-# Jump words back/forward M-h/M-l
-"\eh": backward-word
-"\el": forward-word
+"\C-f": forward-word
+"\C-b": backward-word
+"\ef": forward-char
+"\eb": backward-char
 
 # Completion
 TAB: complete           # tab
