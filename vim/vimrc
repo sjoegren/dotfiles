@@ -13,8 +13,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'morhetz/gruvbox'
-Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -165,10 +165,6 @@ vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 " edit/source vimrc
 nmap <silent> <leader>ev :tabedit $MYVIMRC<CR>
 nmap <silent> <leader>sv :source $MYVIMRC<CR>
-
-" NERDCommenter
-vmap cc <plug>NERDCommenterAlignLeft
-vmap cu <plug>NERDCommenterUncomment
 
 nmap <leader>gg yiw:Glgrep <C-R>"<CR>
 
