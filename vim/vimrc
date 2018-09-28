@@ -122,12 +122,6 @@ colorscheme gruvbox
 
 let g:airline#extensions#branch#enabled = 0
 
-if has("gui_running")
-  " GUI is running or is about to start.
-  " Maximize gvim window
-  set lines=999 columns=999
-endif
-
 " Specific settings for different filetypes
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
 
