@@ -50,9 +50,9 @@ _capture_output() {
         echo -n "$out" | xclip -in
         msg="$msg xclip"
     fi
-    [ -n "$1" ] && return   # no echo with -q
     echo $out
-    [ -n "$msg" ] && echo "[output in $msg]"
+    [ -n "$1" ] && return   # no message with -q
+    [ -n "$msg" ] && echo "[$msg]"
 }
 
 # Copy output of mktemp to clipboard (if xclip is available)
@@ -98,6 +98,7 @@ alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
+alias pwdc='pwd | _capture_output -q'
 
 export EDITOR=vim
 export GIT_EDITOR=$EDITOR
