@@ -19,6 +19,7 @@
 	patternType = perl
 [merge]
 	conflictStyle = diff3
+	tool = vimdiff
 [init]
 	templatedir = ~/.dotfiles/git_template
 [color]
