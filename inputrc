@@ -18,6 +18,7 @@ TAB: complete           # tab
 "\e[Z": menu-complete   # shift-tab
 
 "\eu": 'cd ..\015'      # Alt-u
+"\eOP": "select_git_commit.sh\n"
 
 "\e[A": history-search-backward
 "\e[B": history-search-forward

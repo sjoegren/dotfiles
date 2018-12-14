@@ -106,8 +106,6 @@ export GIT_EDITOR=$EDITOR
 shopt -s checkwinsize
 shopt -s globstar
 
-bind -x '"\eOP": "git hist -10"'    # F1
-
 export PATH=`$DOTFILES/bin/mergepaths.pl $PATH $DOTFILES/bin`
 
 export HISTIGNORE='&:ls:ll:history*:cphist'
