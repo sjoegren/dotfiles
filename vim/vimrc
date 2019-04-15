@@ -10,6 +10,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'bps/vim-textobj-python'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
