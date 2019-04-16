@@ -101,7 +101,6 @@ alias v='vim -R'
 alias pwdc='pwd | _capture_output -q'
 
 export EDITOR=vim
-export GIT_EDITOR=$EDITOR
 
 shopt -s checkwinsize
 shopt -s globstar
