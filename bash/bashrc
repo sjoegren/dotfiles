@@ -61,12 +61,6 @@ _mktemp_copy_filename() {
 }
 alias mktemp='_mktemp_copy_filename'
 
-# Copy output of which to clipboard (if xclip is available)
-_which_capture_output() {
-    command which $* | _capture_output
-}
-alias which='_which_capture_output'
-
 # Print absolute path to files
 abspath() {
     _abspath.py -n "$@" | _capture_output
