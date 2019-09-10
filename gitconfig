@@ -8,6 +8,8 @@
 	ctags = !.git/hooks/ctags
 	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=short
 	st = status
+[log]
+	date = iso
 [rebase]
 	autoSquash = true
 [push]
