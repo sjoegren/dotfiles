@@ -1,5 +1,6 @@
 # vim
 .netrwhist
+vim/black/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
