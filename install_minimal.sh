@@ -6,6 +6,9 @@ set -euo pipefail
 
 DOTDIR="${DOTDIR:-dotfiles}"
 
+# Some config files needs to be created first.
+make all
+
 cd
 ln -sfT "$DOTDIR" .dotfiles
 ln -sfT "$DOTDIR/bash/bash_profile" .bash_profile
