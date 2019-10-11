@@ -11,23 +11,25 @@ Plug 'bps/vim-textobj-python'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mihais/vim-mark'
 Plug 'morhetz/gruvbox'
-Plug 'psf/black'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'w0rp/ale'
 Plug 'sjl/gundo.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+if v:version > 800
+    Plug 'psf/black'
+    Plug 'w0rp/ale'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+endif
 call plug#end()
 
 "------------------------------------------------------------
