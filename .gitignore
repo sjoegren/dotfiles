@@ -1,3 +1,6 @@
+# Built files
+gitconfig
+
 # vim
 .netrwhist
 vim/black/
