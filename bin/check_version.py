@@ -1,12 +1,19 @@
-#!/usr/bin/env python
-"""
-Check if version is --ge/--le to another version.
+#!/usr/bin/env python3
+r"""
+Check how a program version compares to a version string.
 
-Usage:
+Example:
+    # Check if git version is > 2.0
+    $ git --version | check_version.py --match 'version (\d+\.\d+\.\d+)' \
+        --operator gt --check-version 2.0
+    2.21.0 is gt 2.0: True
+    $ echo $?
+    0
 """
 
-from __future__ import print_function
 import argparse
+import functools
+import operator
 import re
 import sys
 
@@ -17,20 +24,62 @@ class Error(Exception):
     """Program errors."""
 
 
+@functools.total_ordering
+class Version:
+    """Dotted version strings like 1.2.3 with comparison operators.
+
+    Example:
+        >>> v = Version('1.2.3')
+        >>> v == Version('1.2')
+        False
+        >>> v == Version('1.2.3')
+        True
+        >>> v > Version('1.2')
+        True
+        >>> v < Version('2.0.0')
+        True
+        >>> Version('0.10.1000') > Version('0.9.99999')
+        True
+    """
+
+    def __init__(self, version):
+        self.version = tuple(int(x) for x in version.split("."))
+
+    def __eq__(self, other):
+        return self.version == other.version
+
+    def __gt__(self, other):
+        return self.version > other.version
+
+    def __str__(self):
+        return ".".join(str(x) for x in self.version)
+
+
 def _init():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
         "--match",
         metavar="REGEX",
+        required=True,
         help="Pattern that captures the version string in a capture group. "
-        "Example: 'version (\\d\\.\\d\\.\\d)'",
+        "Example: 'version (\\d+\\.\\d+\\.\\d+)'",
     )
-    parser.add_argument("--min-version", "--ge", help="Minimum version to match")
+    parser.add_argument(
+        "--operator",
+        choices=("lt", "le", "eq", "ne", "ge", "gt"),
+        default="ge",
+        help="Comparison operator to use, default: %(default)s",
+    )
     parser.add_argument(
         "--file",
         type=argparse.FileType("r"),
         help="File with input, defaults to stdin",
         default=sys.stdin,
+    )
+    parser.add_argument(
+        "--check-version", required=True, help="The version to compare to"
     )
     parser.add_argument(
         "-q", action="store_false", dest="verbose", help="Don't print anything"
@@ -45,25 +94,13 @@ def main(args):
     if not match:
         raise Error("--match pattern doesn't find anything in input")
 
-    if args.min_version:
-        is_ge = version_is_ge(match.group(1), args.min_version)
-        if args.verbose:
-            print("%s version check" % ("PASSED" if is_ge else "FAILED"))
-        return is_ge
-
-
-def version_is_ge(version_string, min_version_string):
-    """Return True if version_string >= min_version_string.
-
-    Example:
-        >>> version_is_ge('8.2.5', '8.1')
-        True
-        >>> version_is_ge('8.2.5', '8.3')
-        False
-    """
-    version = tuple(int(x) for x in version_string.split("."))
-    min_version = tuple(int(x) for x in min_version_string.split("."))
-    return version >= min_version
+    input_version = Version(match.group(1))
+    compare_version = Version(args.check_version)
+    oper = getattr(operator, args.operator)
+    passed = oper(input_version, compare_version)
+    if args.verbose:
+        print(f"{input_version} is {args.operator} {compare_version}: {passed}")
+    return passed
 
 
 if __name__ == "__main__":
