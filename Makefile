@@ -1,10 +1,13 @@
 BUILDDIR := build
-GIT_VERSION := $(shell git --version)
-GIT_V1 := $(findstring git version 1, $(GIT_VERSION))
 MACROS =
 
-ifdef GIT_V1
-	MACROS += '-DGIT_V1'
+GIT_VERSION := $(shell git --version | check_version.py --match 'version (\d+\.\d+\.\d+)' --operator ge --check-version 2.21)
+
+ifeq ($(.SHELLSTATUS), 0)
+	MACROS += -D DF_GIT_DATE_FORMAT="human"
+	MACROS += -D DF_GIT_PUSH_DEFAULT
+else
+	MACROS += -D DF_GIT_DATE_FORMAT="short"
 endif
 
 SOURCES := $(wildcard *.m4)

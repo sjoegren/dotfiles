@@ -6,16 +6,16 @@
 	ci = commit
 	co = checkout
 	ctags = !.git/hooks/ctags
-	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=ifdef(`GIT_V1', `short', `human')
+	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=DF_GIT_DATE_FORMAT
 	st = status
 [log]
 	date = iso
 [rebase]
 	autoSquash = true
-ifdef(`GIT_V1', `', `
+ifdef(`DF_GIT_PUSH_DEFAULT', `
 [push]
 	default = simple
-')
+', `')
 [core]
 	autocrlf = input
 [grep]
