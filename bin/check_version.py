@@ -99,7 +99,7 @@ def main(args):
     oper = getattr(operator, args.operator)
     passed = oper(input_version, compare_version)
     if args.verbose:
-        print(f"{input_version} is {args.operator} {compare_version}: {passed}")
+        print("{} is {} {}: {}".format(input_version, args.operator, compare_version, passed))
     return passed
 
 
