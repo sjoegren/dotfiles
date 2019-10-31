@@ -1,7 +1,7 @@
 BUILDDIR := build
 MACROS =
 
-GIT_VERSION := $(shell git --version | check_version.py --match 'version (\d+\.\d+\.\d+)' --operator ge --check-version 2.21)
+GIT_VERSION := $(shell git --version | bin/check_version.py --match 'version (\d+\.\d+\.\d+)' --operator ge --check-version 2.21)
 
 ifeq ($(.SHELLSTATUS), 0)
 	MACROS += -D DF_GIT_DATE_FORMAT="human"
@@ -28,7 +28,7 @@ $(BUILDDIR)/% : %.m4
 $(BUILD_TARGETS): | $(BUILDDIR)
 
 $(BUILDDIR):
-	mkdir $@
+	mkdir -p $@
 
 clean:
 	rm -rf $(BUILDDIR)
