@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+#!/bin/bash
+""":"
+hash python3 2> /dev/null && bin=python3 || bin=python2
+exec $bin $0 "$@"
+"""
+
+from __future__ import print_function, unicode_literals
 r"""
 Check how a program version compares to a version string.
 
@@ -25,7 +31,7 @@ class Error(Exception):
 
 
 @functools.total_ordering
-class Version:
+class Version(object):
     """Dotted version strings like 1.2.3 with comparison operators.
 
     Example:
