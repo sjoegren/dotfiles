@@ -5,7 +5,7 @@ exec $bin $0 "$@"
 """
 
 from __future__ import print_function, unicode_literals
-r"""
+__doc__ = r"""
 Check how a program version compares to a version string.
 
 Example:
