@@ -1,5 +1,6 @@
 # Built files
 gitconfig
+tmux.conf
 
 # vim
 .netrwhist

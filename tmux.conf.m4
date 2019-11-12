@@ -23,8 +23,11 @@ bind j select-pane -D
 bind k select-pane -U
 # key bindings for vi-like copy/paste
 bind Escape copy-mode
+changequote(`[', `]')dnl
+ifdef([DF_TMUX_VERSION_24], [dnl
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y if-shell "hash xclip" "send -X copy-pipe 'xclip -i'" "send -X copy-selection"
+], [])dnl
 
 # Display pane numbers longer
 set -g display-panes-time 2000

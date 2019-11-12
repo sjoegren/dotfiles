@@ -1,13 +1,18 @@
 BUILDDIR := build
 MACROS =
 
-GIT_VERSION := $(shell git --version | bin/check_version.py --match 'version (\d+\.\d+\.\d+)' --operator ge --check-version 2.21)
+_VERSION := $(shell git --version | bin/check_version.py --match 'version (\d+\.\d+\.\d+)' --operator ge --check-version 2.21)
 
 ifeq ($(.SHELLSTATUS), 0)
 	MACROS += -D DF_GIT_DATE_FORMAT="human"
 	MACROS += -D DF_GIT_PUSH_DEFAULT
 else
 	MACROS += -D DF_GIT_DATE_FORMAT="short"
+endif
+
+_VERSION := $(shell tmux -V | bin/check_version.py --match '(\d+\.\d+)' --operator ge --check-version 2.4)
+ifeq ($(.SHELLSTATUS), 0)
+	MACROS += -D DF_TMUX_VERSION_24
 endif
 
 SOURCES := $(wildcard *.m4)
