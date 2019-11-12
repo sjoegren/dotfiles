@@ -12,10 +12,10 @@
 	date = iso
 [rebase]
 	autoSquash = true
-ifdef(`DF_GIT_PUSH_DEFAULT', `
+ifdef(`DF_GIT_VERSION_21', `dnl
 [push]
 	default = simple
-', `')
+', `')dnl
 [core]
 	autocrlf = input
 [grep]
