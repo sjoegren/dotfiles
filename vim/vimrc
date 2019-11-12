@@ -125,6 +125,7 @@ endif
 set background=dark
 colorscheme gruvbox
 
+let g:airline_theme = 'gruvbox'
 let g:airline#extensions#branch#enabled = 0
 
 " Specific settings for different filetypes
