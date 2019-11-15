@@ -41,11 +41,13 @@ bind -n M-h select-pane -L
 bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
+ifdef([DF_TMUX_VERSION_24], [dnl
 bind -T copy-mode-vi C-h select-pane -L
 bind -T copy-mode-vi C-j select-pane -D
 bind -T copy-mode-vi C-k select-pane -U
 bind -T copy-mode-vi C-l select-pane -R
 bind -T copy-mode-vi C-\ select-pane -l
+], [])dnl
 
 bind S set-window-option synchronize-panes
 bind A set-window-option monitor-activity
@@ -100,4 +102,8 @@ set -g status-left "#S [#(tmux ls | cut -d: -f1 | xargs echo)] "
 set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
+ifdef([DF_TMUX_VERSION_29], [dnl
 source-file $HOME/.dotfiles/.tmux-themepack/powerline/block/gray.tmuxtheme
+], [dnl
+source-file $HOME/.dotfiles/.old.tmuxtheme
+])dnl

@@ -18,6 +18,12 @@ ifneq (,$(findstring True, \
 	MACROS += -D DF_TMUX_VERSION_24
 endif
 
+ifneq (,$(findstring True, \
+	$(shell tmux -V | bin/check_version.py --match '(\d+\.\d+)' --operator ge --check-version 2.9) \
+	))
+	MACROS += -D DF_TMUX_VERSION_29
+endif
+
 SOURCES := $(wildcard *.m4)
 TARGETS := $(patsubst %.m4, %, $(SOURCES))
 BUILD_TARGETS := $(addprefix $(BUILDDIR)/, $(TARGETS))
