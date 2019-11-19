@@ -6,9 +6,6 @@ esac
 
 DOTFILES=$HOME/.dotfiles
 
-# Include color definitions
-source $DOTFILES/bash/colors.bash
-
 # Solarized dircolors
 eval `dircolors $DOTFILES/bash/dircolors-solarized/dircolors.ansi-dark`
 
