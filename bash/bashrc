@@ -62,9 +62,10 @@ _mktemp_copy_filename() {
 alias mktemp='_mktemp_copy_filename'
 
 # Print absolute path to files
-abspath() {
-    _abspath.py -n "$@" | _capture_output
+rp() {
+    realpath --no-symlinks "$@" | _capture_output
 }
+alias abspath='rp'  # To be removed when the time seems right
 
 
 # Concatenate files with filename header between files
