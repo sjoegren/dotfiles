@@ -29,22 +29,20 @@ _have_xclip() {
     command -pv xclip &> /dev/null
 }
 
-# Copy stdin to tmux buffer and x-clipboard if available
-# Usage: command | _capture_output [-q]
+# Copy stdin to tmux buffer and x-clipboard if available.
+# On display output, inverse fg/bg to indicate tmux, color green for X.
 _capture_output() {
     read out
-    local msg=''
+    local format=''
     if [ -n "$TMUX" ]; then
         echo -n "$out" | tmux load-buffer -
-        msg="tmux"
+        format="${format}\e[7m"
     fi
     if _have_xclip; then
         echo -n "$out" | xclip -in
-        msg="$msg xclip"
+        format="${format}\e[92m"
     fi
-    echo $out
-    [ -n "$1" ] && return   # no message with -q
-    [ -n "$msg" ] && echo "[$msg]"
+    echo -e "${format}${out}\e[0m"
 }
 
 # Copy output of mktemp to clipboard (if xclip is available)
@@ -71,7 +69,7 @@ cath() {
 }
 
 # copy last command in history to clipboard
-alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output -q'
+alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
 alias d='dirs'
 alias grep='grep --color=auto'
 alias hist='git hist -10'
@@ -84,7 +82,7 @@ alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
-alias pwdc='pwd | _capture_output -q'
+alias pwdc='pwd | _capture_output'
 VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
 alias l="$VIMRUNTIME/macros/less.sh"
 
