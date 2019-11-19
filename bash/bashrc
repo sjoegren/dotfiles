@@ -4,12 +4,7 @@ case $- in
       *) return;;
 esac
 
-if [ "$OS" == "Windows_NT" ]; then
-    # symlinks doesn't work on Windows
-    DOTFILES=$HOME/dotfiles
-else
-    DOTFILES=$HOME/.dotfiles
-fi
+DOTFILES=$HOME/.dotfiles
 
 # Include color definitions
 source $DOTFILES/bash/colors.bash
@@ -107,17 +102,11 @@ export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 
+source $DOTFILES/bash/liquidprompt/liquidprompt
+
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
 for rcfile in ~/.bashrc.d/*.bash; do
     . $rcfile
 done
 $_nullglob_setting  # restore
-
-
-# If a custom prompt is defined (like at work), use it instead of liquidprompt.
-if [ -f ~/.bashrc_prompt ]; then
-    source ~/.bashrc_prompt
-else
-    source $DOTFILES/bash/liquidprompt/liquidprompt
-fi
