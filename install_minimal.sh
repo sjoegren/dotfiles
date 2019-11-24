@@ -6,7 +6,8 @@ set -euo pipefail
 
 DOTDIR="${DOTDIR:-dotfiles}"
 
-# Some config files needs to be created first.
+# Some config files needs to be made before dotbot can install them.
+./bootstrap.sh
 make all
 
 cd

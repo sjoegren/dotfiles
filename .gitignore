@@ -2,6 +2,10 @@
 gitconfig
 tmux.conf
 
+# Downloaded
+*.tar.gz
+bin/check_version
+
 # vim
 .netrwhist
 vim/black/
