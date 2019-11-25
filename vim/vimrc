@@ -79,7 +79,6 @@ set textwidth=0     " Disable auto line-breaks
 set ruler           " Display cursor position in status bar
 set laststatus=2    " Always display status line
 set directory=~/tmp/vim,.   " Swap files
-let mapleader=","
 
 " Searching
 set hlsearch
