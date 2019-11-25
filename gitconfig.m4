@@ -20,7 +20,7 @@ ifdef(`DF_GIT_VERSION_21', `dnl
 	autocrlf = input
 [grep]
 	lineNumber = true
-	patternType = perl
+	patternType = extended
 [merge]
 	conflictStyle = diff3
 	tool = vimdiff
