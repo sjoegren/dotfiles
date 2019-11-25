@@ -85,6 +85,7 @@ alias v='vim -R'
 alias pwdc='pwd | _capture_output'
 VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
 alias l="$VIMRUNTIME/macros/less.sh"
+alias mg='multigit.sh'
 
 export EDITOR=vim
 
