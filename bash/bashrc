@@ -73,19 +73,20 @@ alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*
 alias d='dirs'
 alias grep='grep --color=auto'
 alias hist='git hist -10'
-alias ls="ls --color=auto"
 alias ll="ls -lh --time-style=long-iso"
+alias ls="ls --color=auto"
+alias mg='multigit.sh'
 alias mv='mv -i'
 alias o='popd'
 alias p='pushd'
+alias pwdc='pwd | _capture_output'
+alias r='fc -s'
 alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
-alias pwdc='pwd | _capture_output'
 VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
 alias l="$VIMRUNTIME/macros/less.sh"
-alias mg='multigit.sh'
 
 export EDITOR=vim
 
