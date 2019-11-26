@@ -177,6 +177,11 @@ let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
 nnoremap <leader>u :GundoToggle<CR>
 
+let g:vimwiki_list = [
+            \ {'path': '~/.vimwiki_work'},
+            \ {'path': '~/.vimwiki'}]
+autocmd FileType vimwiki setlocal ts=2 sw=2 sts=0
+
 source ~/.vimrc_local
 
 function! InsertTodoComment()
