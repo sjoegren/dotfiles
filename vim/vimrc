@@ -168,6 +168,7 @@ nmap <silent> <leader>ev :tabedit $MYVIMRC<CR>
 nmap <silent> <leader>sv :source $MYVIMRC<CR>
 
 nmap <leader>gg yiw:Glgrep <C-R>"<CR>
+nmap <leader><leader>g :GitGutterAll<CR>
 
 nmap <silent> [v <Plug>(ale_previous_wrap)
 nmap <silent> ]v <Plug>(ale_next_wrap)
