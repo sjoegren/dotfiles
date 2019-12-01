@@ -4,7 +4,20 @@
 
 set -eu
 
-URL="https://github.com/akselsjogren/check_version/releases/download/v0.1.0/check_version-0.1.0.tar.gz"
+# Find download URL for the latest release
+LATEST_RELEASE_URL="https://api.github.com/repos/akselsjogren/check_version/releases/latest"
+jsonfile=$(mktemp)
+curl -s $LATEST_RELEASE_URL -o $jsonfile
+URL=$(cat <<EOF | python -
+import json
+with open("$jsonfile", "r") as f:
+    data = json.load(f)
+print(data["assets"][0]["browser_download_url"])
+EOF
+)
+rm $jsonfile
+
+echo "Latest release: $URL"
 
 SCRIPT_DIR="$( (cd "$(dirname "$0")"; pwd) )"
 TARGET_DIR="$SCRIPT_DIR/bin"
