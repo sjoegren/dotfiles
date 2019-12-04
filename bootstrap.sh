@@ -4,15 +4,28 @@
 
 set -eu
 
-# Find download URL for the latest release
-LATEST_RELEASE_URL="https://api.github.com/repos/akselsjogren/check_version/releases/latest"
+# To specify a certain version of check_version, set CHECK_VERSION_TAG=vX.Y.Z
+CHECK_VERSION_TAG="${CHECK_VERSION_TAG:-}"
+
+if [ -n "$CHECK_VERSION_TAG" ]; then
+    RELEASE_API_URL="https://api.github.com/repos/akselsjogren/check_version/releases/tags/$CHECK_VERSION_TAG"
+else
+    RELEASE_API_URL="https://api.github.com/repos/akselsjogren/check_version/releases/latest"
+fi
+
+# Find download URL for the selected release
 jsonfile=$(mktemp)
-curl -s $LATEST_RELEASE_URL -o $jsonfile
+curl -s $RELEASE_API_URL -o $jsonfile
 URL=$(cat <<EOF | python -
-import json
+import json,sys
 with open("$jsonfile", "r") as f:
     data = json.load(f)
-print(data["assets"][0]["browser_download_url"])
+assets = [a for a in data["assets"] if "$(arch)" in a["browser_download_url"]]
+try:
+    print(assets[0]["browser_download_url"])
+except IndexError:
+    sys.stderr.write("No assets found for %r matching arch: $(arch)\n" % data["html_url"])
+    sys.exit(1)
 EOF
 )
 rm $jsonfile
@@ -45,7 +58,7 @@ else
 fi
 
 test -e "$filename"
-dir=$(basename "$filename" .tar.gz)
+dir=$(basename "$filename" "-$(arch).tar.gz")
 if [ -e "$dir" ]; then
     rm -vrf ./"$dir"
 fi
