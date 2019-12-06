@@ -103,7 +103,7 @@ set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
 ifdef([DF_TMUX_VERSION_29], [dnl
-source-file $HOME/.dotfiles/.tmux-themepack/powerline/block/gray.tmuxtheme
+source-file $HOME/.dotfiles/.tmux-themepack/powerline/double/green.tmuxtheme
 ], [dnl
 source-file $HOME/.dotfiles/.old.tmuxtheme
 ])dnl
