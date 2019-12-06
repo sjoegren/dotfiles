@@ -66,7 +66,7 @@ while [ -n "${1:-}" ]; do
     esac
 done
 
-mapfile -t repos < <(find "$opt_finddir" -maxdepth "$opt_maxdepth" -type d -exec test -d "{}/.git" \; -print)
+mapfile -t repos < <(find "$opt_finddir" -maxdepth "$opt_maxdepth" -type d -exec test -e "{}/.git" \; -print)
 
 set +e
 for repo in "${repos[@]}"; do
