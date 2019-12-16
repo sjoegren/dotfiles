@@ -1,3 +1,5 @@
+# vim: ft=tmux
+
 # General settings
 set -g default-terminal "screen-256color"
 set -g history-limit 20000                          # scrollback buffer n lines
@@ -94,6 +96,9 @@ bind y command-prompt -p "swap-pane (target):"  "swap-pane -t '%%'"
 
 # window title string (uses statusbar variables)
 set -g set-titles-string '#T'
+
+setw -g automatic-rename-format '#{b:pane_current_path}'
+bind * setw automatic-rename on
 
 # status bar
 
