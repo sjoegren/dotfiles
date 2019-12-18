@@ -58,17 +58,8 @@ rp() {
 alias abspath='rp'  # To be removed when the time seems right
 
 
-# Concatenate files with filename header between files
-cath() {
-    for file in "$@"; do
-        echo "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-        echo "::  $file"
-        echo "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
-        cat $file || return
-    done
-}
-
 # copy last command in history to clipboard
+alias cath='head -n -0'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
 alias d='dirs'
 alias grep='grep --color=auto'
