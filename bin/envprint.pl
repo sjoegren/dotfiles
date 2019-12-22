@@ -43,7 +43,7 @@ sub print_env {
 
         # if value contains : and first item looks like a directory,
         # guess we're dealing with some PATH var, so we split the values.
-        if ($vals[0] =~ m#^/\w\S*$#) {
+        if (scalar @vals > 0 && $vals[0] =~ m#^/\w\S*$#) {
             say "$var = ";
             say "\t$_" for (@vals);
             return;
