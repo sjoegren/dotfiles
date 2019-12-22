@@ -177,6 +177,8 @@ let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
 nnoremap <leader>u :GundoToggle<CR>
 
+nmap <leader>p :CtrlP $HOME<CR>
+
 let g:vimwiki_list = [
             \ {'path': '~/.vimwiki_primary'},
             \ {'path': '~/.vimwiki_secondary'}]
