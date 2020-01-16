@@ -12,6 +12,7 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mihais/vim-mark'
@@ -172,6 +173,13 @@ nmap <leader><leader>g :GitGutterAll<CR>
 
 nmap <silent> [v <Plug>(ale_previous_wrap)
 nmap <silent> ]v <Plug>(ale_next_wrap)
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+" Align GitHub flavored Markdown tables: gaip*|
+nmap ga <Plug>(EasyAlign)
 
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
