@@ -25,25 +25,15 @@ ifneq (,$(findstring true, \
 endif
 
 SOURCES := $(wildcard *.m4)
+SOURCES += $(wildcard bash/*.m4)
 TARGETS := $(patsubst %.m4, %, $(SOURCES))
-BUILD_TARGETS := $(addprefix $(BUILDDIR)/, $(TARGETS))
 
 .PHONY: all clean
 
 all: $(TARGETS)
 
-%: $(BUILDDIR)/%
-	cp $< $@
-
-.INTERMEDIATE: $(BUILD_TARGETS)
-$(BUILDDIR)/% : %.m4
+%: %.m4
 	m4 $(M4_OPTS) $(MACROS) $< > $@
 
-$(BUILD_TARGETS): | $(BUILDDIR)
-
-$(BUILDDIR):
-	mkdir -p $@
-
 clean:
-	rm -rf $(BUILDDIR)
 	rm -fv $(TARGETS)

@@ -1,3 +1,5 @@
+dnl vim: ft=sh et ts=4 sw=4
+changequote([[,]])dnl
 # If not running interactively, don't do anything
 case $- in
     *i*) stty -ixon ;;
@@ -52,11 +54,10 @@ _mktemp_copy_filename() {
 alias mktemp='_mktemp_copy_filename'
 
 # Print absolute path to files
+syscmd([[hash realpath 2> /dev/null]])dnl
 rp() {
-    realpath --no-symlinks "$@" | _capture_output
+    ifelse(sysval, [[0]], [[realpath --no-symlinks]], [[readlink -f]]) "$@" | _capture_output
 }
-alias abspath='rp'  # To be removed when the time seems right
-
 
 # copy last command in history to clipboard
 alias cath='head -n -0'
