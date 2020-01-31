@@ -54,10 +54,17 @@ _mktemp_copy_filename() {
 alias mktemp='_mktemp_copy_filename'
 
 # Print absolute path to files
+dnl m4: if `realpath` is available, use that in rp(), otherwise fall back to `readlink -f`.
 syscmd([[hash realpath 2> /dev/null]])dnl
 rp() {
     ifelse(sysval, [[0]], [[realpath --no-symlinks]], [[readlink -f]]) "$@" | _capture_output
 }
+
+# Lookup command in PATH and print/capture path to the file.
+cmdpath() {
+    type -fP "${1:?}" | _capture_output
+}
+complete -c cmdpath
 
 # copy last command in history to clipboard
 alias cath='head -n -0'
