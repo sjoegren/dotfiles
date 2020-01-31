@@ -1,6 +1,7 @@
 # Built files
 gitconfig
 tmux.conf
+bash/bashrc
 
 # Downloaded
 *.tar.gz
