@@ -11,8 +11,7 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${BASEDIR}"
 
 # Some config files needs to be made before dotbot can install them.
-./bootstrap.sh
-make all
+make
 
 git submodule update --init --recursive "${DOTBOT_DIR}"
 

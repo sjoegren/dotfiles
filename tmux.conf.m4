@@ -25,11 +25,12 @@ bind j select-pane -D
 bind k select-pane -U
 # key bindings for vi-like copy/paste
 bind Escape copy-mode
-changequote(`[', `]')dnl
-ifdef([DF_TMUX_VERSION_24], [dnl
+changequote(`{', `}')dnl
+syscmd({tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4})dnl
+ifelse(sysval, {0}, {dnl
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y if-shell "hash xclip" "send -X copy-pipe 'xclip -i'" "send -X copy-selection"
-], [])dnl
+})dnl
 
 # Display pane numbers longer
 set -g display-panes-time 2000
@@ -43,13 +44,13 @@ bind -n M-h select-pane -L
 bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
-ifdef([DF_TMUX_VERSION_24], [dnl
+ifelse(sysval, {0}, {dnl
 bind -T copy-mode-vi C-h select-pane -L
 bind -T copy-mode-vi C-j select-pane -D
 bind -T copy-mode-vi C-k select-pane -U
 bind -T copy-mode-vi C-l select-pane -R
 bind -T copy-mode-vi C-\ select-pane -l
-], [])dnl
+})dnl
 
 bind S set-window-option synchronize-panes
 bind A set-window-option monitor-activity
@@ -107,8 +108,9 @@ set -g status-left "#S [#(tmux ls | cut -d: -f1 | xargs echo)] "
 set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
-ifdef([DF_TMUX_VERSION_29], [dnl
+syscmd({tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9})dnl
+ifelse(sysval, {0}, {dnl
 source-file $HOME/.dotfiles/.tmux-themepack/powerline/double/green.tmuxtheme
-], [dnl
+}, {dnl
 source-file $HOME/.dotfiles/.old.tmuxtheme
-])dnl
+})dnl

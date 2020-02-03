@@ -1,4 +1,5 @@
-# vim: ft=gitconfig
+dnl vim: ft=gitconfig
+syscmd(`git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.21')dnl
 [alias]
 	alias = !git config --global --list | grep ^alias
 	amend = commit --all --amend
@@ -6,13 +7,13 @@
 	ci = commit
 	co = checkout
 	ctags = !.git/hooks/ctags
-	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=DF_GIT_DATE_FORMAT
+	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=ifelse(sysval, `0', `human', `short')
 	st = status
 [log]
 	date = iso
 [rebase]
 	autoSquash = true
-ifdef(`DF_GIT_VERSION_21', `dnl
+ifelse(sysval, `0', `dnl
 [push]
 	default = simple
 ', `')dnl

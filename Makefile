@@ -1,28 +1,6 @@
 BUILDDIR := build
-MACROS =
-
-# If findstring finds "True" in command output, it evaluates to "" and the
-# ifneq expression evaluates to true.
-ifneq (,$(findstring true, \
-	$(shell git --version | bin/check_version -r 'version ([0-9]+\.[0-9]+\.[0-9]+)' -c 2.21) \
-	))
-	MACROS += -D DF_GIT_DATE_FORMAT="human"
-	MACROS += -D DF_GIT_VERSION_21
-else
-	MACROS += -D DF_GIT_DATE_FORMAT="short"
-endif
-
-ifneq (,$(findstring true, \
-	$(shell tmux -V | bin/check_version -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4) \
-	))
-	MACROS += -D DF_TMUX_VERSION_24
-endif
-
-ifneq (,$(findstring true, \
-	$(shell tmux -V | bin/check_version -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9) \
-	))
-	MACROS += -D DF_TMUX_VERSION_29
-endif
+PATH := bin:$(PATH)
+CHECKVER := bin/check_version
 
 SOURCES := $(wildcard *.m4)
 SOURCES += $(wildcard bash/*.m4)
@@ -32,8 +10,11 @@ TARGETS := $(patsubst %.m4, %, $(SOURCES))
 
 all: $(TARGETS)
 
-%: %.m4
-	m4 $(M4_OPTS) $(MACROS) $< > $@
+%: %.m4 | $(CHECKVER)
+	m4 $< > $@
+
+$(CHECKVER):
+	bash get_check_version.sh
 
 clean:
-	rm -fv $(TARGETS)
+	rm -fv $(TARGETS) $(CHECKVER)
