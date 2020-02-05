@@ -71,7 +71,7 @@ alias cath='head -n -0'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
 alias d='dirs'
 alias grep='grep --color=auto'
-alias hist='git hist -10'
+alias hist='b="$(git branch --show-current)" && test "${b:-master}" == master && git hist -n 10 || git hist -n 30 origin/master~1..@'
 alias ll="ls -lh --time-style=long-iso"
 alias ls="ls --color=auto"
 alias mg='multigit.sh'
