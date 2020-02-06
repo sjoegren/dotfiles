@@ -25,25 +25,25 @@ grepfilter() {
     fi
 }
 
-# return 0 (ok) if xclip is installed and a display is connected
-_have_xclip() {
-    [ -n "$DISPLAY" ] || return 1
-    command -pv xclip &> /dev/null
-}
-
 # Copy stdin to tmux buffer and x-clipboard if available.
 # On display output, inverse fg/bg to indicate tmux, color green for X.
 _capture_output() {
     read out
     local format=''
+syscmd([[hash tmux 2> /dev/null]])dnl
+ifelse(sysval, [[0]], [[dnl
     if [ -n "$TMUX" ]; then
         echo -n "$out" | tmux load-buffer -
         format="${format}\e[7m"
     fi
-    if _have_xclip; then
+]], [[]])dnl
+syscmd([[hash xclip 2> /dev/null]])dnl
+ifelse(sysval, [[0]], [[dnl
+    if [ -n "$DISPLAY" ]; then
         echo -n "$out" | xclip -in
         format="${format}\e[92m"
     fi
+]], [[]])dnl
     echo -e "${format}${out}\e[0m"
 }
 
