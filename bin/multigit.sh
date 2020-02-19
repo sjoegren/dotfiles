@@ -1,4 +1,5 @@
 #!/bin/bash
+# vim: et ts=4 sw=4
 set -eu
 IFS=$'\n'
 
@@ -7,6 +8,7 @@ opt_abspath=false
 opt_finddir=.
 opt_maxdepth=1
 opt_exitcode=false
+opt_name=""
 
 log() {
     $opt_verbose && echo "$@" >&2
@@ -34,6 +36,7 @@ stdout.
       --dir DIR             Find repositories in DIR (default: $opt_finddir)
       --maxdepth N          See FIND(1) -maxdepth option (default: $opt_maxdepth)
   -e, --exitcode            Log exit code after each command
+      --name PATTERN        Only find git directories mathing pattern (find -iname)
   -q, --quiet               Don't log messages to stderr
   -h, --help                Give this help
 
@@ -60,13 +63,23 @@ while [ -n "${1:-}" ]; do
                 error "Missing or invalid argument value for $1"
             fi
             ;;
+        --name|--iname)
+            if [[ "${2:-}" =~ ^[^-] ]]; then
+                opt_name="$2"
+                shift 2
+            fi
+            ;;
         -h|--help)      usage; exit 0 ;;
         -q|--quiet)     opt_verbose=false; shift ;;
         *)  break ;;
     esac
 done
 
-mapfile -t repos < <(find "$opt_finddir" -maxdepth "$opt_maxdepth" -type d -exec test -e "{}/.git" \; -print)
+if [ -n "$opt_name" ]; then
+    mapfile -t repos < <(find "$opt_finddir" -maxdepth "$opt_maxdepth" -type d -name "${opt_name}" -exec test -e "{}/.git" \; -print)
+else
+    mapfile -t repos < <(find "$opt_finddir" -maxdepth "$opt_maxdepth" -type d -exec test -e "{}/.git" \; -print)
+fi
 
 set +e
 for repo in "${repos[@]}"; do
