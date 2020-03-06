@@ -8,8 +8,11 @@ Given an inventory file like this:
     [buildslaves]
     foo     ansible_host=192.0.2.1
 
-Running 'sshansible.py foo', will exec the command 'ssh -o Hostname=192.0.2.1 foo'.
+Running 'sshansible.py -- -v foo', will exec the command 'ssh -o Hostname=192.0.2.1 -v foo'.
 That way any config in 'ssh_config' for host 'foo' will still be honored.
+
+scp:
+    sshansible.py --scp bar -- /etc/foo.conf bar:/tmp
 """
 
 import argparse
@@ -37,8 +40,12 @@ def main():
     )
     parser.add_argument("--complete-hosts", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument(
-        "hostname", nargs="?", help="Host from ansible inventory to connect to"
+        "sshargs",
+        nargs="*",
+        metavar='arg',
+        help="ssh arguments, like host from ansible inventory to connect to",
     )
+    parser.add_argument("--scp", metavar="hostname", help="Run scp instead of ssh")
     args = parser.parse_args()
 
     if args.complete_hosts:
@@ -50,24 +57,29 @@ def main():
         print("\t".join(hosts))
         return True
     else:
-        if not args.hostname:
+        if not args.sshargs:
             parser.error("hostname argument is required")
 
+    hostname = args.scp or args.sshargs[-1]
+
+    # hostname = args.sshargs[0]
     for line in args.inventory:
-        match = re.match(rf"({args.hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
+        match = re.match(rf"({hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
         if match:
             print(line, end="")
             ansible_host = match[2]
             break
     else:
-        print(f"Couldn't find any hosts matching '{args.hostname}'")
+        print(f"Couldn't find any hosts matching '{hostname}'")
         return False
 
     args.inventory.close()
-    exec_args = ("ssh", "-o", f"Hostname={ansible_host}", args.hostname)
+
+    command = "scp" if args.scp else "ssh"
+    exec_args = (command, "-o", f"Hostname={ansible_host}", *args.sshargs)
     print(f"exec: {' '.join(exec_args)}")
     sys.stdout.flush()
-    os.execlp("ssh", *exec_args)
+    os.execlp(command, *exec_args)
 
 
 if __name__ == "__main__":
