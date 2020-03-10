@@ -38,6 +38,11 @@ sub print_env {
         return;
     }
 
+    if ($opts{'unset'}) {
+        say "unset $var;";
+        return;
+    }
+
     if ($ENV{$var} =~ /:/) {
         my @vals = split /:/, $ENV{$var};
 
@@ -55,7 +60,7 @@ sub print_env {
 }
 
 Getopt::Long::Configure(qw/bundling auto_version/);
-GetOptions(\%opts, 'values|v', 'debug', 'usage|h', 'help', 'only-names|n', 'env|e')
+GetOptions(\%opts, 'values|v', 'debug', 'usage|h', 'help', 'only-names|n', 'env|e', 'unset|u')
     or pod2usage(-verbose => 0);
 pod2usage(-verbose => 0, exitval => 0) if $opts{usage};
 pod2usage(-verbose => 2) if $opts{help};
@@ -105,6 +110,7 @@ envprint.pl [options] [PATTERN]
     -h                          Short help message
     --help                      Show full help
     -v, --values                Match on environment values instead of names.
+    -u, --unset                 Print shell unset commands for the variables matched.
     --debug                     Turn on debug output
     --version                   Show program version and exit
 
