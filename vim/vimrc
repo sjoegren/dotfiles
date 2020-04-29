@@ -31,7 +31,6 @@ Plug 'vimwiki/vimwiki'
 if v:version > 800
     Plug 'psf/black'
     Plug 'w0rp/ale'
-    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 endif
 call plug#end()
 
