@@ -104,6 +104,10 @@ set complete=.,w,i
 " Useful for <C-W> f, <C-X> <C-F>
 set isfname-==
 
+" git hooks from git_template puts ctags file here.
+set tags^=./.git/tags
+set cpoptions+=d
+
 if !&scrolloff
   set scrolloff=1
 endif
