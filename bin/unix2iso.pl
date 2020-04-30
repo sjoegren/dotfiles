@@ -10,11 +10,11 @@ my $formatted;
 
 sub usage {
     $0 =~ s#^.*/##;
-    print "Read lines from stdin and converts any POSIX timestamps to iso8601 timestamps.
+    print "Read lines from stdin and converts any POSIX timestamps to ISO8601 timestamps.
 
 Usage: $0 [OPTIONS]
   -s --strict             YYYY-MM-DDTHH:MM:SS+HH:MM. Default is 'YYYY-MM-DD HH:MM:SS'.
-  -u --utc                Interpret timestamps as UTC time instead of local time.
+  -u --utc                Print ISO8601 timestamps in UTC instead of local time.
   -h                      Print usage text.
 ";
     exit 0;
@@ -28,12 +28,14 @@ GetOptions(
 usage if $opt_help;
 
 while (<>) {
-    /(\d{10})/;
-    $formatted = strftime(
-        defined $opt_strict ? '%FT%T%z' : '%F %T',
-        defined $opt_utc ? gmtime($1) : localtime($1)
-    );
-    s/(\d{10})/$formatted/;
+	if (/(\d{10})/) {;
+		my $tz = $opt_utc ? 'Z' : '%z';
+		$formatted = strftime(
+			defined $opt_strict ? "%Y-%m-%dT%H:%M:%S$tz" : '%Y-%m-%d %H:%M:%S',
+			defined $opt_utc ? gmtime($1) : localtime($1)
+		);
+		s/(\d{10})/$formatted/;
+	}
     print;
 }
 
