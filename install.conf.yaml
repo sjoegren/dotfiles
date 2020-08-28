@@ -16,6 +16,7 @@
     ~/.gitconfig:
     ~/.inputrc:
     ~/.liquidpromptrc: bash/liquidpromptrc
+    ~/.mdlrc:
     ~/.tmux.conf:
     ~/.vim:
       force: false
