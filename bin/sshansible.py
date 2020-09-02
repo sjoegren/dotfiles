@@ -42,10 +42,13 @@ def main():
     parser.add_argument(
         "sshargs",
         nargs="*",
-        metavar='arg',
+        metavar="arg",
         help="ssh arguments, like host from ansible inventory to connect to",
     )
     parser.add_argument("--scp", metavar="hostname", help="Run scp instead of ssh")
+    parser.add_argument(
+        "--copy-id", action="store_true", help="Run ssh-copy-id instead of ssh"
+    )
     args = parser.parse_args()
 
     if args.complete_hosts:
@@ -75,7 +78,7 @@ def main():
 
     args.inventory.close()
 
-    command = "scp" if args.scp else "ssh"
+    command = "scp" if args.scp else "ssh-copy-id" if args.copy_id else "ssh"
     exec_args = (command, "-o", f"Hostname={ansible_host}", *args.sshargs)
     print(f"exec: {' '.join(exec_args)}")
     sys.stdout.flush()
