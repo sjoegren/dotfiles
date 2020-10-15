@@ -1,0 +1,10 @@
+style=linux
+indent=tab
+unpad-paren
+pad-oper
+pad-header
+lineend=linux
+align-pointer=name
+keep-one-line-statements
+preserve-date
+#formatted

@@ -11,6 +11,7 @@
       path: ''
       force: false
       relink: false
+    ~/.astylerc:
     ~/.bash_profile: bash/bash_profile
     ~/.bashrc: bash/bashrc
     ~/.gitconfig:
