@@ -4,26 +4,12 @@
 use 5.010;
 use strict;
 use warnings;
-use Data::Dumper;
 use Getopt::Long;
 use Pod::Usage;
 use File::Basename qw(basename);
 
-my ($debug); # for --debug options
-my %opts = ('debug' => \$debug, );
+my %opts;
 my $pattern;
-
-# Usage: debug(@items)
-# If an item is a reference, print it using Data::Dumper
-sub debug {
-    return unless $debug;
-    for my $item (@_) {
-        $item = Dumper($item) if (ref $item);
-        for (split /\n/, $item) {
-            warn "--- DEBUG: $_\n";
-        }
-    }
-}
 
 sub print_env {
     my $var = shift;
@@ -60,12 +46,10 @@ sub print_env {
 }
 
 Getopt::Long::Configure(qw/bundling auto_version/);
-GetOptions(\%opts, 'values|v', 'debug', 'usage|h', 'help', 'only-names|n', 'env|e', 'unset|u')
+GetOptions(\%opts, 'values|v', 'usage|h', 'help', 'only-names|n', 'env|e', 'unset|u')
     or pod2usage(-verbose => 0);
 pod2usage(-verbose => 0, exitval => 0) if $opts{usage};
 pod2usage(-verbose => 2) if $opts{help};
-
-debug \%opts;
 
 $pattern = shift;
 
@@ -111,7 +95,6 @@ envprint.pl [options] [PATTERN]
     --help                      Show full help
     -v, --values                Match on environment values instead of names.
     -u, --unset                 Print shell unset commands for the variables matched.
-    --debug                     Turn on debug output
     --version                   Show program version and exit
 
 =head1 DESCRIPTION
