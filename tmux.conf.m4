@@ -1,4 +1,6 @@
 # vim: ft=tmux
+changecom()
+changequote(`{{', `}}')dnl
 
 # General settings
 set -g default-terminal "screen-256color"
@@ -25,12 +27,11 @@ bind j select-pane -D
 bind k select-pane -U
 # key bindings for vi-like copy/paste
 bind Escape copy-mode
-changequote(`{', `}')dnl
-syscmd({tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4})dnl
-ifelse(sysval, {0}, {dnl
+syscmd({{tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4}})dnl
+ifelse(sysval, {{0}}, {{dnl
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y if-shell "hash xclip" "send -X copy-pipe 'xclip -i'" "send -X copy-selection"
-})dnl
+}})dnl
 
 # Display pane numbers longer
 set -g display-panes-time 2000
@@ -44,13 +45,13 @@ bind -n M-h select-pane -L
 bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
-ifelse(sysval, {0}, {dnl
+ifelse(sysval, {{0}}, {{dnl
 bind -T copy-mode-vi C-h select-pane -L
 bind -T copy-mode-vi C-j select-pane -D
 bind -T copy-mode-vi C-k select-pane -U
 bind -T copy-mode-vi C-l select-pane -R
 bind -T copy-mode-vi C-\ select-pane -l
-})dnl
+}})dnl
 
 bind S set-window-option synchronize-panes
 bind A set-window-option monitor-activity
@@ -103,7 +104,14 @@ bind y command-prompt -p "swap-pane (target):"  "swap-pane -t '%%'"
 # window title string (uses statusbar variables)
 set -g set-titles-string '#T'
 
-setw -g automatic-rename-format '#{b:pane_current_path}'
+setw -g automatic-rename on
+# If ssh runs in active pane, set window name to ssh target (last ssh argument)
+# Set window name to:
+# - ssh target (last ssh argument) if ssh runs in active pane
+# - ~ if in $HOME
+# - basename of PWD
+# debug with: tmux display-message -p -v 'FORMAT'
+setw -g automatic-rename-format '#{?#{==:#{pane_current_command},ssh},#(ps --ppid #{pane_pid} -o pid= | pidcmd.py - -1),#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
 bind * setw automatic-rename on
 
 # status bar
@@ -113,9 +121,9 @@ set -g status-left "#S [#(tmux ls | cut -d: -f1 | xargs echo)] "
 set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
-syscmd({tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9})dnl
-ifelse(sysval, {0}, {dnl
-source-file $HOME/.dotfiles/.tmux-themepack/powerline/double/green.tmuxtheme
-}, {dnl
-source-file $HOME/.dotfiles/.old.tmuxtheme
-})dnl
+syscmd({{tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9}})dnl
+ifelse(sysval, {{0}}, {{dnl
+source-file DOTFILES_DIR/.tmux-themepack/powerline/double/green.tmuxtheme
+}}, {{dnl
+source-file DOTFILES_DIR/.old.tmuxtheme
+}})dnl
