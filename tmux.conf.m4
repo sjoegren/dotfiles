@@ -80,13 +80,18 @@ bind -n S-PageDown send-keys PageDown
 bind o command-prompt -p "create pane (horisontal) from:"  "join-pane -s ':%%'"
 bind @ command-prompt -p "create pane (vertical) from:"  "join-pane -h -s ':%%'"
 
-# Toggle fullscreen pane (zoomed)
-bind -n f3 resize-pane -Z
-
-# Cycle through windows and panes
-bind -n f6 previous-window
-bind -n f7 last-window
-bind -n f8 next-window
+bind -n f1 selectw -T -t :1
+bind -n f2 selectw -T -t :2
+bind -n f3 selectw -T -t :3
+bind -n f4 selectw -T -t :4
+bind -n f5 selectw -T -t :5
+bind -n f6 selectw -T -t :6
+bind -n f7 selectw -T -t :7
+bind -n f8 selectw -T -t :8
+bind -n f9 selectw -T -t :9
+bind -n f10 previous-window
+bind -n f11 last-window
+bind -n f12 next-window
 
 # Switch sessions and redraw status bar
 bind ( switch-client -p\; refresh -S
