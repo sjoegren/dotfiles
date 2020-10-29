@@ -6,10 +6,8 @@ case $- in
       *) return;;
 esac
 
-DOTFILES=$HOME/.dotfiles
-
 # Solarized dircolors
-eval `dircolors $DOTFILES/bash/dircolors-solarized/dircolors.ansi-dark`
+eval `dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark`
 
 # ---------------------------------
 # Functions
@@ -92,18 +90,20 @@ export EDITOR=vim
 shopt -s checkwinsize
 shopt -s globstar
 
-export PATH=`$DOTFILES/bin/mergepaths.pl $PATH $DOTFILES/bin`
+export PATH=`DOTFILES_DIR/bin/mergepaths.pl $PATH DOTFILES_DIR/bin`
 
 export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 
-source $DOTFILES/bash/liquidprompt/liquidprompt
-source $DOTFILES/bash/sshansible-completion.bash
+source DOTFILES_DIR/bash/liquidprompt/liquidprompt
+source DOTFILES_DIR/bash/sshansible-completion.bash
 
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
+DOTFILES=DOTFILES_DIR
 for rcfile in ~/.bashrc.d/*.bash; do
     . $rcfile
 done
+unset DOTFILES
 $_nullglob_setting  # restore

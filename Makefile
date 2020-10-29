@@ -1,8 +1,9 @@
 BUILDDIR := build
 PATH := bin:$(PATH)
 CHECKVER := bin/check_version
-DOTFILES_DIR := $(HOME)/.dotfiles
+DOTFILES_DIR := $(PWD)
 MACROS = -D DOTFILES_DIR="$(DOTFILES_DIR)"
+MACROS += -D HOME_DIR="$(HOME)"
 
 SOURCES := $(wildcard *.m4)
 SOURCES += $(wildcard bash/*.m4)
