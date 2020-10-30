@@ -111,7 +111,7 @@ setw -g automatic-rename on
 # - ~ if in $HOME
 # - basename of PWD
 # debug with: tmux display-message -p -v 'FORMAT'
-setw -g automatic-rename-format '#{?#{==:#{pane_current_command},ssh},#(ps --ppid #{pane_pid} -o pid= | pidcmd.py - -1),#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
+setw -g automatic-rename-format '#{?#{==:#{pane_current_command},ssh},#(pidcmd #{pane_pid} -1),#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
 bind * setw automatic-rename on
 
 # status bar

@@ -3,6 +3,7 @@ gitconfig
 tmux.conf
 bash/bashrc
 mdlrc
+bin/pidcmd
 
 # Downloaded
 *.tar.gz

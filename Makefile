@@ -8,16 +8,20 @@ MACROS += -D HOME_DIR="$(HOME)"
 SOURCES := $(wildcard *.m4)
 SOURCES += $(wildcard bash/*.m4)
 TARGETS := $(patsubst %.m4, %, $(SOURCES))
+BUILD_TARGETS = bin/pidcmd
 
 .PHONY: all clean
 
-all: $(TARGETS)
+all: $(TARGETS) $(BUILD_TARGETS)
 
 %: %.m4 | $(CHECKVER)
 	m4 $(MACROS) $< > $@
 
 $(CHECKVER):
 	bash get_check_version.sh
+
+bin/%:
+	utils/build-utils.sh "$(DOTFILES_DIR)"
 
 clean:
 	rm -fv $(TARGETS) $(CHECKVER)
