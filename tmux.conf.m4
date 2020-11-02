@@ -105,13 +105,17 @@ bind y command-prompt -p "swap-pane (target):"  "swap-pane -t '%%'"
 set -g set-titles-string '#T'
 
 setw -g automatic-rename on
-# If ssh runs in active pane, set window name to ssh target (last ssh argument)
-# Set window name to:
-# - ssh target (last ssh argument) if ssh runs in active pane
-# - ~ if in $HOME
-# - basename of PWD
+# if #{pane_current_command} == ssh in any pane in a window;
+# - set window name to the ssh target (last ssh cmdline argument)
+# - blue fg color
+# if vim runs in the active pane;
+# - green fg color of the window name
+# if #{pane_current_path} is $HOME;
+# - set window name to '~'
+# else;
+# - set window name to basename of #{pane_current_path}
+setw -g automatic-rename-format '#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},#[fg=blue]#(pidcmd --arg -1 --tmux-cmd ssh "#{P:#{pane_current_command}:#{pane_pid}|}"),#{?#{==:#{pane_current_command},vim},#[fg=green],}#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
 # debug with: tmux display-message -p -v 'FORMAT'
-setw -g automatic-rename-format '#{?#{==:#{pane_current_command},ssh},#(pidcmd #{pane_pid} -1),#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
 bind * setw automatic-rename on
 
 # status bar
@@ -123,7 +127,7 @@ set -g status-right '%H:%M, %a %h %e '
 
 syscmd({{tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9}})dnl
 ifelse(sysval, {{0}}, {{dnl
-source-file DOTFILES_DIR/.tmux-themepack/powerline/double/green.tmuxtheme
+source-file DOTFILES_DIR/.tmux-themepack/powerline/double/orange.tmuxtheme
 }}, {{dnl
 source-file DOTFILES_DIR/.old.tmuxtheme
 }})dnl
