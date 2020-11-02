@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Convert any POSIX timestamps within specified bounds in input to a human
 readable timestamp format, defaults to ISO 8601 in the systems localtime.
