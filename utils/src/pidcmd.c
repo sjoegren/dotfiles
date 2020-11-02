@@ -14,23 +14,28 @@
 #define PACKAGE "prog"
 #define PACKAGE_STRING ""
 #endif
-static char doc[] = "Usage: " PACKAGE " PID|- [argument]\n\n"
-"Get an argument of the command line for a given PIDs child process.\n"
-"Example:\n\n"
-"  # second to last command line argument of pid 123's child\n"
-"  pidcmd 123 -2\n"
-"  # first argument (read from stdin)\n"
-"  echo 123 | pidcmd - 0\n"
-"  # full command line\n"
-"  pidcmd 123\n"
-"\nVersion: " PACKAGE_STRING;
+static char doc_usage[] = "Usage: " PACKAGE " [-hV] [-a arg] pid";
+static char doc_help[] =
+    "Get an argument of the command line for a given PIDs child process.\n\n"
+    "Options:\n"
+    "  -a, --arg ARG         argument id from the pids child command line to return.\n"
+    "                          first argument is 0, last is -1.\n"
+    "  --tmux-cmd command    indicates that the input pid string is on the format 'cmd1:pid|cmdN:pid'.\n"
+    "                          Find the pid associated with the given 'command'.\n"
+    "                          Used in tmux format string as:\n"
+    "                          #(pidcmd --arg -1 --tmux-cmd ssh \"#{P:#{pane_current_command}:#{pane_pid}|}\")\n"
+    "  -h, --help            display this help and exit.\n"
+    "  -V, --version         output version information and exit.\n"
+	"Arguments:\n"
+    "  pid                   parent process whose child to find.";
 static const int MAX_FILENAME_LEN = 32;
 static const int NO_INDEX = INT_MAX;
 static const int MAX_CMDLINE_ARGS = 32;
 static const size_t BUFFER_SIZE = 256;
+static const char *TMUX_CMD_PID_TOKEN_DELIMITER = "|";
 
 /**
- * Return pointer to a malloc'ed copy of 's', where occurences or 'search' are
+ * Return pointer to a malloc'ed copy of 's', where occurrences of 'search' are
  * replaced by 'replace'.
  * Caller must free() the returned pointer.
  */
@@ -67,7 +72,8 @@ char *cmdline_arg(char *cmdline, size_t size, int index)
 	}
 	check(p >= end, "args should be exhausted");
 	if (index < 0) {
-		check_debug(abs(index) <= i, "No argument at index '%d' (got %d arguments)", index, i);
+		check_debug(abs(index) <= i, "No argument at index '%d' (got %d arguments)", index,
+		            i);
 		return args[i + index];
 	}
 	check_debug(index < i, "No argument at index '%d' (got %d arguments)", index, i);
@@ -77,10 +83,10 @@ error:
 }
 
 /*
- * Gived a `pid`, read at most n bytes from the file /proc/pid/cmdline into the
- * buffer pointed to by cmdline.
+ * Given a `pid`, read at most n bytes from the file /proc/pid/cmdline into the
+ * buffer n bytes pointed to by cmdline.
  */
-size_t get_cmdline(int pid, char *cmdline, size_t n)
+size_t get_proc_cmdline(int pid, char *cmdline, size_t n)
 {
 	char filename[MAX_FILENAME_LEN];
 	FILE *file;
@@ -97,26 +103,8 @@ error:
 }
 
 /*
- * Read a line from the stream `input` and return a pointer to the initial
- * portion of the string that consists of digits, possibly prefixed with
- * spaces. The resulting string is null terminated.
- * It is the callers responsibility to free() the pointer.
+ * Return non-zero if all characters in s are digits.
  */
-char *getline_numeric(FILE *input)
-{
-	char *lineptr = NULL, *p;
-	size_t size = 0;
-	ssize_t read_n;
-	read_n = getline(&lineptr, &size, input);
-	check(read_n != -1, "Failed to read from stdin");
-	p = lineptr;
-	while (isdigit(*p) || *p == ' ')
-		p++;
-	*p = '\0';
-error:
-	return lineptr;
-}
-
 int isnumeric(const char *s)
 {
 	char *p = (char *)s;
@@ -133,13 +121,13 @@ int isnumeric(const char *s)
 int get_child_pid(int parent)
 {
 	DIR *proc = opendir("/proc");
-	char filename[MAX_FILENAME_LEN], buf[BUFFER_SIZE], *lineptr;;
+	char filename[MAX_FILENAME_LEN], buf[BUFFER_SIZE], *lineptr;
 	FILE *file;
 	struct dirent *dir;
 	int pid, ppid, found_pid = 0, read;
 
 	check_mem(proc);
-	while((dir = readdir(proc)) != NULL && !found_pid) {
+	while ((dir = readdir(proc)) != NULL && !found_pid) {
 		if (dir->d_type == DT_DIR && isnumeric(dir->d_name)) {
 			sprintf(filename, "/proc/%s/stat", dir->d_name);
 			if ((file = fopen(filename, "r")) == NULL) {
@@ -163,58 +151,105 @@ error:
 	return found_pid;
 }
 
-int main(int argc, const char **argv)
+char *get_pid_for_tmux_cmd(char *input, const char *tmux_cmd)
 {
-	char *command = NULL, *arg, buf[256], *input = NULL, *pid_in;
+	debug("Find pid in input '%s' prefixed with tmux_cmd: '%s'", input, tmux_cmd);
+	char *delim = NULL, *token = strtok(input, TMUX_CMD_PID_TOKEN_DELIMITER);
+	while (token != NULL) {
+		debug("token = %s", token);
+		delim = strchr(token, ':');
+		check(delim, "Invalid input format: '%s'", token);
+		*delim = '\0';
+		if (!strcmp(token, tmux_cmd)) {
+			debug("Found command '%s' with value '%s'", token, delim + 1);
+			return delim + 1;
+		}
+		token = strtok(NULL, TMUX_CMD_PID_TOKEN_DELIMITER);
+	}
+error:
+	return NULL;
+}
+
+int main(int argc, char **argv)
+{
+	char *command = NULL, *arg, buf[BUFFER_SIZE], *input = NULL, *pid_in = NULL, *tmux_cmd = NULL;
 	size_t size = 0;
 	int retval = 1, index = NO_INDEX, child_pid;
 
-	if (argc < 2 || strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
-		puts(doc);
-		return 0;
+#ifdef LOG_ARGS
+	FILE *log = fopen("/tmp/pidcmd.log", "w");
+	check_mem(log);
+	for (int i = 0; i < argc; i++) {
+		fprintf(log, "argv[%d]=%s\n", i, argv[i]);
 	}
-	if (strcmp(argv[1], "-V") == 0 || strcmp(argv[1], "--version") == 0) {
-		puts(PACKAGE_STRING);
-		return 0;
-	}
+	fclose(log);
+#endif
 
-	if (strcmp(argv[1], "-") == 0) {
-		debug("Read pid from stdin");
-		input = getline_numeric(stdin);
-		check(input != NULL, "Failed to read pid from stdin");
+	while (argc > 1 && *argv[1] == '-') {
+		debug("argc: %d, argv[1]: '%s', argv[2]: '%s'", argc, argv[1], (argc > 2) ? argv[2] : "n/a");
+		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
+			puts(doc_usage);
+			puts(doc_help);
+			return 0;
+		} else if (!strcmp(argv[1], "-V") || !strcmp(argv[1], "--version")) {
+			puts(PACKAGE_STRING);
+			return 0;
+		} else if (!strcmp(argv[1], "-a") || !strcmp(argv[1], "--arg")) {
+			check(argc > 2, "%s requires an argument", argv[1]);
+			index = atoi(argv[2]);
+			argc--;
+			argv++;
+		} else if (!strcmp(argv[1], "--tmux-cmd")) {
+			check(argc > 2, "%s requires an argument", argv[1]);
+			tmux_cmd = argv[2];
+			argc--;
+			argv++;
+		} else {
+			log_info("Unknown option: '%s'", argv[1]);
+			puts(doc_usage);
+			puts("Try '" PACKAGE " --help' for more information");
+			return 2;
+		}
+		argc--;
+		argv++;
+	}
+	debug("after option parsing: argc: %d, argv[1]: %s", argc, (argc > 1) ? argv[1] : "n/a");
+
+	if (argc < 2) {
+		puts(doc_usage);
+		puts("Try '" PACKAGE " --help' for more information");
+		return 2;
+	}
+	input = argv[1];
+
+	if (tmux_cmd) {
+		pid_in = get_pid_for_tmux_cmd(input, tmux_cmd);
+		check(pid_in, "Couldn't find command '%s' in input", tmux_cmd);
+		pid_in = strpbrk(pid_in, "123456789");
 	}
 	else {
-		input = (char *)argv[1];
+		pid_in = strpbrk(input, "123456789");
 	}
-	pid_in = strpbrk(input, "123456789");
 	check(pid_in, "Numbers not found in input: '%s'", input);
 
 	child_pid = get_child_pid(atoi(pid_in));
-	if (input && strcmp(argv[1], "-") == 0)
-		free(pid_in);
 	check(child_pid, "Child process not found for %s", pid_in);
 
-	if (argc >= 3) {
-		index = atoi(argv[2]);
-	}
-
-	size = get_cmdline(child_pid, buf, BUFFER_SIZE);
-	if (!size)
-		goto error;
+	size = get_proc_cmdline(child_pid, buf, BUFFER_SIZE);
+	check(size, "Nothing read from cmdline file");
 
 	command = strndup_replace(buf, size, '\0', ' ');
 	check_mem(command);
 
 	if (index != NO_INDEX) {
 		if ((arg = cmdline_arg(buf, size, index)) == NULL) {
-			sentinel("No argument with index '%d' in command line '%s'", index, command);
+			sentinel("No argument with index '%d' in command line '%s'", index,
+			         command);
 		}
 		printf("%s\n", arg);
-	}
-	else {
+	} else {
 		printf("%s\n", command);
 	}
-
 
 	retval = 0;
 error:

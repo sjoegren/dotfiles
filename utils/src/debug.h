@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Don't print debug() messages when NDEBUG is defined. */
-#ifdef NDEBUG
-#define debug(M, ...)
-#else
+/* Only print debug() messages when DEBUG is defined. */
+#ifdef DEBUG
 #define debug(M, ...) fprintf(stderr, "[DEBUG] %s:%d: " M "\n", \
 	__FILE__, __LINE__, ##__VA_ARGS__)
-#endif /* NDEBUG */
+#else
+#define debug(M, ...)
+#endif /* DEBUG */
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
 
