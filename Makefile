@@ -10,7 +10,7 @@ SOURCES += $(wildcard bash/*.m4)
 TARGETS := $(patsubst %.m4, %, $(SOURCES))
 BUILD_TARGETS = bin/pidcmd
 
-.PHONY: all clean
+.PHONY: all clean clean-build
 
 all: $(TARGETS) $(BUILD_TARGETS)
 
@@ -23,5 +23,8 @@ $(CHECKVER):
 bin/%:
 	utils/build-utils.sh "$(DOTFILES_DIR)"
 
-clean:
+clean: clean-build
 	rm -fv $(TARGETS) $(CHECKVER)
+
+clean-build:
+	rm -fv $(BUILD_TARGETS)
