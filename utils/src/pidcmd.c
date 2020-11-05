@@ -20,14 +20,15 @@ static char doc_help[] =
     "Options:\n"
     "  -a, --arg ARG         argument id from the pids child command line to return.\n"
     "                          first argument is 0, last is -1.\n"
+    "                          if not specified, the whole command line is printed.\n"
     "  --tmux-cmd command    indicates that the input pid string is on the format 'cmd1:pid|cmdN:pid'.\n"
-    "                          Find the pid associated with the given 'command'.\n"
-    "                          Used in tmux format string as:\n"
+    "                          find the pid associated with the given 'command'.\n"
+    "                          used in tmux format string as:\n"
     "                          #(pidcmd --arg -1 --tmux-cmd ssh \"#{P:#{pane_current_command}:#{pane_pid}|}\")\n"
     "  -h, --help            display this help and exit.\n"
     "  -V, --version         output version information and exit.\n"
 	"Arguments:\n"
-    "  pid                   parent process whose child to find.";
+    "  pid                   parent pid whose child to find or a string of format 'cmd1:pid|cmdN:pidN'.";
 static const int MAX_FILENAME_LEN = 32;
 static const int NO_INDEX = INT_MAX;
 static const int MAX_CMDLINE_ARGS = 32;
@@ -221,6 +222,9 @@ int main(int argc, char **argv)
 		return 2;
 	}
 	input = argv[1];
+	for (int i = 2; i < argc; i++) {
+		log_warn("Unknown argument '%s'", argv[i]);
+	}
 
 	if (tmux_cmd) {
 		pid_in = get_pid_for_tmux_cmd(input, tmux_cmd);
