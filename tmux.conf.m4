@@ -1,7 +1,6 @@
 # vim: ft=tmux
-changecom()
-changequote(`{{', `}}')dnl
-
+changecom()dnl
+changequote(`@@', `@@')dnl
 # General settings
 set -g default-terminal "screen-256color"
 set -g history-limit 20000                          # scrollback buffer n lines
@@ -27,11 +26,11 @@ bind j select-pane -D
 bind k select-pane -U
 # key bindings for vi-like copy/paste
 bind Escape copy-mode
-syscmd({{tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4}})dnl
-ifelse(sysval, {{0}}, {{dnl
+syscmd(@@tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.4@@)dnl
+ifelse(sysval, @@0@@, @@dnl
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y if-shell "hash xclip" "send -X copy-pipe 'xclip -i'" "send -X copy-selection"
-}})dnl
+@@)dnl
 
 # Display pane numbers longer
 set -g display-panes-time 2000
@@ -45,13 +44,13 @@ bind -n M-h select-pane -L
 bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
-ifelse(sysval, {{0}}, {{dnl
+ifelse(sysval, @@0@@, @@dnl
 bind -T copy-mode-vi C-h select-pane -L
 bind -T copy-mode-vi C-j select-pane -D
 bind -T copy-mode-vi C-k select-pane -U
 bind -T copy-mode-vi C-l select-pane -R
 bind -T copy-mode-vi C-\ select-pane -l
-}})dnl
+@@)dnl
 
 bind S set-window-option synchronize-panes
 bind A set-window-option monitor-activity
@@ -105,6 +104,8 @@ bind y command-prompt -p "swap-pane (target):"  "swap-pane -t '%%'"
 set -g set-titles-string '#T'
 
 setw -g automatic-rename on
+syscmd(@@pidcmd -V &> /dev/null@@)
+ifelse(sysval, @@0@@, @@dnl   # format with pidcmd available.
 # if #{pane_current_command} == ssh in any pane in a window;
 # - set window name to the ssh target (last ssh cmdline argument)
 # - blue fg color
@@ -116,6 +117,9 @@ setw -g automatic-rename on
 # - set window name to basename of #{pane_current_path}
 setw -g automatic-rename-format '#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},#[fg=blue]#(pidcmd --arg -1 --tmux-cmd ssh "#{P:#{pane_current_command}:#{pane_pid}|}"),#{?#{==:#{pane_current_command},vim},#[fg=green],}#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
 # debug with: tmux display-message -p -v 'FORMAT'
+@@, @@dnl  # format without pidcmd
+setw -g automatic-rename-format '#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},#[fg=blue],#{?#{==:#{pane_current_command},vim},#[fg=green],}#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}'
+@@)
 bind * setw automatic-rename on
 
 # status bar
@@ -125,9 +129,9 @@ set -g status-left "#S [#(tmux ls | cut -d: -f1 | xargs echo)] "
 set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
-syscmd({{tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9}})dnl
-ifelse(sysval, {{0}}, {{dnl
+syscmd(@@tmux -V | check_version -q -r 'tmux ([0-9]+\.[0-9]+)' -c 2.9@@)dnl
+ifelse(sysval, @@0@@, @@dnl
 source-file DOTFILES_DIR/.tmux-themepack/powerline/double/orange.tmuxtheme
-}}, {{dnl
+@@, @@dnl
 source-file DOTFILES_DIR/.old.tmuxtheme
-}})dnl
+@@)dnl
