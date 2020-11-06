@@ -64,12 +64,28 @@ cmdpath() {
 }
 complete -c cmdpath
 
+hist() {
+    git config --local branch.master.remote > /dev/null
+    if [ $? -eq 0 ]; then
+        local default="master"
+    elif [ $? -eq 1 ]; then
+        local default="main"
+    else
+        return
+    fi
+    local current="$(git branch --show-current)"
+    if [ "${current:-master}" == "$default" ]; then
+        git hist -n 10
+    else
+        git hist -n 30 origin/$default~1..@
+    fi
+}
+
 # copy last command in history to clipboard
 alias cath='head -n -0'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
 alias d='dirs'
 alias grep='grep --color=auto'
-alias hist='b="$(git branch --show-current)" && test "${b:-master}" == master && git hist -n 10 || git hist -n 30 origin/master~1..@'
 alias ll="ls -lh --time-style=long-iso"
 alias ls="ls --color=auto"
 alias mg='multigit.sh'
