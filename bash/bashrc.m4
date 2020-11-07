@@ -106,7 +106,7 @@ export EDITOR=vim
 shopt -s checkwinsize
 shopt -s globstar
 
-export PATH=`DOTFILES_DIR/bin/mergepaths.pl $PATH DOTFILES_DIR/bin`
+export PATH=$(DOTFILES_DIR/bin/mergepaths.pl $PATH DOTFILES_DIR/bin $HOME/.local/bin $HOME/bin)
 
 export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth:erasedups'

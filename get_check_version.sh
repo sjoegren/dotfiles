@@ -6,6 +6,7 @@ set -eu
 
 # To specify a certain version of check_version, set CHECK_VERSION_TAG=vX.Y.Z
 CHECK_VERSION_TAG="${CHECK_VERSION_TAG:-}"
+PREFIX=$PREFIX
 
 if [ -n "$CHECK_VERSION_TAG" ]; then
     RELEASE_API_URL="https://api.github.com/repos/akselsjogren/check_version/releases/tags/$CHECK_VERSION_TAG"
@@ -20,11 +21,10 @@ URL=$(cat <<EOF | python -
 import json,sys
 with open("$jsonfile", "r") as f:
     data = json.load(f)
-assets = [a for a in data["assets"] if "$(arch)" in a["browser_download_url"]]
 try:
-    print(assets[0]["browser_download_url"])
+    print(data["assets"][0]["browser_download_url"])
 except IndexError:
-    sys.stderr.write("No assets found for %r matching arch: $(arch)\n" % data["html_url"])
+    sys.stderr.write("No assets found for %r" % data["html_url"])
     sys.exit(1)
 EOF
 )
@@ -33,7 +33,6 @@ rm $jsonfile
 echo "Latest release: $URL"
 
 SCRIPT_DIR="$( (cd "$(dirname "$0")"; pwd) )"
-TARGET_DIR="$SCRIPT_DIR/bin"
 
 download_archive()
 {
@@ -58,11 +57,15 @@ else
 fi
 
 test -e "$filename"
-dir=$(basename "$filename" "-$(arch).tar.gz")
+dir=$(basename "$filename" ".tar.gz")
 if [ -e "$dir" ]; then
     rm -vrf ./"$dir"
 fi
 
-tar -xzvf "$filename"
-mv -vf "$dir/check_version" "$TARGET_DIR/"
+tar -xzf "$filename"
+cd "$dir"
+./configure --prefix="$PREFIX"
+make
+make install
 rm -vrf ./"$dir"
+check_version --version

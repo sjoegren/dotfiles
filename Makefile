@@ -1,6 +1,7 @@
+PREFIX := $(HOME)/.local
 BUILDDIR := build
 PATH := bin:$(PATH)
-CHECKVER := bin/check_version
+CHECKVER := $(PREFIX)/bin/check_version
 DOTFILES_DIR := $(PWD)
 MACROS = -D DOTFILES_DIR="$(DOTFILES_DIR)"
 MACROS += -D HOME_DIR="$(HOME)"
@@ -18,7 +19,7 @@ all: $(TARGETS) $(BUILD_TARGETS)
 	m4 $(MACROS) $< > $@
 
 $(CHECKVER):
-	bash get_check_version.sh
+	PREFIX="$(PREFIX)" bash get_check_version.sh
 
 bin/%:
 	utils/build-utils.sh "$(DOTFILES_DIR)"
