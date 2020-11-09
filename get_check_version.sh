@@ -59,7 +59,7 @@ fi
 test -e "$filename"
 dir=$(basename "$filename" ".tar.gz")
 if [ -e "$dir" ]; then
-    rm -vrf ./"$dir"
+    rm -rf ./"$dir"
 fi
 
 tar -xzf "$filename"

@@ -13,18 +13,22 @@ BUILD_TARGETS = bin/pidcmd
 
 .PHONY: all clean clean-build
 
-all: $(TARGETS) $(BUILD_TARGETS)
+all: $(TARGETS)
 
-%: %.m4 | $(CHECKVER)
+%: %.m4 | $(CHECKVER) $(BUILD_TARGETS)
+	@echo "--- Installing $@"
 	m4 $(MACROS) $< > $@
 
 .PHONY: check_version
 check_version: $(CHECKVER)
 
 $(CHECKVER):
+	@echo "--- Installing $@"
 	PREFIX="$(PREFIX)" bash get_check_version.sh
+	check_version -V
 
-bin/%:
+$(BUILD_TARGETS):
+	@echo "--- Installing $@"
 	utils/build-utils.sh "$(DOTFILES_DIR)"
 
 clean: clean-build
