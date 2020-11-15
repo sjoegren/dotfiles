@@ -18,6 +18,9 @@ all: $(TARGETS) $(BUILD_TARGETS)
 %: %.m4 | $(CHECKVER)
 	m4 $(MACROS) $< > $@
 
+.PHONY: check_version
+check_version: $(CHECKVER)
+
 $(CHECKVER):
 	PREFIX="$(PREFIX)" bash get_check_version.sh
 

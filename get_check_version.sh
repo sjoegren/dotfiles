@@ -68,4 +68,3 @@ cd "$dir"
 make
 make install
 rm -vrf ./"$dir"
-check_version --version
