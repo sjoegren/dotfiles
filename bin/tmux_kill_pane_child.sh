@@ -1,8 +1,7 @@
 #!/bin/bash
+# Usage: tmux_kill_pane_child.sh [-t :win.pane]
 
 set -euo pipefail
-
-tmux_target="${1:-}"
 
 debug() {
 	if [ -n "${DEBUG:-}" ]; then
@@ -11,7 +10,7 @@ debug() {
 }
 
 IFS=';'
-panes="$(tmux display -p '#{P:#P:#{pane_current_command}:#{pane_pid};}')"
+panes="$(tmux display -p $* '#{P:#P:#{pane_current_command}:#{pane_pid};}')"
 echo "Pane  Child PID  Child command"
 for pane in $panes; do
 	IFS=':' read -r pane_id pane_cmd pane_pid <<< $pane
