@@ -89,9 +89,10 @@ bind -n f6 selectw -T -t :6
 bind -n f7 selectw -T -t :7
 bind -n f8 selectw -T -t :8
 bind -n f9 selectw -T -t :9
-bind -n f10 previous-window
-bind -n f11 last-window
+bind -n f10 selectw -T -t :10
+bind -n f11 previous-window
 bind -n f12 next-window
+bind -n C-Space last-window
 
 # Switch sessions and redraw status bar
 bind ( switch-client -p\; refresh -S
@@ -125,7 +126,7 @@ bind * setw automatic-rename on
 # status bar
 
 # List sessions in status bar
-set -g status-left "#S [#(tmux ls | cut -d: -f1 | xargs echo)] "
+set -g status-left "#S "
 set -g status-left-length 80
 set -g status-right '%H:%M, %a %h %e '
 
