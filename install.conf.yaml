@@ -27,7 +27,14 @@
     command: git submodule update --init --recursive
     description: Installing submodules
   - mkdir -p -m 0700 ~/tmp/vim
-  - mkdir -p -m 0700 ~/.bashrc.d
+  -
+    command: >
+      test -e ~/.bashrc.d || (
+      git config remote.origin.url | grep -q '^git@' &&
+      git clone $(git config remote.origin.url | sed -e 's/\bdotfiles\b/bashrc.d/') ~/.bashrc.d
+      )
+    description: Setup ~/.bashrc.d
+    quiet: true
   -
     command: >
       curl -fLo ~/.vim/autoload/plug.vim --create-dirs
