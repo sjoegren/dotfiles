@@ -3,6 +3,7 @@ set bell-style none
 set visible-stats on
 
 "\C-x\C-r": re-read-init-file
+"\C-x\C-b": ". ~/.bashrc\n"
 
 "\C-d": backward-kill-word
 "\C-g": kill-whole-line
