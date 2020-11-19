@@ -95,6 +95,18 @@ difflines() {
     xdg-open "$tmpfile"
 }
 
+# Pipe jq output into pager
+syscmd([[hash jq 2> /dev/null]])dnl
+ifelse(sysval, [[0]], [[dnl
+jql() {
+	if [ ${#@} -eq 1 ]; then
+		jq -C . $1 | less -R
+	else
+		jq -C $* | less -R
+	fi
+}
+]], [[]])dnl
+
 # copy last command in history to clipboard
 alias cath='head -n -0'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
