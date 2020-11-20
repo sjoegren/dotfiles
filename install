@@ -10,8 +10,10 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASEDIR}"
 
-# Some config files needs to be made before dotbot can install them.
-make
+if [[ "${1:-}" != *-h* ]]; then
+	# Some config files needs to be made before dotbot can install them.
+	PATH="$PATH:$HOME/.local/bin" make
+fi
 
 git submodule update --init --recursive "${DOTBOT_DIR}"
 

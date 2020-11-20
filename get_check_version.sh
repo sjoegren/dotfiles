@@ -63,8 +63,9 @@ if [ -e "$dir" ]; then
 fi
 
 tar -xzf "$filename"
-cd "$dir"
+pushd "$dir"
 ./configure --prefix="$PREFIX"
 make
 make install
-rm -vrf ./"$dir"
+popd
+rm -rf ./"$dir"
