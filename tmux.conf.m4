@@ -105,7 +105,7 @@ bind y command-prompt -p "swap-pane (target):"  "swap-pane -t '%%'"
 set -g set-titles-string '#T'
 
 setw -g automatic-rename on
-syscmd(@@pidcmd -V &> /dev/null@@)
+syscmd(@@pidcmd -V > /dev/null 2>&1@@)
 ifelse(sysval, @@0@@, @@dnl   # format with pidcmd available.
 # if #{pane_current_command} == ssh in any pane in a window;
 # - set window name to the ssh target (last ssh cmdline argument)
