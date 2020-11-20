@@ -64,7 +64,9 @@ cmdpath() {
 }
 complete -c cmdpath
 
+syscmd([[git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.25 --mode=ge]])dnl
 hist() {
+ifelse(sysval, [[0]], [[dnl
     git config --local branch.master.remote > /dev/null
     if [ $? -eq 0 ]; then
         local default="master"
@@ -79,6 +81,9 @@ hist() {
     else
         git hist -n 30 origin/$default~1..@
     fi
+]], [[dnl
+    git hist -n 10
+]])dnl
 }
 
 # copy last command in history to clipboard
