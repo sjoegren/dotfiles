@@ -86,6 +86,15 @@ ifelse(sysval, [[0]], [[dnl
 ]])dnl
 }
 
+# Show diff with inter/intra-line changes in HTML.
+difflines() {
+    local tmpfile
+    tmpfile="$(command -p mktemp --suffix=.html)"
+    difflibcli.py -m $* > "$tmpfile"
+    echo "Wrote diff to $tmpfile"
+    xdg-open "$tmpfile"
+}
+
 # copy last command in history to clipboard
 alias cath='head -n -0'
 alias cphist='history 1 | perl -ne "print \$1 if /^(?:\s*\d+\s+)?(?:\[.+?\])?\s*(.*)\$/" | _capture_output'
