@@ -40,6 +40,10 @@ syscmd(`tmux -V | check_version -q -r "tmux ([0-9]+\.[0-9]+)" -c 2.4')dnl
 ifelse(sysval, `0', `dnl
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y if-shell "hash xclip" "send -X copy-pipe RQ()xclip -i`'RQ()" "send -X copy-selection"
+bind -T copy-mode-vi C-h select-pane -L
+bind -T copy-mode-vi C-j select-pane -D
+bind -T copy-mode-vi C-k select-pane -U
+bind -T copy-mode-vi C-l select-pane -R
 ')dnl
 
 # Display pane numbers longer
@@ -54,13 +58,6 @@ bind -n M-h select-pane -L
 bind -n M-j select-pane -D
 bind -n M-k select-pane -U
 bind -n M-l select-pane -R
-ifelse(sysval, `0', `dnl
-bind -T copy-mode-vi C-h select-pane -L
-bind -T copy-mode-vi C-j select-pane -D
-bind -T copy-mode-vi C-k select-pane -U
-bind -T copy-mode-vi C-l select-pane -R
-bind -T copy-mode-vi C-\ select-pane -l
-')dnl
 
 bind S set-window-option synchronize-panes
 bind A set-window-option monitor-activity
@@ -144,16 +141,11 @@ setw -g automatic-rename-format RQ()#{b:pane_current_path}RQ()
 ')dnl end of ifelse FANCY_FORMAT
 bind * setw automatic-rename on
 
-# status bar
-
-# List sessions in status bar
 set -g status-left "#S "
 set -g status-left-length 80
 set -g status-right "%H:%M, %a %h %e "
 
-dnl TODO: use FANCY_FORMAT
-syscmd(`tmux -V | check_version -q -r "tmux ([0-9]+\.[0-9]+)" -c 2.9')dnl
-ifelse(sysval, `0', `dnl
+ifelse(FANCY_FORMAT, `yes', `
 source-file DOTFILES_DIR/.tmux-themepack/powerline/double/orange.tmuxtheme
 ', `dnl
 source-file DOTFILES_DIR/.old.tmuxtheme
