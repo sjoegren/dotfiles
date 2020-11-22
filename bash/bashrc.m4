@@ -87,10 +87,11 @@ ifelse(sysval, [[0]], [[dnl
 }
 
 # Show diff with inter/intra-line changes in HTML.
-difflines() {
+hhdiffhtml() {
+    hash hhdiff || return
     local tmpfile
     tmpfile="$(command -p mktemp --suffix=.html)"
-    difflibcli.py -m $* > "$tmpfile"
+    hhdiff --html $* > "$tmpfile"
     echo "Wrote diff to $tmpfile"
     xdg-open "$tmpfile"
 }
@@ -105,7 +106,6 @@ jql() {
 		jq -C $* | less -R
 	fi
 }
-]], [[]])dnl
 
 # copy last command in history to clipboard
 alias cath='head -n -0'
