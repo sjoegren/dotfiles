@@ -132,9 +132,14 @@ ifelse(HAVE_PIDCMD, `yes', ` dnl format with pidcmd
 # - set window name to basename of #{pane_current_path}
 # debug with: tmux display-message -p -v "FORMAT"
 
-setw -g automatic-rename-format RQ()#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},#[fg=blue]#(pidcmd --arg -1 --tmux-cmd ssh "#{P:#{pane_current_command}:#{pane_pid}|}"),#{?#{==:#{pane_current_command},vim},#[fg=green],}#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}RQ()
+setw -g automatic-rename-format RQ()#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},\
+#[fg=blue]#(pidcmd --arg -1 --tmux-cmd ssh "#{P:#{pane_current_command}:#{pane_pid}|}"),\
+#{?#{==:#{pane_current_command},vim},#[fg=green],}\
+#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}RQ()
 ', ` dnl format without pidcmd
-setw -g automatic-rename-format RQ()#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},#[fg=blue],#{?#{==:#{pane_current_command},vim},#[fg=green],}#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}RQ()
+setw -g automatic-rename-format RQ()#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},\
+#[fg=blue],#{?#{==:#{pane_current_command},vim},#[fg=green],}\
+#{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}RQ()
 ')dnl end of ifelse HAVE_PIDCMD
 ', `dnl  FANCY_FORMAT=no
 setw -g automatic-rename-format RQ()#{b:pane_current_path}RQ()
