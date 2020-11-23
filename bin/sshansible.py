@@ -18,11 +18,13 @@ scp:
 import argparse
 import sys
 import os
+import pathlib
 import re
 
 ANSIBLE_INVENTORY = os.path.expanduser(
     os.environ.get("ANSIBLE_INVENTORY", "~/.ansible-inventory")
 )
+CACHE_FILE = pathlib.Path("/var/run/user") / str(os.getuid()) / "sshansible_last_host"
 
 
 def main():
@@ -45,12 +47,23 @@ def main():
         metavar="arg",
         help="ssh arguments, like host from ansible inventory to connect to",
     )
-    parser.add_argument("--scp", metavar="hostname", help="Run scp instead of ssh")
+    parser.add_argument(
+        "--scp",
+        nargs="?",
+        const="last",
+        metavar="hostname",
+        help="Run scp instead of ssh, if used together with -l no hostname is "
+        "requiredi, leave host empty is target spec.",
+    )
     parser.add_argument(
         "--copy-id", action="store_true", help="Run ssh-copy-id instead of ssh"
     )
+    parser.add_argument(
+        "-l", "--last", action="store_true", help="ssh to last target used"
+    )
     args = parser.parse_args()
 
+    hostname = None
     if args.complete_hosts:
         hosts = []
         for line in args.inventory:
@@ -59,13 +72,20 @@ def main():
                 hosts.append(match[1])
         print("\t".join(hosts))
         return True
-    else:
+    elif args.last:
+        hostname = CACHE_FILE.read_text()
+        for i, arg in enumerate(args.sshargs):
+            if arg.startswith(':'):
+                args.sshargs[i] = f"hostname{arg}"
         if not args.sshargs:
-            parser.error("hostname argument is required")
+            args.sshargs.append(hostname)
+    elif not args.sshargs:
+        parser.error("hostname argument is required")
 
-    hostname = args.scp or args.sshargs[-1]
+    if not hostname:
+        hostname = args.scp or args.sshargs[-1]
+    CACHE_FILE.write_text(hostname)
 
-    # hostname = args.sshargs[0]
     for line in args.inventory:
         match = re.match(rf"({hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
         if match:
@@ -86,5 +106,4 @@ def main():
 
 
 if __name__ == "__main__":
-    if not main():
-        sys.exit(1)
+    main()
