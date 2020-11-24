@@ -73,10 +73,11 @@ def main():
         print("\t".join(hosts))
         return True
     elif args.last:
-        hostname = CACHE_FILE.read_text()
-        for i, arg in enumerate(args.sshargs):
-            if arg.startswith(':'):
-                args.sshargs[i] = f"hostname{arg}"
+        try:
+            hostname = CACHE_FILE.read_text()
+        except OSError:
+            print("Cannot use --last because cache file doesn't exist.", file=sys.stderr)
+            sys.exit(1)
         if not args.sshargs:
             args.sshargs.append(hostname)
     elif not args.sshargs:
@@ -84,7 +85,11 @@ def main():
 
     if not hostname:
         hostname = args.scp or args.sshargs[-1]
-    CACHE_FILE.write_text(hostname)
+
+    # Allow empty hostname in scp src/dest specifications
+    for i, arg in enumerate(args.sshargs):
+        if arg.startswith(':'):
+            args.sshargs[i] = f"{hostname}{arg}"
 
     for line in args.inventory:
         match = re.match(rf"({hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
@@ -95,8 +100,8 @@ def main():
     else:
         print(f"Couldn't find any hosts matching '{hostname}'")
         return False
-
     args.inventory.close()
+    CACHE_FILE.write_text(hostname)
 
     command = "scp" if args.scp else "ssh-copy-id" if args.copy_id else "ssh"
     exec_args = (command, "-o", f"Hostname={ansible_host}", *args.sshargs)
