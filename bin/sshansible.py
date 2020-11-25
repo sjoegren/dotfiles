@@ -20,6 +20,8 @@ import sys
 import os
 import pathlib
 import re
+import subprocess
+import time
 
 ANSIBLE_INVENTORY = os.path.expanduser(
     os.environ.get("ANSIBLE_INVENTORY", "~/.ansible-inventory")
@@ -46,6 +48,13 @@ def main():
         nargs="*",
         metavar="arg",
         help="ssh arguments, like host from ansible inventory to connect to",
+    )
+    parser.add_argument(
+        "-c",
+        "--remote-cmd",
+        metavar="FILE",
+        help="Execute remote command read from FILE (- to read from stdin), "
+        "on target host",
     )
     parser.add_argument(
         "--scp",
@@ -76,7 +85,9 @@ def main():
         try:
             hostname = CACHE_FILE.read_text()
         except OSError:
-            print("Cannot use --last because cache file doesn't exist.", file=sys.stderr)
+            print(
+                "Cannot use --last because cache file doesn't exist.", file=sys.stderr
+            )
             sys.exit(1)
         if not args.sshargs:
             args.sshargs.append(hostname)
@@ -88,8 +99,8 @@ def main():
 
     # Allow empty hostname in scp src/dest specifications
     for i, arg in enumerate(args.sshargs):
-        if arg.startswith(':'):
-            args.sshargs[i] = f"{hostname}{arg}"
+        if arg.startswith(":"):
+                args.sshargs[i] = f"{hostname}{arg}"
 
     for line in args.inventory:
         match = re.match(rf"({hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
@@ -104,11 +115,63 @@ def main():
     CACHE_FILE.write_text(hostname)
 
     command = "scp" if args.scp else "ssh-copy-id" if args.copy_id else "ssh"
-    exec_args = (command, "-o", f"Hostname={ansible_host}", *args.sshargs)
+    exec_args = [command, "-o", f"Hostname={ansible_host}", *args.sshargs]
+
+    if args.remote_cmd:
+        return run_remote_command(args.remote_cmd, hostname, ansible_host, exec_args)
+
     print(f"exec: {' '.join(exec_args)}")
     sys.stdout.flush()
-    os.execlp(command, *exec_args)
+    os.execvp(command, exec_args)
+
+
+def run_remote_command(remote_cmd_file, hostname, ansible_host, exec_args):
+    """Run the script in file remote_cmd_file on the remote host.
+
+    First transfer the file to remote host with scp.
+    Run the file with "sh", then remove the file and print any output.
+    """
+    assert os.path.exists(remote_cmd_file)
+    if remote_cmd_file == "-":
+        print("not implemented", file=sys.stderr)
+        return False
+    remote_tmp_file = "/tmp/sshansible_cmd_{}.sh".format(str(int(time.time())))
+    proc = subprocess.run(
+        [
+            "scp",
+            "-o",
+            f"Hostname={ansible_host}",
+            remote_cmd_file,
+            f"{hostname}:{remote_tmp_file}",
+        ],
+        text=True,
+        check=True,
+        capture_output=True,
+    )
+    proc = subprocess.run(
+        exec_args
+        + [f"sh {remote_tmp_file}; ret=$?; rm -f {remote_tmp_file}; exit $ret"],
+        text=True,
+        capture_output=True,
+    )
+    if proc.stdout:
+        print(
+            ">>>>> Remote stdout start <<<<<",
+            proc.stdout,
+            ">>>>> Remote stdout end <<<<<",
+            sep="\n",
+        )
+    if proc.stderr:
+        print(
+            ">>>>> Remote stderr start <<<<<",
+            proc.stderr,
+            ">>>>> Remote stderr end <<<<<",
+            sep="\n",
+        )
+    print(f"Remote exit code: {proc.returncode}")
+    return proc.returncode == 0
 
 
 if __name__ == "__main__":
-    main()
+    if not main():
+        sys.exit(1)
