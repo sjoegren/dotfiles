@@ -16,11 +16,13 @@ scp:
 """
 
 import argparse
-import sys
 import os
 import pathlib
+import queue
 import re
 import subprocess
+import sys
+import threading
 import time
 
 ANSIBLE_INVENTORY = os.path.expanduser(
@@ -70,6 +72,9 @@ def main():
     parser.add_argument(
         "-l", "--last", action="store_true", help="ssh to last target used"
     )
+    parser.add_argument(
+        "-L", "--list", action="store_true", help="List hosts in inventory"
+    )
     args = parser.parse_args()
 
     hostname = None
@@ -91,6 +96,9 @@ def main():
             sys.exit(1)
         if not args.sshargs:
             args.sshargs.append(hostname)
+    elif args.list:
+        list_inventory(args.inventory)
+        return
     elif not args.sshargs:
         parser.error("hostname argument is required")
 
@@ -100,7 +108,7 @@ def main():
     # Allow empty hostname in scp src/dest specifications
     for i, arg in enumerate(args.sshargs):
         if arg.startswith(":"):
-                args.sshargs[i] = f"{hostname}{arg}"
+            args.sshargs[i] = f"{hostname}{arg}"
 
     for line in args.inventory:
         match = re.match(rf"({hostname}\b\S*)\s.*?\bansible_host=(\S+)", line)
@@ -123,6 +131,58 @@ def main():
     print(f"exec: {' '.join(exec_args)}")
     sys.stdout.flush()
     os.execvp(command, exec_args)
+
+
+def host_status(tasks, result):
+    """Return True if host is online, otherwise False."""
+    host = tasks.get()
+    proc = subprocess.run(
+        ["ping", "-c", "1", "-W", "0.5", "-q", host["address"]],
+        text=True,
+        capture_output=True,
+    )
+    host["status"] = proc.returncode == 0
+    result.put((threading.current_thread(), host))
+    tasks.task_done()
+
+
+def list_inventory(inventory):
+    tasks = queue.Queue()
+    hosts = {}
+    threads = []
+    results = queue.Queue()
+    for line in inventory:
+        match = re.match(r"^(\S+)\s.*?\bansible_host=(\S+)", line)
+        if match:
+            host_data = {
+                "name": match[1],
+                "address": match[2],
+                "has_status": threading.Event(),
+            }
+            hosts[match[1]] = host_data
+            t = threading.Thread(target=host_status, args=(tasks, results))
+            threads.append(t)
+            tasks.put(host_data)
+            t.start()
+    maxhostlen = max(len(h["name"]) for h in hosts.values())
+    print(
+        "Hostname{padding}  Address          Status  URL".format(
+            padding=" " * (maxhostlen - 8)
+        )
+    )
+    # print hosts as soon as they are ready
+    for _ in range(len(threads)):
+        thread, host = results.get(timeout=5)
+        thread.join()
+        print(
+            "{0:<{colwidth}}  {1:<15}  {2:<6}  https://{1}".format(
+                host["name"],
+                host["address"],
+                "Online" if host["status"] else "-",
+                colwidth=maxhostlen,
+            )
+        )
+    assert threading.active_count() == 1
 
 
 def run_remote_command(remote_cmd_file, hostname, ansible_host, exec_args):
