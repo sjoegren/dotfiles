@@ -106,6 +106,7 @@ jql() {
 		jq -C $* | less -R
 	fi
 }
+]], [[]])dnl
 
 # copy last command in history to clipboard
 alias cath='head -n -0'
