@@ -40,7 +40,7 @@
   -
     command: >
       curl -sSL https://raw.githubusercontent.com/akselsjogren/hedgehog/main/install-hedgehog.bash | bash
-      && echo "export PATH=$PATH:$HOME/.local/hedgehog/bin" > ~/.bashrc.d/90-hedgehog.bash
+      && echo 'export PATH=$PATH:$HOME/.local/hedgehog/bin' > ~/.bashrc.d/90-hedgehog.bash
     description: Install hedgehog
     quiet: true
   -
