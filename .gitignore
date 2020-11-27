@@ -4,6 +4,7 @@ tmux.conf
 bash/bashrc
 mdlrc
 bin/pidcmd
+vim/vimrc
 
 # Downloaded
 *.tar.gz

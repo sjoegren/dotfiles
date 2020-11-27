@@ -1,31 +1,31 @@
+changequote(`[[', `]]')dnl
 set nocompatible
-
 "------------------------------------------------------------
 " plug.vim plugin manager (Install with :PlugInstall)
 "------------------------------------------------------------
 call plug#begin()
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'airblade/vim-gitgutter'
-Plug 'altercation/vim-colors-solarized'
-Plug 'bps/vim-textobj-python'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
-Plug 'jparise/vim-graphql'
-Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mihais/vim-mark'
 Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdtree'
-Plug 'sjl/gundo.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+ifdef([[BASIC_CONFIG]], [[" essential plugins]], [[dnl
+dnl these are only included if not BASIC_CONFIG
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'airblade/vim-gitgutter'
+Plug 'bps/vim-textobj-python'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+Plug 'jparise/vim-graphql'
+Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vimwiki/vimwiki'
@@ -34,6 +34,7 @@ if v:version > 800
     Plug 'w0rp/ale'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 endif
+]])
 call plug#end()
 
 "------------------------------------------------------------
@@ -191,16 +192,16 @@ nnoremap <leader>u :GundoToggle<CR>
 
 nmap <leader>p :CtrlP $HOME<CR>
 
+ifdef([[BASIC_CONFIG]], , [[
 let g:vimwiki_list = [
             \ {'path': '~/.vimwiki_primary'},
             \ {'path': '~/.vimwiki_secondary'}]
-autocmd FileType vimwiki setlocal ts=2 sw=2 sts=0
+autocmd FileType vimwiki setlocal ts=2 sw=2 sts=0]])
 
 source ~/.vimrc_local
 
 function! InsertTodoComment()
-    let git_user = systemlist('git config --get user.name')[0]
-    let c = split(&commentstring, '%s')[0] . " TODO(" . git_user . "): "
+    let c = split(&commentstring, '%s')[0] . " TODO(GIT_USER_NAME): "
     return c
 endfunction
 let @c="=InsertTodoComment()a"
