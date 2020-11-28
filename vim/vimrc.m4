@@ -201,7 +201,7 @@ autocmd FileType vimwiki setlocal ts=2 sw=2 sts=0]])
 source ~/.vimrc_local
 
 function! InsertTodoComment()
-    let c = split(&commentstring, '%s')[0] . " TODO(GIT_USER_NAME): "
+    let c = split(&commentstring, '%s')[0] . "TODO(GIT_USER_NAME): "
     return c
 endfunction
 let @c="=InsertTodoComment()a"
