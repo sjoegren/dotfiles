@@ -27,7 +27,7 @@
     command: git submodule update --init --recursive
     description: Installing submodules
   - mkdir -p -m 0700 ~/tmp/vim
-  - test -e ~/.bashrc.d && rmdir --ignore-fail-on-non-empty -v ~/.bashrc.d/ || true 
+  - test -e ~/.bashrc.d && rmdir --ignore-fail-on-non-empty -v ~/.bashrc.d/ || true
   -
     command: >
       test -e ~/.bashrc.d || (
@@ -37,11 +37,14 @@
       )
     description: Setup ~/.bashrc.d
     quiet: true
+    stderr: true
   -
     command: >
       curl -sSL https://raw.githubusercontent.com/akselsjogren/hedgehog/main/install-hedgehog.bash | BASH_DIR=$HOME/.bashrc.d bash
     description: Install hedgehog
-    quiet: true
+    quiet: false
+    stdout: true
+    stderr: true
   -
     command: >
       curl -fLo ~/.vim/autoload/plug.vim --create-dirs
