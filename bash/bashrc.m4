@@ -140,7 +140,6 @@ export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
-source DOTFILES_DIR/bash/sshansible-completion.bash
 
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
