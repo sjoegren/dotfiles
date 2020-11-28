@@ -17,6 +17,8 @@ ifelse(sysval, `0', `dnl
 [push]
 	default = simple
 ', `')dnl
+[pull]
+	ff = only
 [core]
 	autocrlf = input
 [grep]
