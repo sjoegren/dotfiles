@@ -140,6 +140,7 @@ export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
+source DOTFILES_DIR/bash/dirstack.bash
 
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
