@@ -138,6 +138,7 @@ export PATH=$(DOTFILES_DIR/bin/mergepaths.pl $PATH DOTFILES_DIR/bin $HOME/.local
 export HISTIGNORE='&:ls:ll:history*:cphist'
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
+export HISTSIZE=10000
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
 source DOTFILES_DIR/bash/dirstack.bash
