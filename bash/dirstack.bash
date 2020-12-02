@@ -1,4 +1,4 @@
-_dirstack_file=/var/run/user/1000/dirstack.txt
+_dirstack_file=$HOME/.cache/dirstack.txt
 dirstack() {
 	cat <<-'EOF'
 	dirstack commands:

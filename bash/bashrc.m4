@@ -141,10 +141,12 @@ export HISTTIMEFORMAT="[%F %T] "
 export HISTSIZE=10000
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
-source DOTFILES_DIR/bash/dirstack.bash
 
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
+for f in DOTFILES_DIR/bash/*.bash; do
+    . $f
+done
 DOTFILES=DOTFILES_DIR
 for rcfile in ~/.bashrc.d/*.bash; do
     . $rcfile
