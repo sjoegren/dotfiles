@@ -1,0 +1,18 @@
+#!/bin/bash
+# Usage: git rmbranch [branch]
+set -eu
+
+branch="${1:-$(git branch --show-current)}"
+
+cmd="git push origin :$branch"
+read -r -p "$cmd ? [y/N]: "
+if [ "$REPLY" == "y" ]; then
+	$cmd
+fi
+if [ -n "${1:-}" ]; then
+	cmd="git branch --delete --force $1"
+	read -r -p "$cmd ? [y/N]: "
+	if [ "$REPLY" == "y" ]; then
+		$cmd
+	fi
+fi

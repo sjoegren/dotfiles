@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+branch="$(git branch --show-current)"
+cmd="git push -u origin $branch"
+read -r -p "$cmd ? [y/N]: "
+if [ "$REPLY" == "y" ]; then
+	$cmd
+	exit
+fi
