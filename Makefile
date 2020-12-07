@@ -1,6 +1,6 @@
 PREFIX := $(HOME)/.local
 BUILDDIR := build
-PATH := bin:$(PATH)
+PATH := $(PREFIX):bin:$(PATH)
 CHECKVER := $(PREFIX)/bin/check_version
 DOTFILES_DIR := $(PWD)
 MACROS = -D DOTFILES_DIR="$(DOTFILES_DIR)"

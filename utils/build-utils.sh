@@ -1,6 +1,13 @@
 #!/bin/bash
 set -eu
 
+failed() {
+	echo "Warning: cannot continue installing, command failed at: $(caller)"
+	exit 0
+}
+
+trap failed ERR
+
 prefix="$1"
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
