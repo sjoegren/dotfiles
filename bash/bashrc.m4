@@ -1,5 +1,10 @@
-dnl vim: ft=sh et ts=4 sw=4
-changequote([[,]])dnl
+dnl vim: et ts=4 sw=4
+syscmd(`hash xclip 2> /dev/null')dnl
+define(`HAVE_XCLIP', ifelse(sysval, `0', `yes', `no'))dnl
+syscmd(`hash tmux 2> /dev/null')dnl
+define(`HAVE_TMUX', ifelse(sysval, `0', `yes', `no'))dnl
+syscmd(`hash bat 2> /dev/null')dnl
+define(`HAVE_BAT', ifelse(sysval, `0', `yes', `no'))dnl
 # If not running interactively, don't do anything
 case $- in
     *i*) stty -ixon ;;
@@ -7,7 +12,7 @@ case $- in
 esac
 
 # Solarized dircolors
-eval `dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark`
+eval $(dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark)
 
 # ---------------------------------
 # Functions
@@ -27,35 +32,33 @@ grepfilter() {
 # On display output, inverse fg/bg to indicate tmux, color green for X.
 _capture_output() {
     read out
-    local format=''
-syscmd([[hash tmux 2> /dev/null]])dnl
-ifelse(sysval, [[0]], [[dnl
+    local format
+ifelse(HAVE_TMUX, `yes', `
     if [ -n "$TMUX" ]; then
         echo -n "$out" | tmux load-buffer -
         format="${format}\e[7m"
     fi
-]], [[]])dnl
-syscmd([[hash xclip 2> /dev/null]])dnl
-ifelse(sysval, [[0]], [[dnl
+')dnl
+ifelse(HAVE_XCLIP, `yes', `
     if [ -n "$DISPLAY" ]; then
         echo -n "$out" | xclip -in
         format="${format}\e[92m"
     fi
-]], [[]])dnl
-    echo -e "${format}${out}\e[0m"
+')dnl
+    echo -e "${format:-}${out}\e[0m"
 }
 
 # Copy output of mktemp to clipboard (if xclip is available)
 _mktemp_copy_filename() {
     command -p mktemp --tmpdir $USER.XXX $* | _capture_output
 }
-alias mktemp='_mktemp_copy_filename'
+alias mktemp=_mktemp_copy_filename
 
 # Print absolute path to files
-dnl m4: if `realpath` is available, use that in rp(), otherwise fall back to `readlink -f`.
-syscmd([[hash realpath 2> /dev/null]])dnl
+dnl m4: if realpath is available, use that in rp(), otherwise fall back to readlink -f.
+syscmd(`hash realpath 2> /dev/null')dnl
 rp() {
-    ifelse(sysval, [[0]], [[realpath --no-symlinks]], [[readlink -f]]) "$@" | _capture_output
+    ifelse(sysval, `0', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
 }
 
 # Lookup command in PATH and print/capture path to the file.
@@ -64,9 +67,9 @@ cmdpath() {
 }
 complete -c cmdpath
 
-syscmd([[git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.25 --mode=ge]])dnl
+syscmd(`git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.25 --mode=ge')dnl
 hist() {
-ifelse(sysval, [[0]], [[dnl
+ifelse(sysval, `0', `dnl
     git config --local branch.master.remote > /dev/null
     if [ $? -eq 0 ]; then
         local default="master"
@@ -81,9 +84,9 @@ ifelse(sysval, [[0]], [[dnl
     else
         git hist -n 30 origin/$default~1..@
     fi
-]], [[dnl
+', `dnl
     git hist -n 10
-]])dnl
+')dnl
 }
 
 # Show diff with inter/intra-line changes in HTML.
@@ -96,17 +99,16 @@ hhdiffhtml() {
     xdg-open "$tmpfile"
 }
 
+syscmd(`hash jq 2> /dev/null')dnl
+ifelse(sysval, `0', `dnl
 # Pipe jq output into pager
-syscmd([[hash jq 2> /dev/null]])dnl
-ifelse(sysval, [[0]], [[dnl
 jql() {
 	if [ ${#@} -eq 1 ]; then
 		jq -C . $1 | less -R
 	else
 		jq -C $* | less -R
 	fi
-}
-]], [[]])dnl
+}')
 
 # copy last command in history to clipboard
 alias cath='head -n -0'
@@ -125,8 +127,7 @@ alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
-VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
-alias l="$VIMRUNTIME/macros/less.sh"
+alias l="ifelse(HAVE_BAT, `yes', `bat', `less -R')"
 
 export EDITOR=vim
 
