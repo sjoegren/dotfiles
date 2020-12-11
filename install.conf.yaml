@@ -40,7 +40,8 @@
     stderr: true
   -
     command: >
-      curl -sSL https://raw.githubusercontent.com/akselsjogren/hedgehog/main/install-hedgehog.bash | BASH_DIR=$HOME/.bashrc.d bash
+      curl -sSL https://raw.githubusercontent.com/akselsjogren/hedgehog/main/install-hedgehog.bash
+      | BASH_DIR=$HOME/.bashrc.d bash -s -- --force
     description: Install hedgehog
     quiet: false
     stdout: true
