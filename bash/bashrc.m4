@@ -61,6 +61,10 @@ rp() {
     ifelse(sysval, `0', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
 }
 
+getcommit() {
+    git fixup --print-commit | _capture_output
+}
+
 # Lookup command in PATH and print/capture path to the file.
 cmdpath() {
     type -fP "${1:?}" | _capture_output
