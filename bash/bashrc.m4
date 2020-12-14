@@ -48,7 +48,8 @@ ifelse(HAVE_XCLIP, `yes', `
     echo -e "${format:-}${out}\e[0m"
 }
 
-# Copy output of mktemp to clipboard (if xclip is available)
+# Make named temporary file and print/capture filename.
+# dotfiles-help: mktemp
 _mktemp_copy_filename() {
     command -p mktemp --tmpdir $USER.XXX $* | _capture_output
 }
@@ -61,6 +62,7 @@ rp() {
     ifelse(sysval, `0', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
 }
 
+# Show list of commits, print and capture selected commit.
 getcommit() {
     git fixup --print-commit | _capture_output
 }
@@ -72,6 +74,7 @@ cmdpath() {
 complete -c cmdpath
 
 syscmd(`git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.25 --mode=ge')dnl
+# git hist between main..HEAD
 hist() {
 ifelse(sysval, `0', `dnl
     git config --local branch.master.remote > /dev/null
@@ -105,7 +108,7 @@ hhdiffhtml() {
 
 syscmd(`hash jq 2> /dev/null')dnl
 ifelse(sysval, `0', `dnl
-# Pipe jq output into pager
+# Usage: jql JSON_FILE
 jql() {
 	if [ ${#@} -eq 1 ]; then
 		jq -C . $1 | less -R
