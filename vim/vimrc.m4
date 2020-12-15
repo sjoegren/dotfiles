@@ -188,9 +188,9 @@ nmap ga <Plug>(EasyAlign)
 
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
-nnoremap <leader>u :GundoToggle<CR>
-
-nmap <leader>p :CtrlP $HOME<CR>
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_by_filename = 1
+let g:ctrlp_switch_buffer = 0
 
 ifdef([[BASIC_CONFIG]], , [[
 let g:vimwiki_list = [
