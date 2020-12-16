@@ -22,11 +22,11 @@ def main():
     )
     parser.set_defaults(log_level="WARNING")
     parser.add_argument(
-        "-v", "--verbose", action="store_const", dest="log_level", const="INFO"
-    )
-    parser.add_argument(
         "--debug", action="store_const", dest="log_level", const="DEBUG"
     )
+    parser.add_argument(
+        "-v", "--verbose", "--where", action="store_true", dest="verbose",
+        help="Print filename where function is defined")
     parser.add_argument(
         "pattern",
         nargs="?",
@@ -55,7 +55,7 @@ def main():
         if (not regex and not name.startswith("_")) or (
             regex and (regex.search(name) or regex.search(desc))
         ):
-            print(f"{name:<30} [{path}]")
+            print("{:<30}{}".format(name, f" ({path})" if args.verbose else ""))
             print(textwrap.indent(desc, "  "))
             if desc:
                 print()

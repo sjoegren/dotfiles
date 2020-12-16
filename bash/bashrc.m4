@@ -120,13 +120,16 @@ alias mg='multigit.sh'
 alias mv='mv -i'
 alias o='popd'
 alias p='pushd'
-alias pwdc='pwd | _capture_output'
 alias r='fc -s'
 alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
 alias l="ifdef(`HAVE_bat', `bat', `less -R')"
+
+# Capture PWD in tmux/xclip
+# dotfiles-help: pwdc
+alias pwdc='pwd | _capture_output'
 
 export EDITOR=vim
 
