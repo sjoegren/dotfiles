@@ -1,10 +1,4 @@
 dnl vim: et ts=4 sw=4
-syscmd(`hash xclip 2> /dev/null')dnl
-define(`HAVE_XCLIP', ifelse(sysval, `0', `yes', `no'))dnl
-syscmd(`hash tmux 2> /dev/null')dnl
-define(`HAVE_TMUX', ifelse(sysval, `0', `yes', `no'))dnl
-syscmd(`hash bat 2> /dev/null')dnl
-define(`HAVE_BAT', ifelse(sysval, `0', `yes', `no'))dnl
 # If not running interactively, don't do anything
 case $- in
     *i*) stty -ixon ;;
@@ -33,13 +27,13 @@ grepfilter() {
 _capture_output() {
     read out
     local format
-ifelse(HAVE_TMUX, `yes', `
+ifdef(`HAVE_tmux', `
     if [ -n "$TMUX" ]; then
         echo -n "$out" | tmux load-buffer -
         format="${format}\e[7m"
     fi
 ')dnl
-ifelse(HAVE_XCLIP, `yes', `
+ifdef(`HAVE_xclip', `
     if [ -n "$DISPLAY" ]; then
         echo -n "$out" | xclip -in
         format="${format}\e[92m"
@@ -57,9 +51,8 @@ alias mktemp=_mktemp_copy_filename
 
 # Print absolute path to files
 dnl m4: if realpath is available, use that in rp(), otherwise fall back to readlink -f.
-syscmd(`hash realpath 2> /dev/null')dnl
 rp() {
-    ifelse(sysval, `0', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
+    ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
 }
 
 # Show list of commits, print and capture selected commit.
@@ -106,8 +99,7 @@ hhdiffhtml() {
     xdg-open "$tmpfile"
 }
 
-syscmd(`hash jq 2> /dev/null')dnl
-ifelse(sysval, `0', `dnl
+ifdef(`HAVE_jq', `
 # Usage: jql JSON_FILE
 jql() {
 	if [ ${#@} -eq 1 ]; then
@@ -134,7 +126,7 @@ alias rm='rm -I'
 alias tree='tree -C'
 alias treefull='tree -Cfi'
 alias v='vim -R'
-alias l="ifelse(HAVE_BAT, `yes', `bat', `less -R')"
+alias l="ifdef(`HAVE_bat', `bat', `less -R')"
 
 export EDITOR=vim
 

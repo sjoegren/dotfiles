@@ -20,6 +20,12 @@ ifneq ($(wildcard /usr/share/doc/powerline-fonts),)
 	MACROS += -D HAVE_POWERLINE_FONTS=1
 endif
 
+# check existence of programs in prog_list, define m4 macros "HAVE_prog" for
+# those that exist.
+prog_list := xclip tmux bat fzf git realpath jq check_version pidcmd
+check_program = $(if $(shell command -v $(prog)), -D HAVE_$(prog))
+have_progs := $(foreach prog, $(prog_list), $(check_program))
+
 SOURCES := $(wildcard *.m4)
 SOURCES += $(wildcard bash/*.m4)
 SOURCES += $(wildcard vim/*.m4)
@@ -30,9 +36,9 @@ BUILD_TARGETS = bin/pidcmd
 
 all: $(TARGETS)
 
-%: %.m4 | $(CHECKVER) $(BUILD_TARGETS)
+%: %.m4 Makefile | $(CHECKVER) $(BUILD_TARGETS)
 	@echo "--- Installing $@"
-	m4 $(MACROS) $< > $@
+	m4 $(MACROS) $(have_progs) $< > $@
 
 .PHONY: check_version
 check_version: $(CHECKVER)
