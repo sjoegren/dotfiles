@@ -3,17 +3,21 @@ BUILDDIR := build
 PATH := $(PREFIX):bin:$(PATH)
 CHECKVER := $(PREFIX)/bin/check_version
 DOTFILES_DIR := $(PWD)
-MACROS = -D DOTFILES_DIR="$(DOTFILES_DIR)"
+MACROS += -D DOTFILES_DIR="$(DOTFILES_DIR)"
 MACROS += -D HOME_DIR="$(HOME)"
 ifeq ($(USER), root)
 	MACROS += -D BASIC_CONFIG=1
 endif
 
-gituser := $(shell git -C ~ config --get user.name)
+gituser := $(shell git -C ~ config --get user.name 2> /dev/null)
 ifeq ($(.SHELLSTATUS), 0)
 	MACROS += -D GIT_USER_NAME="$(gituser)"
 else
 	MACROS += -D GIT_USER_NAME=$(USER)
+endif
+
+ifneq ($(wildcard /usr/share/doc/powerline-fonts),)
+	MACROS += -D HAVE_POWERLINE_FONTS=1
 endif
 
 SOURCES := $(wildcard *.m4)

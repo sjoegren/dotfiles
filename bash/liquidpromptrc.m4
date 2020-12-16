@@ -5,7 +5,11 @@
 
 # If you want to use different themes and features,
 # you can load the corresponding files here:
-source ~/.dotfiles/bash/liquidprompt/liquid.theme
+ifdef(`HAVE_POWERLINE_FONTS', `
+POWERLINE_PYTHON_ENV_MARKER="."
+source DOTFILES_DIR/bash/liquidprompt/themes/powerline/powerline.theme
+lp_theme powerline_full
+')
 #LP_PS1_FILE=~/.config/liquidprompt/nojhan.ps1
 
 #############
@@ -88,6 +92,8 @@ LP_ENABLE_VCS_ROOT=0
 # Recommended value is 1
 LP_ENABLE_GIT=1
 
+LP_MARK_GIT="$LP_MARK_DEFAULT"
+
 # Do you want to use the Subversion special features?
 # Recommended value is 1
 LP_ENABLE_SVN=0
@@ -151,5 +157,7 @@ LP_ENABLE_SSH_COLORS=1
 # Specify a list of complete and colon (":") separated paths in which, all vcs
 # will be disabled
 LP_DISABLED_VCS_PATH=""
+
+LP_ENABLE_DETACHED_SESSIONS=0
 
 # vim: set et sts=4 sw=4 tw=120 ft=sh:
