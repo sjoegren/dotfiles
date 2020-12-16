@@ -49,10 +49,32 @@ _mktemp_copy_filename() {
 }
 alias mktemp=_mktemp_copy_filename
 
-# Print absolute path to files
+# Usage: rp PATH | rp [-d] DIR | rp COMMAND
+# Print and capture absolute path to file, dir, command, or file selected with fzf.
 dnl m4: if realpath is available, use that in rp(), otherwise fall back to readlink -f.
 rp() {
-    ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
+    local selected
+    if [ $# -ge 1 ]; then
+        if [ -f "$1" ]; then
+            ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
+        elif [ "$1" == "-d" ]; then
+            shift
+            ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
+        elif hash "$1" 2> /dev/null; then
+            cmdpath "$1"
+            return
+        else
+            # rp DIR: fzf find files in DIR
+            ifdef(`HAVE_fzf', `', `return # no fzf')
+            selected="$(FZF_DEFAULT_COMMAND="find '$1'" fzf)"
+            [ -z "$selected" ] && return
+            ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f')  | _capture_output
+        fi
+        return
+    fi
+    ifdef(`HAVE_fzf', `
+    ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') $(fzf) | _capture_output
+    ')
 }
 
 # Show list of commits, print and capture selected commit.
