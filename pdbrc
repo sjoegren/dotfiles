@@ -1,0 +1,5 @@
+alias pi for k,v in %1.__dict__.items(): print("%s.%s = %r" % ("%1", k, v))
+alias ppd pp dir(%1)
+
+# Remind me of configured aliases
+alias

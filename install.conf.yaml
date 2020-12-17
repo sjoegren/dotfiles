@@ -18,6 +18,7 @@
     ~/.inputrc:
     ~/.liquidpromptrc: bash/liquidpromptrc
     ~/.mdlrc:
+    ~/.pdbrc:
     ~/.tmux.conf:
     ~/.vim:
       force: false
