@@ -54,3 +54,4 @@
     description: Downloading vim-plug
     quiet: true
   - touch ~/.vimrc_local
+  - touch ~/.ripgrepignore

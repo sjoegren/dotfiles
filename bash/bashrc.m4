@@ -167,6 +167,11 @@ export HISTSIZE=10000
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
 
+ifdef(`HAVE_fzf', `
+export FZF_DEFAULT_OPTS="--height 40%"
+. /usr/share/fzf/shell/key-bindings.bash
+')
+
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob
 for f in DOTFILES_DIR/bash/*.bash; do
