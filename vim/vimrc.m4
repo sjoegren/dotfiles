@@ -24,6 +24,8 @@ Plug 'bps/vim-textobj-python'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'jparise/vim-graphql'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
