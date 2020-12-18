@@ -31,5 +31,26 @@ ifelse(sysval, `0', `dnl
 	templatedir = ~/.dotfiles/git_template
 [color]
 	ui = auto
+ifdef(`HAVE_delta', `
+# enable delta pager
+[core]
+	pager = delta
+
+[delta]
+	plus-color = "#012800"
+	minus-color = "#340001"
+	syntax-theme = Monokai Extended
+	; line-numbers = true
+	; side-by-side = true
+	features = line-numbers decorations
+	whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+	commit-decoration-style = bold yellow box ul
+
+[interactive]
+	diffFilter = delta --color-only
+# end delta pager
+')
 [include]
 	path = ~/.gitconfig_local
