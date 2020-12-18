@@ -77,10 +77,15 @@ rp() {
     ')
 }
 
-# Show list of commits, print and capture selected commit.
+ifdef(`HAVE_fzf', `
+# Print/capture selected git commit.
 getcommit() {
-    git fixup --print-commit | _capture_output
+    local sha1 description
+    read -r _ sha1 description < <(git hist | fzf --no-sort --preview "git show --color=always {2}")
+    echo "$sha1 - $description"
+    echo $sha1 | _capture_output
 }
+')
 
 # Lookup command in PATH and print/capture path to the file.
 cmdpath() {
