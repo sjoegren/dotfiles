@@ -14,8 +14,9 @@ define(`HAVE_NOTE', ifelse(sysval, `0', `yes', `no'))dnl
 
 # General settings
 set -g default-terminal "screen-256color"
-set -g history-limit 20000                          # scrollback buffer n lines
-set -g base-index 1                                 # start indexing windows at 1 (instead of 0)
+set -ga terminal-overrides ",xterm-256color:Tc"
+set -g history-limit 20000
+set -g base-index 1
 set -g pane-base-index 1
 set -g display-time 2000
 set-environment -g CHERE_INVOKING 1
