@@ -178,6 +178,11 @@ nmap <Leader>f/ :History/<CR>
 nmap <Leader>fc :Commits<CR>
 nmap <Leader>hh :Helptags<CR>
 
+ifdef([[BASIC_CONFIG]], , [[
+" :Wikigrep! PATTERN - run rg in vimwiki and launch fzf
+command! -bang -nargs=* Wikigrep call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>)." ~/vimwiki", 1, <bang>0)
+]])
+
 " Search for word under cursor in new split-window
 " ,w / ,W
 nnoremap <Leader>w :let @/='\<'.expand("<cword>").'\>'<Bar>split<Bar>normal n<CR>
@@ -204,12 +209,8 @@ nmap ga <Plug>(EasyAlign)
 
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
-ifdef([[BASIC_CONFIG]], , [[
-let g:vimwiki_list = [
-            \ {'path': '~/.vimwiki_primary'},
-            \ {'path': '~/.vimwiki_secondary'}]
-autocmd FileType vimwiki setlocal ts=2 sw=2 sts=0]])
 
+syscmd([[touch ~/.vimrc_local]])
 source ~/.vimrc_local
 
 function! InsertTodoComment()
