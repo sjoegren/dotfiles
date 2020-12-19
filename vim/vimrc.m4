@@ -162,7 +162,21 @@ map Y y$
 
 nmap <C-n> :NERDTreeToggle<CR>
 
+" fzf.vim settings
 let g:fzf_tags_command = 'git ctags || ctags -R'
+nmap <C-p> :Files<CR>
+nmap <Leader>g :GFiles<CR>
+nmap <Leader>G :GFiles?<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>l :BLines<CR>
+nmap <Leader>L :Lines<CR>
+nmap <Leader>t :Tags<CR>
+nmap <Leader>T :BTags<CR>
+nmap <Leader>fm :Marks<CR>
+nmap <Leader>fh :History<CR>
+nmap <Leader>f/ :History/<CR>
+nmap <Leader>fc :Commits<CR>
+nmap <Leader>hh :Helptags<CR>
 
 " Search for word under cursor in new split-window
 " ,w / ,W
