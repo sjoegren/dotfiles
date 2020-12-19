@@ -5,6 +5,8 @@ set nocompatible
 "------------------------------------------------------------
 call plug#begin()
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mihais/vim-mark'
@@ -23,8 +25,6 @@ Plug 'bps/vim-textobj-python'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'jparise/vim-graphql'
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
@@ -161,6 +161,8 @@ inoremap <C-L> <C-X><C-L>
 map Y y$
 
 nmap <C-n> :NERDTreeToggle<CR>
+
+let g:fzf_tags_command = 'git ctags || ctags -R'
 
 " Search for word under cursor in new split-window
 " ,w / ,W

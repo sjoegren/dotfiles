@@ -77,16 +77,6 @@ rp() {
     ')
 }
 
-ifdef(`HAVE_fzf', `
-# Print/capture selected git commit.
-getcommit() {
-    local sha1 description
-    read -r _ sha1 description < <(git hist | fzf --no-sort --preview "git show --color=always {2}")
-    echo "$sha1 - $description"
-    echo $sha1 | _capture_output
-}
-')
-
 # Lookup command in PATH and print/capture path to the file.
 cmdpath() {
     type -fP "${1:?}" | _capture_output
@@ -173,9 +163,10 @@ export HISTSIZE=10000
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
 
 ifdef(`HAVE_fzf', `
-export FZF_DEFAULT_OPTS="--height 40%"
-. /usr/share/fzf/shell/key-bindings.bash
+source DOTFILES_DIR/bash/fzf.bash
 ')
+
+export RIPGREP_CONFIG_PATH=DOTFILES_DIR/ripgreprc
 
 _nullglob_setting=$(shopt -p nullglob)
 shopt -s nullglob

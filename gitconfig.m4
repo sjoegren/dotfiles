@@ -1,4 +1,3 @@
-dnl vim: ft=gitconfig
 syscmd(`git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -c 2.21')dnl
 [alias]
 	alias = !git config --global --list | grep ^alias
