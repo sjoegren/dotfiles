@@ -5,7 +5,6 @@ set nocompatible
 "------------------------------------------------------------
 call plug#begin()
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'mihais/vim-mark'
@@ -175,7 +174,6 @@ vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 nmap <silent> <leader>ev :tabedit $MYVIMRC<CR>
 nmap <silent> <leader>sv :source $MYVIMRC<CR>
 
-nmap <leader>gg yiw:Glgrep <C-R>"<CR>
 nmap <leader><leader>g :GitGutterAll<CR>
 
 nmap <silent> [v <Plug>(ale_previous_wrap)
@@ -189,10 +187,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
-
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 0
 
 ifdef([[BASIC_CONFIG]], , [[
 let g:vimwiki_list = [
