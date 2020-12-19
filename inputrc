@@ -6,8 +6,7 @@ set visible-stats on
 "\C-x\C-b": ". ~/.bashrc\n"
 
 "\C-d": backward-kill-word
-"\C-g": kill-whole-line
-"\C-xk": kill-line
+"\C-k": kill-whole-line
 
 "\C-f": forward-word
 "\C-b": backward-word

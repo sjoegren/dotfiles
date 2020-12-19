@@ -67,7 +67,7 @@ def get_functions(bashfile):
     comment = []
     with bashfile.open() as f:
         for line in f:
-            if (match := re.match(r"(?:(\w+)\(\)|# dotfiles-help: (\w+))", line)) :
+            if (match := re.match(r"(?:(\w+)\(\)|# dotfiles-help: (.+))", line)) :
                 log.debug("Function: %s", match[1])
                 yield match[1] or match[2], comment, bashfile
                 comment = []
