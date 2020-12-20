@@ -26,6 +26,7 @@ unbind C-b
 set -g prefix C-a
 bind a send-prefix
 bind r source-file ~/.tmux.conf \; display-message "configuration reloaded"
+bind t choose-tree
 
 # Act like vim
 set-window-option -g mode-keys vi
