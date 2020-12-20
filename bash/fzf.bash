@@ -1,6 +1,6 @@
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--height 40%"
+export FZF_DEFAULT_OPTS="--height 40% --ansi"
 . /usr/share/fzf/shell/key-bindings.bash
 
 # Print/capture selected git commit.
@@ -67,8 +67,8 @@ _fzf_gr() {
 bind '"\er": redraw-current-line'
 
 # git fzf select filenames from git status to command line
-# dotfiles-help: Ctrl-g Ctrl-f
-bind '"\C-g\C-f": "$(_fzf_gf)\e\C-e\er"'
+# dotfiles-help: Ctrl-g Ctrl-s
+bind '"\C-g\C-s": "$(_fzf_gf)\e\C-e\er"'
 
 # git fzf select branches to command line
 # dotfiles-help: Ctrl-g Ctrl-b
@@ -81,3 +81,7 @@ bind '"\C-g\C-t": "$(_fzf_gt)\e\C-e\er"'
 # git fzf select commit hashes to command line
 # dotfiles-help: Ctrl-g Ctrl-h
 bind '"\C-g\C-h": "$(_fzf_gh)\e\C-e\er"'
+
+# git commit -a --fixup {fzf selected commit}
+# dotfiles-help: Ctrl-g Ctrl-f
+bind '"\C-g\C-f": "git commit -a --fixup $(_fzf_gh)\e\C-e\er"'

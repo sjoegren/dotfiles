@@ -6,7 +6,7 @@ syscmd(`git --version | check_version -q -r "version ([0-9]+\.[0-9]+\.[0-9]+)" -
 	ci = commit
 	co = checkout
 	ctags = !.git/hooks/ctags
-	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=ifelse(sysval, `0', `human', `short')
+	hist = log --graph --pretty=format:'%Cred%h%Creset %Cblue%ad%Creset %s %Cgreen[%an] %C(auto)%d%Creset' --date=ifelse(sysval, `0', `human', `short') --color=always
 	st = status
 [log]
 	date = iso

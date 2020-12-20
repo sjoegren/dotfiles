@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-
-read -r _ sha1 _ < <(git hist | fzf --no-sort --preview 'git show --color=always {2}')
-
-echo "# Run: git commit $* --fixup $sha1"
-git commit $* --fixup $sha1
