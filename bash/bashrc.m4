@@ -5,6 +5,11 @@ case $- in
       *) return;;
 esac
 
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 # Solarized dircolors
 eval $(dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark)
 
