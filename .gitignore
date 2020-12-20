@@ -1,11 +1,11 @@
 # Built files
-gitconfig
-tmux.conf
 bash/bashrc
 bash/liquidpromptrc
-mdlrc
 bin/pidcmd
-vim/vimrc
+gitconfig
+mdlrc
+ripgreprc
+tmux.conf
 
 # Downloaded
 *.tar.gz

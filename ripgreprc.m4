@@ -1,0 +1,1 @@
+--ignore-file=HOME_DIR/.ripgrepignore
