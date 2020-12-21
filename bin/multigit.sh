@@ -28,9 +28,8 @@ usage() {
     cat <<DOC
 Usage: $(basename $0) [OPTION...] [<command> [args]]
 
-Run "git <command>" with optional args in each git repository for each git
-repository found. Without command, found git repositories are printed to
-stdout.
+Run "git <command>" with optional args in each git repository found. Without
+command, found git repositories are printed to stdout.
 
   -a, --abspath             Print absolute path to repositories
       --dir DIR             Find repositories in DIR (default: $opt_finddir)

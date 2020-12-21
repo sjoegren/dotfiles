@@ -1,5 +1,14 @@
 #!/bin/bash
 # Usage: tmux_kill_pane_child.sh [-t :win.pane]
+# Example:
+#   > tmux_kill_pane_child.sh
+#   Pane  Child PID  Child command
+#     2   1626187    vim /tmp/tmp.S5nltZ1Wfj
+#     3   1624144    /usr/bin/python
+#     4   1624027    watch date
+#   Which panes process to kill? [2] (0 to cancel) 3
+#   kill pid 1624144 (/usr/bin/python) [y/N] y
+
 
 set -euo pipefail
 
@@ -8,6 +17,14 @@ debug() {
 		echo "DEBUG: $*"
 	fi
 }
+
+if [[ "${1:-}" == *-h* ]]; then
+	while read -r line; do
+		[[ "$line" =~ ^[^#] ]] && break
+		[[ "$line" =~ ^#\  ]] && echo "${line:2}"
+	done < $0
+	exit 0
+fi
 
 IFS=';'
 panes="$(tmux display -p $* '#{P:#P:#{pane_current_command}:#{pane_pid};}')"
