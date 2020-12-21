@@ -134,6 +134,8 @@ colorscheme gruvbox
 
 let g:airline_theme = 'gruvbox'
 let g:airline#extensions#branch#enabled = 0
+ifdef([[HAVE_POWERLINE_FONTS]], [[let g:airline_powerline_fonts=1]])
+let g:airline#extensions#virtualenv#enabled = 0
 
 " Specific settings for different filetypes
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
@@ -193,7 +195,7 @@ nnoremap <Leader>W :let @/=expand("<cWORD>")<Bar>split<Bar>normal n<CR>
 vmap <silent> // y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
 " edit/source vimrc
-nmap <silent> <leader>ev :tabedit $MYVIMRC<CR>
+nmap <silent> <leader>ev :tabedit $MYVIMRC.m4<CR>
 nmap <silent> <leader>sv :source $MYVIMRC<CR>
 
 nmap <leader><leader>g :GitGutterAll<CR>
@@ -220,4 +222,4 @@ function! InsertTodoComment()
 endfunction
 let @c="=InsertTodoComment()a"
 
-" vim: set ft=vim et sw=2
+" vim: ft=vim et sw=2
