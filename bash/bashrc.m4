@@ -50,7 +50,7 @@ ifdef(`HAVE_xclip', `
 # Make named temporary file and print/capture filename.
 # dotfiles-help: mktemp
 _mktemp_copy_filename() {
-    command -p mktemp --tmpdir $USER.XXX $* | _capture_output
+    command -p mktemp $* | _capture_output
 }
 alias mktemp=_mktemp_copy_filename
 
