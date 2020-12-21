@@ -17,15 +17,18 @@ eval $(dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark)
 # Functions
 # ---------------------------------
 
-# Usage: grepfilter PATTERN [files...]
-# Show contents of a file, but use grep to highlight a pattern
-grepfilter() {
+ifdef(`HAVE_rg', `
+# Usage: gf (grepfilter) PATTERN [files...]
+# Filter output through ripgrep and highlight matches.
+gf() {
+    local cmd="rg --no-column --no-line-number --colors match:bg:219 --colors match:fg:black"
     if [ -e "$2" ]; then
-        command grep --color=always -E "$1|" "${@:2}"
-    else
-        command grep --color=always -E "$1|"
+        $cmd "$1|" "${@:2}"
+    else  # read from stdin
+        $cmd "$1|"
     fi
 }
+')
 
 # Copy stdin to tmux buffer and x-clipboard if available.
 # On display output, inverse fg/bg to indicate tmux, color green for X.
