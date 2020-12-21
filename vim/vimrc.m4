@@ -165,6 +165,7 @@ nmap <C-n> :NERDTreeToggle<CR>
 " fzf.vim settings
 let g:fzf_tags_command = 'git ctags || ctags -R'
 nmap <C-p> :Files<CR>
+nmap <Leader>H :Files ~/<CR>
 nmap <Leader>g :GFiles<CR>
 nmap <Leader>G :GFiles?<CR>
 nmap <Leader>b :Buffers<CR>
