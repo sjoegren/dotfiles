@@ -37,8 +37,8 @@ BUILD_TARGETS = bin/pidcmd
 all: $(TARGETS)
 
 %: %.m4 Makefile | $(CHECKVER) $(BUILD_TARGETS)
-	@echo "--- Installing $@"
-	m4 $(MACROS) $(have_progs) $< > $@
+	@echo "--- Building $@"
+	@m4 $(MACROS) $(have_progs) $< > $@
 
 .PHONY: check_version
 check_version: $(CHECKVER)
