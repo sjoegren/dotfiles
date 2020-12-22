@@ -11,6 +11,32 @@ getcommit() {
     echo $sha1 | _capture_output
 }
 
+# Select mv command from history and suggest to undo it.
+undo_mv() {
+	local lines old_dest old_src new_src REPLY
+	mapfile -t lines < <(python -c 'import shlex,sys; print(*shlex.split(sys.argv[1]), sep="\n")' "$(READLINE_LINE="'mv " __fzf_history__)")
+	if [ ${#lines[*]} -lt 3 ] || [ ${lines[0]} != "mv" ]; then
+		echo "Not a mv command"
+		return
+	fi
+	old_dest="${lines[$(( ${#lines[*]} - 1 ))]}"
+	old_src="${lines[$(( ${#lines[*]} - 2 ))]}"
+	if [ -d "$old_dest" ]; then
+		new_src="$(realpath -e "$old_dest")/$(basename "$old_src")"
+	elif [ -e "$old_dest" ]; then
+		new_src="$old_dest"
+	fi
+	if ! [ -e "$new_src" ]; then
+		echo "source doesn't exist: $new_src"
+		return
+	fi
+	cmd=(mv -iv "$new_src" "$old_src")
+	read -p "${cmd[*]} [y/N]? : "
+	if [ "$REPLY" == "y" ]; then
+		${cmd[*]}
+	fi
+}
+
 
 #
 # git key bindings (https://junegunn.kr/2016/07/fzf-git/)
