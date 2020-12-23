@@ -108,6 +108,6 @@ bind '"\C-g\C-t": "$(_fzf_gt)\e\C-e\er"'
 # dotfiles-help: Ctrl-g Ctrl-h
 bind '"\C-g\C-h": "$(_fzf_gh)\e\C-e\er"'
 
-# git commit -a --fixup {fzf selected commit}
+# git commit --fixup {fzf selected commit}
 # dotfiles-help: Ctrl-g Ctrl-f
-bind '"\C-g\C-f": "git commit -a --fixup $(_fzf_gh)\e\C-e\er"'
+bind '"\C-g\C-f": "git commit --fixup $(_fzf_gh)\e\C-e\er"'
