@@ -68,8 +68,9 @@ set cursorline      " Highlight line of cursor
 set colorcolumn=100
 set wildmenu        " Better command-line completion
 set number          " always show line numbers
-set shiftwidth=0    " number of spaces to use for autoindenting
+set shiftwidth=0    " 0 is same as ts
 set tabstop=4
+set softtabstop=-1  " same as shiftwidth
 set shiftround      " use multiple of shiftwidth when indenting with '<' and '>'
 set showmatch       " Show matching brace
 set showmode        " Show mode I'm in
@@ -177,7 +178,7 @@ nmap <Leader>L :Lines<CR>
 nmap <Leader>t :Tags<CR>
 nmap <Leader>T :BTags<CR>
 nmap <Leader>fm :Marks<CR>
-nmap <Leader>fh :History<CR>
+nmap <Leader>h :History<CR>
 nmap <Leader>f/ :History/<CR>
 nmap <Leader>fc :Commits<CR>
 nmap <Leader>hh :Helptags<CR>
@@ -185,6 +186,8 @@ nmap <Leader>hh :Helptags<CR>
 ifdef([[BASIC_CONFIG]], , [[
 " :Wikigrep! PATTERN - run rg in vimwiki and launch fzf
 command! -bang -nargs=* Wikigrep call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>)." ~/vimwiki", 1, <bang>0)
+
+nmap <Leader><Leader>f :Black<CR>
 ]])
 
 " Search for word under cursor in new split-window
