@@ -47,7 +47,7 @@ is_in_git_repo() {
 }
 
 fzf-down() {
-	fzf-tmux --height 50% "$@" --border
+	fzf-tmux -d 65% -- "$@" --border
 }
 
 _fzf_gf() {
@@ -91,6 +91,14 @@ _fzf_gr() {
 		cut -d$'\t' -f1
 }
 
+_fzf_gstash() {
+	is_in_git_repo || return
+	git stash list |
+		fzf-down \
+		--preview 'cut -d: -f1 <<< {} | xargs git stash show --patch | head -200 | delta --paging never' |
+		cut -d: -f1
+}
+
 bind '"\er": redraw-current-line'
 
 # git fzf select filenames from git status to command line
@@ -112,3 +120,7 @@ bind '"\C-g\C-h": "$(_fzf_gh)\e\C-e\er"'
 # git commit --fixup {fzf selected commit}
 # dotfiles-help: Ctrl-g Ctrl-f
 bind '"\C-g\C-f": "git commit --fixup $(_fzf_gh)\e\C-e\er"'
+
+# git fzf select stash
+# dotfiles-help: Ctrl-g Ctrl-o
+bind '"\C-g\C-o": "$(_fzf_gstash)\e\C-e\er"'
