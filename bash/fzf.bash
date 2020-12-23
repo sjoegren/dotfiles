@@ -38,6 +38,24 @@ undo_mv() {
 }
 export HISTIGNORE="$HISTIGNORE:undo_mv"
 
+# Usage: remove_from_path [-n|--no-export]
+# Remove selected items from PATH
+remove_from_path() {
+	local out newpath rv oldpath
+	out=$(tr : '\n' <<< "$PATH" | fzf-tmux -- --reverse --multi)
+	rv=$?
+	oldpath="$PATH"
+	if [ $rv -eq 0 ]; then
+		newpath="$(mergepaths.pl --delete "$(echo "$out" | tr '\n' :)" "$PATH")"
+		if [ -z "$*" ]; then
+			export PATH="$newpath"
+			echo "# restore path:"
+			echo "export PATH='$oldpath'"
+		fi
+		envprint.pl '^PATH$'
+	fi
+}
+
 
 #
 # git key bindings (https://junegunn.kr/2016/07/fzf-git/)

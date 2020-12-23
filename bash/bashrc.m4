@@ -70,6 +70,7 @@ rp() {
             ifdef(`HAVE_realpath', `realpath --no-symlinks', `readlink -f') "$@" | _capture_output
         elif hash "$1" 2> /dev/null; then
             cmdpath "$1"
+            file $(type -fP "$1")
             return
         else
             # rp DIR: fzf find files in DIR

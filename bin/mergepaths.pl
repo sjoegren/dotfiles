@@ -8,16 +8,29 @@ use Pod::Usage;
 
 my (%opts, %seen, @new_list);
 
-GetOptions(\%opts, 'check-dirs', 'help', 'usage|h') or pod2usage(-verbose => 0);
+GetOptions(\%opts, 'check-dirs', 'help', 'usage|h', 'delete|d=s') or pod2usage(-verbose => 0);
 pod2usage(-verbose => 2, exitval => 0) if $opts{help};
 pod2usage(-verbose => 0, exitval => 0) if $opts{usage};
+if (!$opts{'delete'}) {
+	$opts{'delete'} = '';
+}
 
 sub get_new_unique_dirs {
     my $seen = shift;
     my $dirlist = shift;
     my @new_dirlist;
+	my @remove_dirs = split /:/, $opts{'delete'};
+
 
     for my $d (@$dirlist) {
+		my $skip = 0;
+		for my $rd (@remove_dirs) {
+			if ($d eq $rd) {
+				$skip = 1;
+				next;
+			}
+		}
+		next if $skip;
         unless (exists $seen->{$d}) {
             if (not $opts{'check-dirs'} or ($opts{'check-dirs'} and -d $d)) {
                 push @new_dirlist, $d;
@@ -47,10 +60,11 @@ mergepaths.pl - Create directory list for PATH like environment variables.
 
 =head1 SYNOPSIS
 
-mergepaths.pl [-c|--check-dirs] [new_dir] $PATH [new_dir]
+mergepaths.pl [-c|--check-dirs] [-d dirs] [new_dir] $PATH [new_dir]
 
  Options:
     -c, --check-dirs            Only add directories that exists
+	-d, --delete dirlist		Delete directories from the PATH-like string dirlist from PATH.
     -h, --usage                 Short help
     --help                      Full help
 
