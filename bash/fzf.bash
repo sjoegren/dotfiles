@@ -14,7 +14,7 @@ getcommit() {
 # Select mv command from history and suggest to undo it.
 undo_mv() {
 	local lines old_dest old_src new_src REPLY
-	mapfile -t lines < <(python -c 'import shlex,sys; print(*shlex.split(sys.argv[1]), sep="\n")' "$(READLINE_LINE="'mv " __fzf_history__)")
+	mapfile -t lines < <(python -c 'import shlex,sys,os.path; print(*map(os.path.expanduser, shlex.split(sys.argv[1])), sep="\n")' "$(READLINE_LINE="'mv " __fzf_history__)")
 	if [ ${#lines[*]} -lt 3 ] || [ ${lines[0]} != "mv" ]; then
 		echo "Not a mv command"
 		return
@@ -36,6 +36,7 @@ undo_mv() {
 		${cmd[*]}
 	fi
 }
+export HISTIGNORE="$HISTIGNORE:undo_mv"
 
 
 #
