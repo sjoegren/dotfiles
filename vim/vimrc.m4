@@ -68,6 +68,7 @@ set cursorline      " Highlight line of cursor
 set colorcolumn=100
 set wildmenu        " Better command-line completion
 set number          " always show line numbers
+set relativenumber
 set shiftwidth=0    " 0 is same as ts
 set tabstop=4
 set softtabstop=-1  " same as shiftwidth
