@@ -33,7 +33,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'vimwiki/vimwiki'
 if v:version > 800
     Plug 'psf/black'
-    Plug 'w0rp/ale'
+    Plug 'dense-analysis/ale'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 endif
 ]])
