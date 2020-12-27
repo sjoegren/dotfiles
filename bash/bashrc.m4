@@ -171,10 +171,6 @@ export HISTSIZE=10000
 
 source DOTFILES_DIR/bash/liquidprompt/liquidprompt
 
-ifdef(`HAVE_fzf', `
-source DOTFILES_DIR/bash/fzf.bash
-')
-
 export RIPGREP_CONFIG_PATH=DOTFILES_DIR/ripgreprc
 
 _nullglob_setting=$(shopt -p nullglob)

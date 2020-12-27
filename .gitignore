@@ -1,5 +1,6 @@
 # Built files
 bash/bashrc
+bash/fzf.bash
 bash/liquidpromptrc
 bin/pidcmd
 gitconfig
