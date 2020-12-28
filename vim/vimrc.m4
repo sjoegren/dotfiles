@@ -146,6 +146,10 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=<:>
 " python.vim
 let python_highlight_all = 1
 
+" Prevent default filetype alias vimwiki => markdown, that triggers markdown
+" linting.
+let g:ale_linter_aliases = {'vimwiki': ''}
+
 "------------------------------------------------------------
 " Mappings
 "------------------------------------------------------------
