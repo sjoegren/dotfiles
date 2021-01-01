@@ -17,6 +17,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'beloglazov/vim-textobj-quotes'
 ifdef([[BASIC_CONFIG]], [[" essential plugins]], [[dnl
 dnl these are only included if not BASIC_CONFIG
 Plug 'Glench/Vim-Jinja2-Syntax'
