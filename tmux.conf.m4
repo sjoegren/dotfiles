@@ -16,6 +16,10 @@ set -g base-index 1
 set -g pane-base-index 1
 set -g display-time 2000
 set-environment -g CHERE_INVOKING 1
+set -s command-alias[0] alarm="command-prompt -p \"alarm time:\" \"run -b RQ()tmux_alarm.sh --set %%RQ()\""
+set -s command-alias[1] alarmclear="confirm -p \"clear current alarm?\" \"run RQ()tmux_alarm.sh --kill RQ()\""
+
+
 
 # Bindings
 unbind C-b
