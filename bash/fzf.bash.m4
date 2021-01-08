@@ -51,6 +51,52 @@ remove_from_path() {
 	fi
 }
 
+# Usage: copy_files [ls-options]
+# Open fzf to select multiple files to copy. Then use paste_files to copy them
+# to a destination directory.
+copy_files() {
+	local -a files
+	local i
+	files=( $(ls --color=always "$@" | fzf-tmux -- --multi --preview-window right:hidden --preview 'bat {}' --bind 'ctrl-p:toggle-preview' --reverse) )
+	[ $? -eq 0 ] || return
+	for ((i = 0; i < ${#files[*]}; i++)); do
+		files[$i]="$(realpath "${files[$i]}")"
+	done
+	export _COPIED_FILES="$(mergepaths.pl "${files[@]}")"
+	echo "Use paste_files to copy files to a destination:"
+	for i in ${files[@]}; do
+		echo $i
+	done
+	if [ -n "$TMUX" ]; then
+		tmux setenv -g _COPIED_FILES "$_COPIED_FILES"
+	fi
+}
+
+# Usage: paste_files [-C] [dir]
+# Copy the files from copy_file into dir or CWD.
+#  -C	don't clear copied files from environment
+paste_files() {
+	local dir noclear env
+	if [ -z "$_COPIED_FILES" ]; then
+		if [ -n "$TMUX" ]; then
+			env="$(tmux showenv -g _COPIED_FILES)"
+			[ $? -eq 0 ] || return
+			eval "$env"
+		fi
+	fi
+	if [ "$1" == "-C" ]; then
+		noclear=1
+		shift
+	fi
+	dir="${1:-$(pwd)}"
+	[ -d "$dir" ] || return
+	cp -a -i -v -t "$dir" $(tr : ' ' <<< "$_COPIED_FILES")
+	if [ -z "$noclear" ]; then
+		unset _COPIED_FILES
+		[ -n "$TMUX" ] && tmux setenv -u _COPIED_FILES
+	fi
+}
+
 
 #
 # git key bindings (https://junegunn.kr/2016/07/fzf-git/)
