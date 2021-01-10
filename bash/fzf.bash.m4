@@ -135,11 +135,42 @@ _fzf_gt() {
 
 _fzf_gh() {
 	is_in_git_repo || return
+	local tmp key line
+	local -a ids
+	tmp=$(command mktemp)
+		# --bind "ctrl-s:execute(grep -o '[a-f0-9]\{7,\}' <<< {} | xargs git show --color=always)" \
 	git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
-		fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
-		--header 'Press CTRL-S to toggle sort' \
-		--preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -'$LINES |
-		grep -o "[a-f0-9]\{7,\}"
+		fzf-tmux -d 75% -- --ansi --no-sort --reverse --multi \
+		--expect ctrl-f,ctrl-o,alt-s \
+		--bind "ctrl-s:execute(grep -o '[a-f0-9]\{7,\}' <<< {} | xargs git show --color=always | delta --paging always > /dev/tty)" \
+		--bind "alt-p:toggle-preview" \
+		--header 'CTRL-f|s|o (commit --fixup/show/checkout), ALT-s git show, ALT-p preview' \
+		--preview-window hidden \
+		--preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -'$LINES > $tmp
+		# keep first line (--expect key) lines with commit id's
+	local -A cmdmap=(
+		[ctrl-f]="s:git commit --fixup"
+		[ctrl-o]="s:git checkout"
+		[alt-s]="git show"
+	)
+	# Open output file $tmp and read first line for --expect key and selected commit ids.
+	{
+		read -u 9 key  # One of --expect keys, or empty
+		while read -u 9 line; do
+			if [[ "$line" =~ ([a-f0-9]{7,}) ]]; then
+				ids+=("$BASH_REMATCH")
+			fi
+		done
+	} 9<$tmp
+	rm $tmp
+	[ ${#ids[*]} -eq 0 ] && return
+	case "$key" in
+		ctrl-f) echo "git commit --fixup ${ids[0]}"; return ;;
+		ctrl-o) echo "git checkout ${ids[0]}"; return ;;
+		alt-s) echo -n "git show " ;;
+		*)
+	esac
+	echo ${ids[*]}
 }
 
 _fzf_gr() {
@@ -172,13 +203,9 @@ bind '"\C-g\C-b": "$(_fzf_gb)\e\C-e\er"'
 # dotfiles-help: Ctrl-g Ctrl-t
 bind '"\C-g\C-t": "$(_fzf_gt)\e\C-e\er"'
 
-# git fzf select commit hashes to command line
+# git fzf select commit hashes to command line, possibly with specific commands.
 # dotfiles-help: Ctrl-g Ctrl-h
 bind '"\C-g\C-h": "$(_fzf_gh)\e\C-e\er"'
-
-# git commit --fixup {fzf selected commit}
-# dotfiles-help: Ctrl-g Ctrl-f
-bind '"\C-g\C-f": "git commit --fixup $(_fzf_gh)\e\C-e\er"'
 
 # git fzf select stash
 # dotfiles-help: Ctrl-g Ctrl-o
