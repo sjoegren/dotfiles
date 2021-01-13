@@ -170,7 +170,8 @@ inoremap <C-L> <C-X><C-L>
 " which is the default
 map Y y$
 
-nmap <C-n> :NERDTreeToggle<CR>
+nmap <C-n> :NERDTreeFind<CR>
+let NERDTreeQuitOnOpen=1
 
 " fzf.vim settings
 let g:fzf_tags_command = 'git ctags || ctags -R'
