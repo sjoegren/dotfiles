@@ -96,10 +96,31 @@ bind -n S-PageDown send-keys PageDown
 
 # Display menu for joining panes. Use s/v for vertical/horizontal as in vim.
 ifdef(`MENU_FEATURE', `
-bind j display-menu -T "#[align=center]Join selected pane" -x P -y P \
-"join-pane -v" s "choose-tree -Z \"join-pane -v -s RQ()%%RQ()\"" \
-"join-pane -h" v "choose-tree -Z \"join-pane -h -s RQ()%%RQ()\""
+bind-key -T prefix > display-menu -T "#[align=centre]Magic features | #{pane_index} (#{pane_id})" -x P -y P \
+"Find pid in pane (back: C-a RQ())" f "run-shell RQ()_tmux_find_pane.py --find-pid #{pane_id} -q --mark-pane #{pane_id}RQ(); \
+switchc -t \"{marked}\"; \
+run-shell RQ()_tmux_find_pane.py -q --mark-env-pane`'RQ()" \
+"Go to parent pane of pid" p "command-prompt -p \"Enter PID:\" \"run-shell RQ()_tmux_find_pane.py --pid %% -q --mark-pane #{pane_id}RQ(); \
+switchc -t RQ(){marked}RQ(); \
+run-shell RQ()_tmux_find_pane.py -q --mark-env-pane`'RQ()\"" \
+"Go to globally last pane" b "run-shell RQ()_tmux_find_pane.py -q --mark-env-pane`'RQ(); \
+switchc -t \"{marked}\"" \
+"" \
+"join selected pane (vertival)" s "choose-tree -Z \"join-pane -v -s RQ()%%RQ()\"" \
+"join selected pane (horizontal)" v "choose-tree -Z \"join-pane -h -s RQ()%%RQ()\"" \
+"" \
+"Swap Up" u "swap-pane -U" \
+"Swap Down" d "swap-pane -D" \
+"#{?pane_marked_set,,-}Swap Marked" s swap-pane \
+"" \
+Kill X kill-pane \
+Respawn R "respawn-pane -k" \
+"#{?pane_marked,Unmark,Mark}" m "select-pane -m" \
+"#{?window_zoomed_flag,Unzoom,Zoom}" z "resize-pane -Z"
 ')
+bind \' switch-client -t "{marked}"
+
+#showenv -g _TMUX_LAST_PANE" \
 
 bind -n f1 selectw -T -t :1
 bind -n f2 selectw -T -t :2
