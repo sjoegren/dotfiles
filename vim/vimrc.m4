@@ -25,6 +25,7 @@ Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'airblade/vim-gitgutter'
 Plug 'bps/vim-textobj-python'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'gilligan/textobj-gitgutter'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'haya14busa/is.vim'
 Plug 'jparise/vim-graphql'
