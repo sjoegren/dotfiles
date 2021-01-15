@@ -158,6 +158,7 @@ alias l="ifdef(`HAVE_bat', `bat', `less -R')"
 alias pwdc='pwd | _capture_output'
 
 export EDITOR=vim
+export GIT_EDITOR="vim --cmd 'let g:localvimrc_enable=0'"
 
 shopt -s checkwinsize
 shopt -s globstar

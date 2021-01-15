@@ -21,11 +21,12 @@ Plug 'tpope/vim-unimpaired'
 Plug 'beloglazov/vim-textobj-quotes'
 ifdef([[BASIC_CONFIG]], [[" essential plugins]], [[dnl
 dnl these are only included if not BASIC_CONFIG
-Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'airblade/vim-gitgutter'
 Plug 'bps/vim-textobj-python'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'embear/vim-localvimrc'
 Plug 'gilligan/textobj-gitgutter'
+Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'haya14busa/is.vim'
 Plug 'jparise/vim-graphql'
@@ -152,6 +153,8 @@ let python_highlight_all = 1
 " Do not register the default markdown file extensions as vimwiki files.
 let g:vimwiki_ext2syntax = {}
 
+let g:localvimrc_name = ['.lvimrc', '_vimrc_local.vim']
+
 "------------------------------------------------------------
 " Mappings
 "------------------------------------------------------------
@@ -224,9 +227,9 @@ nmap ga <Plug>(EasyAlign)
 
 let @j='0"tyiwwviW//VN<...VngJ0"tPjk'
 
-
-syscmd([[touch ~/.vimrc_local]])
-source ~/.vimrc_local
+if filereadable(expand('~/.vimrc_local'))
+  source ~/.vimrc_local
+endif
 
 function! InsertTodoComment()
     let c = split(&commentstring, '%s')[0] . "TODO(GIT_USER_NAME): "
