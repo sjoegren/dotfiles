@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 Helper script for tmux config.
 Find and print the tmux pane id where the given pid(s) are running.
 
@@ -17,13 +17,17 @@ Usage:
 Tmux config example:
 
 ```
-bind-key -T prefix > display-menu -T "#[align=centre]Magic features | #{pane_index} (#{pane_id})" -x P -y P \
-"Find pid in pane (back: C-a ')" f "run-shell '_tmux_find_pane.py --find-pid #{pane_id} -q --mark-pane #{pane_id}'; \
+bind-key -T prefix > display-menu -T \
+  "#[align=centre]Magic features | #{pane_index} (#{pane_id})" -x P -y P \
+"Find pid in pane (back: C-a ')" f \
+  "run-shell '_tmux_find_pane.py --find-pid #{pane_id} -q --mark-pane #{pane_id}'; \
 switchc -t \"{marked}\"; \
 run-shell '_tmux_find_pane.py -q --mark-env-pane'" \
-"Go to parent pane of pid" p "command-prompt -p \"Enter PID:\" \"run-shell '_tmux_find_pane.py --pid %% -q --mark-pane #{pane_id}'; \
-switchc -t '{marked}'; \
-run-shell '_tmux_find_pane.py -q --mark-env-pane'\"" \
+"Go to parent pane of pid" p \
+  "command-prompt -p \"Enter PID:\" \
+  \"run-shell '_tmux_find_pane.py --pid %% -q --mark-pane #{pane_id}'; \
+  switchc -t '{marked}'; \
+  run-shell '_tmux_find_pane.py -q --mark-env-pane'\"" \
 "Go to globally last pane" b "run-shell '_tmux_find_pane.py -q --mark-env-pane'; \
 switchc -t \"{marked}\""
 
@@ -65,6 +69,8 @@ class Panes:
                 self.marked_pane = pane_id
 
     def get_tmux_pane(self, pid):
+        """Return the pane id owning the child process pid by recursively
+        checking pids parent processes."""
         if pid in self.pids:
             return self.pids[pid]
         if pid < 100:
