@@ -197,6 +197,7 @@ nmap <Leader>hh :Helptags<CR>
 ifdef([[BASIC_CONFIG]], , [[
 " :Wikigrep! PATTERN - run rg in vimwiki and launch fzf
 command! -bang -nargs=* Wikigrep call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -- ".shellescape(<q-args>)." ~/vimwiki", 1, <bang>0)
+nmap <Leader>wt :VimwikiTOC<CR>
 
 nmap <Leader><Leader>f :Black<CR>
 ]])
