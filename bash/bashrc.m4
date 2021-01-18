@@ -126,13 +126,13 @@ hhdiffhtml() {
 }
 
 ifdef(`HAVE_jq', `
-# Usage: jql JSON_FILE
-jql() {
-	if [ ${#@} -eq 1 ]; then
-		jq -C . $1 | less -R
-	else
-		jq -C $* | less -R
-	fi
+# Usage: jqp JSON_FILE [jq options]
+# jq-pager, using bat
+jqp() {
+    local file="$1"
+    [ -n "$file" ] || return
+    shift
+    jq "$@" < "$file" | bat --file-name "$file" -l json --paging always --style plain
 }')
 
 # copy last command in history to clipboard
