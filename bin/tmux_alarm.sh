@@ -54,6 +54,9 @@ failed() {
 	exit 1
 }
 
+# Signal handler; someone (probably $0 --status) wants us to wake from sleep
+# and report current status to a named pipe that the same someone is reading
+# from.
 report_status() {
 	{
 		cat <<-EOF >&9
@@ -65,6 +68,7 @@ report_status() {
 }
 
 # print_status varname
+# Read status from the named pipe written to by report_status().
 print_status() {
 	{
 		if [ "$1" == 'all' ]; then
