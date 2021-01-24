@@ -97,6 +97,20 @@ paste_files() {
 	fi
 }
 
+# fzf select files, copy absolute paths to tmux buffers, one per file.
+# Use tmux choose-buffer from magic-menu and select buffers to paste.
+copy_paths() {
+	local -a files
+	local i
+	[ -n "$TMUX" ] || return
+	files=( $(fzf-tmux -- --multi --preview-window right:hidden --preview 'bat {}' --bind 'ctrl-p:toggle-preview' --reverse --header 'Select files to load to tmux buffers (CTRL-P preview)') )
+	[ $? -eq 0 ] || return
+	for ((i = 0; i < ${#files[*]}; i++)); do
+		tmux loadb - <<<"$(realpath "${files[$i]}")"
+	done
+	tmux display "Copied ${#files[*]} paths to tmux buffers"
+}
+
 
 #
 # git key bindings (https://junegunn.kr/2016/07/fzf-git/)
