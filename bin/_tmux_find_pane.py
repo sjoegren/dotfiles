@@ -8,31 +8,15 @@ Usage:
     * find pid in pane:
         - Find a line with e.g. 'process id: X' in the current pane (for example
         vim swapfile warning).
+        - "run-shell '_tmux_find_pane.py --find-pid #{pane_id} -q --mark-pane #{pane_id}'; \
+            switchc -t \"{marked}\"; \
+            run-shell '_tmux_find_pane.py -q --mark-env-pane'"
+
     * enter pid manually:
 
     * Locate the tmux pane parenting the pid.
     * Do a switch-client to that pane (previous pane will be marked).
     * `prefix '` to get back (switchc -t '{marked}').
-
-Tmux config example:
-
-```
-bind-key -T prefix > display-menu -T \
-  "#[align=centre]Magic features | #{pane_index} (#{pane_id})" -x P -y P \
-"Find pid in pane (back: C-a ')" f \
-  "run-shell '_tmux_find_pane.py --find-pid #{pane_id} -q --mark-pane #{pane_id}'; \
-switchc -t \"{marked}\"; \
-run-shell '_tmux_find_pane.py -q --mark-env-pane'" \
-"Go to parent pane of pid" p \
-  "command-prompt -p \"Enter PID:\" \
-  \"run-shell '_tmux_find_pane.py --pid %% -q --mark-pane #{pane_id}'; \
-  switchc -t '{marked}'; \
-  run-shell '_tmux_find_pane.py -q --mark-env-pane'\"" \
-"Go to globally last pane" b "run-shell '_tmux_find_pane.py -q --mark-env-pane'; \
-switchc -t \"{marked}\""
-
-bind \' switch-client -t "{marked}"
-```
 
 """
 import argparse
@@ -46,6 +30,7 @@ if sys.version_info < (3, 5):
     sys.exit(1)
 
 DEBUG = int(os.environ.get("PDB_DEBUG", 0))
+BUFFER_NAME = "last_pane"
 
 
 class Panes:
@@ -135,7 +120,11 @@ def main():
         help="Mark the target pane and store %(metavar)s in global tmux environment.",
     )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--mark-env-pane", action="store_true")
+    group.add_argument(
+        "--mark-buffer-pane",
+        action="store_true",
+        help="Mark the pane stored in buffer {}".format(BUFFER_NAME),
+    )
     group.add_argument("--find-pid", metavar="pane_id")
     group.add_argument("--pid", type=int)
     parser.add_argument("-q", "--quiet", dest="verbose", action="store_false")
@@ -144,31 +133,29 @@ def main():
         raise RuntimeError("must run in tmux client")
     panes = Panes(args.timeout)
     pids = Pids(args.timeout)
-    if args.mark_env_pane:
-        try:
-            pane_id = os.environ["_TMUX_LAST_PANE"]
-        except KeyError:
-            raise RuntimeError(
-                "_TMUX_LAST_PANE not in environment. "
-                "Hint: are we running in tmux run-shell?"
-            )
+    if args.mark_buffer_pane:
+        p = subprocess.run(
+            ["tmux", "show-buffer", "-b", BUFFER_NAME],
+            check=True,
+            timeout=1,
+            stdout=subprocess.PIPE,
+            universal_newlines=True,
+        )
+        pane_id = p.stdout.strip()
         if args.verbose:
             print(pane_id)
-        # If pane is already marked, don't 'select-pane' since it will toggle it to off.
         if pane_id != panes.marked_pane:
+            # Make sure the pane just loaded from BUFFER_NAME is marked.
             subprocess.run(
                 ["tmux", "select-pane", "-m", "-t", pane_id], check=True, timeout=1
             )
-        subprocess.run(
-            ["tmux", "setenv", "-u", "-g", "_TMUX_LAST_PANE"], check=True, timeout=1
-        )
+        subprocess.run(["tmux", "delete-buffer", "-b", BUFFER_NAME], timeout=1)
         return
     if args.find_pid:
         pid = pids.find_pid_in_pane(args.find_pid)
         if pid:
             pane_id = panes.get_tmux_pane(pid)
             if args.verbose:
-                # print(pid)
                 print(pane_id)
         else:
             if args.verbose:
@@ -184,20 +171,23 @@ def main():
     if args.mark_pane:
         # Store the current pane id in tmux global environment to provide a way
         # to find our way back, by calling this script again with
-        # `--mark-env-pane`, which will set the stored pane to the marked pane,
+        # `--mark-buffer-pane`, which will set the stored pane to the marked pane,
         # to ease navigating back again.
         subprocess.run(
             [
                 "tmux",
-                "setenv",
-                "-g",
-                "_TMUX_LAST_PANE",
-                args.mark_pane,
+                "load-buffer",
+                "-b",
+                BUFFER_NAME,
+                "-",
             ],
             check=True,
             timeout=1,
+            universal_newlines=True,
+            input=args.mark_pane,
         )
         if pane_id != panes.marked_pane:
+            # Make sure target pane is marked so that tmux can switchc to it.
             subprocess.run(
                 ["tmux", "select-pane", "-m", "-t", pane_id], check=True, timeout=1
             )
