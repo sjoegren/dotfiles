@@ -1,5 +1,6 @@
 alias pi for k,v in %1.__dict__.items(): print("%s.%s = %r" % ("%1", k, v))
 alias ppd pp dir(%1)
+alias mocks pp %1.mock_calls
 
 # Remind me of configured aliases
 alias
