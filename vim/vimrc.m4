@@ -153,7 +153,12 @@ let python_highlight_all = 1
 " Do not register the default markdown file extensions as vimwiki files.
 let g:vimwiki_ext2syntax = {}
 
-let g:localvimrc_name = ['.lvimrc', '_vimrc_local.vim']
+" If set from elsewhere, like a local alias, let it be.
+if !exists('g:localvimrc_name')
+  let g:localvimrc_name = ['.lvimrc', '_vimrc_local.vim']
+endif
+let g:localvimrc_sandbox = 0
+let g:localvimrc_persistent = 1
 
 "------------------------------------------------------------
 " Mappings
