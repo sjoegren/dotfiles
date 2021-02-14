@@ -106,7 +106,6 @@ _fzf_gh() {
 	local tmp key line
 	local -a ids
 	tmp=$(command mktemp)
-		# --bind "ctrl-s:execute(grep -o '[a-f0-9]\{7,\}' <<< {} | xargs git show --color=always)" \
 	git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=always |
 		fzf-tmux -d 75% -- --ansi --no-sort --reverse --multi \
 		--expect ctrl-f,ctrl-o,alt-s \
@@ -116,11 +115,6 @@ _fzf_gh() {
 		--preview-window hidden \
 		--preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -'$LINES > $tmp
 		# keep first line (--expect key) lines with commit id's
-	local -A cmdmap=(
-		[ctrl-f]="s:git commit --fixup"
-		[ctrl-o]="s:git checkout"
-		[alt-s]="git show"
-	)
 	# Open output file $tmp and read first line for --expect key and selected commit ids.
 	{
 		read -u 9 key  # One of --expect keys, or empty
