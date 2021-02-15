@@ -9,7 +9,6 @@ Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'kana/vim-textobj-user'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'mihais/vim-mark'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdtree'
@@ -180,6 +179,7 @@ inoremap <C-L> <C-X><C-L>
 map Y y$
 
 nmap <C-n> :NERDTreeToggle<CR>
+nmap <Leader>n :NERDTreeFind<CR>
 
 " fzf.vim settings
 let g:fzf_tags_command = 'git ctags || ctags -R'
