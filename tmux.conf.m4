@@ -113,8 +113,19 @@ bind -n f12 next-window
 bind -n C-Space last-window
 
 # Switch sessions and redraw status bar
-bind ( switch-client -p\; refresh -S
-bind ) switch-client -n\; refresh -S
+bind -n S-f1 switch-client -t $1\; refresh -S
+bind -n S-f2 switch-client -t $2\; refresh -S
+bind -n S-f3 switch-client -t $3\; refresh -S
+bind -n S-f4 switch-client -t $4\; refresh -S
+bind -n S-f5 switch-client -t $5\; refresh -S
+bind -n S-f6 switch-client -t $6\; refresh -S
+bind -n S-f7 switch-client -t $7\; refresh -S
+bind -n S-f8 switch-client -t $8\; refresh -S
+bind -n S-f9 switch-client -t $9\; refresh -S
+# last, previous, next sessions
+bind -n S-f10 switch-client -l\; refresh -S
+bind -n S-f11 switch-client -p\; refresh -S
+bind -n S-f12 switch-client -n\; refresh -S
 
 # Swap current pane with target pane
 bind y command-prompt -p "swap-pane (target):"  "swap-pane -t RQ()%%RQ()"
@@ -145,6 +156,10 @@ set -g status-right "%H:%M, %a %h %e "
 
 ifelse(FANCY_FORMAT, `yes', `
 source-file DOTFILES_DIR/.tmux-themepack/powerline/double/orange.tmuxtheme
+
+# List tmux sessions
+set -g status-left-length 60
+set -g status-left "#[bg=colour240] #{S:#{?session_attached,#[fg=colour007#,bold],#[fg=black#,nobold]}#{s/[^0-9]//:session_id}:#{=4:session_name} } #[fg=colour240,bg=colour233]"
 ', `dnl
 source-file DOTFILES_DIR/.old.tmuxtheme
 ')dnl
