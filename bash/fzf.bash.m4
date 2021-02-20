@@ -3,7 +3,7 @@ ifdef(`HAVE_fd', `
 export FZF_DEFAULT_COMMAND="fd --type f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 ')
-export FZF_DEFAULT_OPTS="--height 40% --ansi"
+export FZF_DEFAULT_OPTS="--ansi"
 . /usr/share/fzf/shell/key-bindings.bash
 
 # Select mv command from history and suggest to undo it.
