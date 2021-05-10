@@ -4,7 +4,7 @@ export FZF_DEFAULT_COMMAND="fd --type f"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 ')
 export FZF_DEFAULT_OPTS="--ansi --no-mouse"
-. /usr/share/fzf/shell/key-bindings.bash
+. esyscmd(`ls /usr/share/fzf/shell/key-bindings.bash 2>/dev/null || ls /usr/share/doc/fzf/examples/key-bindings.bash')
 
 # Select mv command from history and suggest to undo it.
 undo_mv() {
