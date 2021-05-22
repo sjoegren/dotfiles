@@ -29,6 +29,7 @@ ifelse(sysval, `0', `dnl
 	tool = vimdiff
 [init]
 	templatedir = ~/.dotfiles/git_template
+	defaultBranch = master
 [color]
 	ui = auto
 ifdef(`HAVE_delta', `
