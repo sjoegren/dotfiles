@@ -19,8 +19,6 @@ ifelse(sysval, `0', `dnl
 ', `')dnl
 [pull]
 	ff = only
-[core]
-	autocrlf = input
 [grep]
 	lineNumber = true
 	patternType = extended
