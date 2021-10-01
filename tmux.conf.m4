@@ -142,7 +142,7 @@ ifdef(`HAVE_pidcmd', ` dnl format with pidcmd
 source-file DOTFILES_DIR/tmux/tmux-2.9.conf
 ', ` dnl format without pidcmd
 setw -g automatic-rename-format RQ()#{?#{m:*|ssh|*,#{P:|#{pane_current_command}|}},\
-#[fg=blue],#{?#{==:#{pane_current_command},vim},#[fg=green],}\
+#[fg=blue],#{?#{m/r:vi(mx?)?,#{pane_current_command}},#[fg=green],}\
 #{?#{==:#{pane_current_path},/home/aksel},~,#{b:pane_current_path}}}RQ()
 ')dnl end of ifelse HAVE_pidcmd
 ', `dnl  FANCY_FORMAT=no
