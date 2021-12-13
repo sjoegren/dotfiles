@@ -65,6 +65,24 @@ copy_paths() {
 	tmux display "Copied ${#files[*]} paths to tmux buffers"
 }
 
+fzf_lookup_host_addr() {
+	local selected
+	if ! type callhome-client &>/dev/null; then
+		echo "Requires callhome-client to be installed"
+		return 1
+	fi
+	selected=$(callhome-client | fzf-tmux -d 25%)
+	[ $? -eq 0 ] || return $?
+	[ -n "$selected" ] || return 1
+	echo "$selected"
+}
+
+# SSH to selected host from callhome-client
+sshc() {
+	read name addr <<< "$(fzf_lookup_host_addr)"
+	ssh -o Hostname=$addr $name
+}
+
 
 #
 # git key bindings (https://junegunn.kr/2016/07/fzf-git/)
