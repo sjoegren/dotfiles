@@ -24,7 +24,7 @@ log() {
 # Find download URL for the selected release
 jsonfile=$(mktemp)
 curl -s $RELEASE_API_URL -o $jsonfile
-URL=$(cat <<EOF | python -
+URL=$(cat <<EOF | python3 -
 import json,sys
 with open("$jsonfile", "r") as f:
     data = json.load(f)
