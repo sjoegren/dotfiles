@@ -9,4 +9,4 @@
 	url = https://github.com/anishathalye/dotbot
 [submodule ".tmux-themepack"]
 	path = .tmux-themepack
-	url = https://github.com/akselsjogren/tmux-themepack.git
+	url = https://github.com/sjoegren/tmux-themepack.git

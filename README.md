@@ -2,7 +2,7 @@
 
 Clone repo and install using [dotbot]:
 
-    cd && git clone https://github.com/akselsjogren/dotfiles.git && dotfiles/install
+    cd && git clone https://github.com/sjoegren/dotfiles.git && dotfiles/install
 
 Requirements:
 

@@ -134,7 +134,7 @@ See C<find_newer.pl --help> for available options.
 
 Aksel Sjögren
 
-L<Github|https://github.com/akselsjogren/dotfiles>
+L<Github|https://github.com/sjoegren/dotfiles>
 
 =head1 COPYRIGHT AND LICENSE
 

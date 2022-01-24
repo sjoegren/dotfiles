@@ -9,12 +9,12 @@ trap 'echo Warning: command failed at line $LINENO' ERR
 # To specify a certain version of check_version, set CHECK_VERSION_TAG=vX.Y.Z
 CHECK_VERSION_TAG="${CHECK_VERSION_TAG:-}"
 PREFIX=$PREFIX
-BIN_RELEASE_FALLBACK="https://github.com/akselsjogren/check_version/releases/download/v0.2.1/check_version-0.2.1-$(arch).tar.gz"
+BIN_RELEASE_FALLBACK="https://github.com/sjoegren/check_version/releases/download/v0.2.1/check_version-0.2.1-$(arch).tar.gz"
 
 if [ -n "$CHECK_VERSION_TAG" ]; then
-    RELEASE_API_URL="https://api.github.com/repos/akselsjogren/check_version/releases/tags/$CHECK_VERSION_TAG"
+    RELEASE_API_URL="https://api.github.com/repos/sjoegren/check_version/releases/tags/$CHECK_VERSION_TAG"
 else
-    RELEASE_API_URL="https://api.github.com/repos/akselsjogren/check_version/releases/latest"
+    RELEASE_API_URL="https://api.github.com/repos/sjoegren/check_version/releases/latest"
 fi
 
 log() {

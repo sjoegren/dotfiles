@@ -94,7 +94,7 @@ Example in .bashrc, prepend PATH with /some/place/bin:
 
 Aksel Sjögren
 
-L<Github|https://github.com/akselsjogren/dotfiles>
+L<Github|https://github.com/sjoegren/dotfiles>
 
 =head1 COPYRIGHT AND LICENSE
 

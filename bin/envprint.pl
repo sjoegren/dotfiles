@@ -121,7 +121,7 @@ Useful if you don't remember, or care to type, the exact name of some variable.
 
 Aksel Sjögren
 
-L<Github|https://github.com/akselsjogren/dotfiles>
+L<Github|https://github.com/sjoegren/dotfiles>
 
 =head1 COPYRIGHT AND LICENSE
 
