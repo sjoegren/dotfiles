@@ -11,6 +11,7 @@ define(`HAVE_NOTE', ifelse(sysval, `0', `yes', `no'))dnl
 # General settings
 set -g default-terminal "screen-256color"
 set -ga terminal-overrides ",xterm-256color:Tc"
+set -g focus-events on
 set -g history-limit 20000
 set -g base-index 1
 set -g pane-base-index 1

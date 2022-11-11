@@ -157,8 +157,8 @@ alias l="ifdef(`HAVE_bat', `bat', `less -R')"
 # dotfiles-help: pwdc
 alias pwdc='pwd | _capture_output'
 
-export EDITOR=ifdef(`HAVE_vimx', `vimx', `vim')
-export GIT_EDITOR="ifdef(`HAVE_vimx', `vimx', `vim') --cmd 'let g:localvimrc_enable=0'"
+export EDITOR=ifdef(`HAVE_nvim', `nvim', ifdef(`HAVE_vimx', `vimx', `vim'))
+export GIT_EDITOR="ifdef(`HAVE_nvim', `nvim', ifdef(`HAVE_vimx', `vimx', `vim')) --cmd 'let g:localvimrc_enable=0'"
 
 shopt -s checkwinsize
 shopt -s globstar
