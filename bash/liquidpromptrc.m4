@@ -160,4 +160,16 @@ LP_DISABLED_VCS_PATH=""
 
 LP_ENABLE_DETACHED_SESSIONS=0
 
+# Enable Title for screen, byobu, and tmux
+LP_ENABLE_SCREEN_TITLE=0
+
+# Show the error code of the last command if it was not 0
+LP_ENABLE_ERROR=1
+
+# Enable the directory stack support.
+LP_ENABLE_DIRSTACK=1
+
+# Disable display of nested shells count
+LP_ENABLE_SHLVL=0
+
 # vim: set et sts=4 sw=4 tw=120 ft=sh:
