@@ -26,19 +26,17 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'embear/vim-localvimrc'
 Plug 'gilligan/textobj-gitgutter'
 Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug 'haya14busa/is.vim'
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/vim-easy-align'
+Plug 'pearofducks/ansible-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vimwiki/vimwiki'
-if v:version > 800
-    Plug 'psf/black'
-    Plug 'dense-analysis/ale'
-    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-endif
+Plug 'psf/black'
+Plug 'dense-analysis/ale'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 ]])
 call plug#end()
 
@@ -82,7 +80,7 @@ set showcmd         " Show command I'm typing
 set ttyfast         " assume a fast terminal connection
 set visualbell      " Try to flash instead
 set t_vb=           " Turn off flashing too :-)
-set mouse-=a
+set mouse=
 set updatetime=250  " Update vim-gitgutter faster
 set textwidth=0     " Disable auto line-breaks
 set ruler           " Display cursor position in status bar
@@ -108,7 +106,7 @@ set autoindent
 set nostartofline
 
 " Scan current buffer, buffers in other windows and tags for <C-N> completion
-set complete=.,w,i
+set complete=.,w,i,b
 
 " Remove - and = from filename completion
 " Useful for <C-W> f, <C-X> <C-F>
