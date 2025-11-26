@@ -11,13 +11,12 @@ fi
 temp=$(mktemp)
 trap 'rm -f $temp' EXIT
 
-# TODO: preview window that shows to tmux pane of the pid, if any.
-
 ps --sort=-pid $args | fzf-tmux -- --multi --reverse --header-lines=1 \
     --no-sort --no-mouse --exact --cycle --keep-right \
     --bind "ctrl-t:execute(tmux selectp -m -t ${TMUX_PANE:-notmux}; _tmux_find_pane.py --pid {1} | xargs tmux switchc -t)" \
     --expect ctrl-p \
-    --header 'CTRL-p: print, CTRL-t: goto tmux pane, Enter: kill' > $temp
+    --expect ctrl-k \
+    --header 'CTRL-p: print, CTRL-t: goto tmux pane, Enter: SIGTERM, CTRL-k: SIGKILL' > $temp
 [ $? -eq 0 ] || exit
 
 {
@@ -28,7 +27,7 @@ ps --sort=-pid $args | fzf-tmux -- --multi --reverse --header-lines=1 \
             case "$action" in
                 "ctrl-p")
                     echo $pid ;;
-                "")
+                ""|"ctrl-k")
                     # Since we guessed that the pid was the first large-ish
                     # number on the line, show the guessed process to user and
                     # ask for confirmation.
@@ -41,9 +40,9 @@ ps --sort=-pid $args | fzf-tmux -- --multi --reverse --header-lines=1 \
                         pane=""
                     fi
                     set -e
-                    read -p "kill ${pid}${pane} ? [y\N]: " confirm
+                    read -p "kill "${action:+-KILL}" ${pid}${pane} ? [y\N]: " confirm
                     if [ "$confirm" == "y" ]; then
-                        /usr/bin/kill --verbose $pid
+                        /usr/bin/kill --verbose "${action:+-KILL}" "$pid"
                     fi
                     ;;
             esac

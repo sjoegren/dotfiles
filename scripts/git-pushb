@@ -2,7 +2,14 @@
 set -eu
 
 branch="$(git branch --show-current)"
-cmd="git push -u origin $branch"
+set +e
+branch_remote="$(git config --local --get branch.${branch}.remote)"
+if [ $? -ne 0 ]; then
+	echo "NOTICE: Branch doesn't have an upstream configured, using 'origin' as remote" >&2
+	branch_remote=origin
+fi
+set -e
+cmd="git push -u $branch_remote $branch"
 read -r -p "$cmd ? [y/N]: "
 if [ "$REPLY" == "y" ]; then
 	$cmd

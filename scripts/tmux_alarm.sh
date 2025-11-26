@@ -3,15 +3,12 @@ set -eu
 
 pidfile="/var/run/user/$(id -u)/$(basename "$0").pid"
 statusfile="/var/run/user/$(id -u)/$(basename "$0").status"
+opt_set=
 alarm_arg=
 
 usage() {
 	cat <<-EOF
 	Usage: $0 options
-
-	Use via tmux:
-	  <prefix> :alarm
-	  <prefix> :alarmclear
 
 	Wait until the given timestamp has passed, then sound the alarm by
 	modifying tmux status bar.
@@ -93,7 +90,7 @@ quit() {
 orig_args=( "$@" )
 while [ -n "${1:-}" ]; do
 	case "$1" in
-		--set)              alarm_arg="$2"; shift 2 ;;
+		--set)              opt_set=1; shift; break ;;
 		--kill|--clear)     clear_alarm ;;
 		--status)
 			mkfifo "$statusfile"
@@ -102,12 +99,16 @@ while [ -n "${1:-}" ]; do
 			exit
 			;;
 		-h|--help)          usage ;;
-		*)
+		-*)
 			echo "unknown option: $1" >&2
 			usage
 			;;
 	esac
 done
+
+if [ -n "${opt_set:-}" ]; then
+	alarm_arg="$@"
+fi
 test -n "$alarm_arg" || usage
 
 # Set the alarm
