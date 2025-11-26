@@ -1,0 +1,118 @@
+#!/bin/bash
+set -eu
+
+CONF_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}"
+BUFFER_DIR="$CONF_DIR/tmux-buffers"
+SESSIONS_DIR="$CONF_DIR/tmux-sessions"
+SESSIONS_FILE="$SESSIONS_DIR/index"
+
+opt_home=false
+opt_sessions=false
+opt_loadb=false
+opt_verbose=false
+session_to_attach=
+
+usage() {
+    cat <<DOC
+Usage: $(basename "$0") [OPTION...] [dir]
+
+Start new tmux sessions with fzf.
+Load tmux buffers from $BUFFER_DIR
+
+Options:
+--home                       Initial home session
+--sessions                   Start sessions defined in $SESSIONS_FILE
+-l, --load-buffers           Just reload buffers.
+-v, --verbose                Verbose messages, and set tmux env \$TMUX_VERBOSE=1
+-h, --help
+
+DOC
+}
+
+log() {
+	$opt_verbose || return 0
+	echo "tmux-sessionizer: $@" >&2
+}
+
+cmd() {
+	log "Running: $*"
+	"$@"
+	return
+}
+
+load_buffers() {
+	for buffer in "$BUFFER_DIR"/*; do
+		tmux load-buffer -b "$(basename "$buffer")" "$buffer"
+	done
+}
+
+create_session() {
+	local path session_name flags
+	path=$1
+	session_name="${2:-$(basename "$path" | tr . _)}"
+	export session_name
+	# Create a detached session if the selected session doesn't exist
+	if ! tmux has-session -t "$session_name" 2>/dev/null; then
+		log "Create new session: $session_name"
+        if $opt_verbose; then
+            flags="-e TMUX_VERBOSE=1"
+        fi
+		cmd tmux new-session -d -s "$session_name" -c "$path" ${flags:-}
+		# If SESSIONS_DIR/${session_name} file exists, run it to configure session
+		if [ -r "$SESSIONS_DIR/$session_name" ]; then
+			log "Configure session: $SESSIONS_DIR/$session_name"
+			bash "$SESSIONS_DIR/$session_name"
+		fi
+	fi
+	unset session_name
+}
+
+while [ -n "${1:-}" ]; do
+	case "$1" in
+		--home)				opt_home=true; shift ;;
+		--sessions)			opt_sessions=true; shift ;;
+		-l|--load-buffers)	opt_loadb=true; shift ;;
+		-h|--help)			usage; exit 0 ;;
+		-v|--verbose)		opt_verbose=true; shift ;;
+		*)					break ;;
+	esac
+done
+
+if $opt_loadb; then
+	load_buffers
+	exit
+fi
+
+if $opt_sessions; then
+	while IFS=':' read path name; do
+		if [[ "$path" =~ ^# ]]; then
+			continue
+		fi
+		log "Create tmux session for $path (name: '$name')"
+		create_session "$path" "$name"
+		# Attach to the first session created
+		if [ -z "$session_to_attach" ]; then
+			session_to_attach="$name"
+		fi
+	done < "$SESSIONS_FILE"
+elif $opt_home; then
+	selected_dir="$HOME"
+	selected_name=home
+else
+	if [ -n "${1:-}" ]; then
+		selected_dir="$1"
+	else
+		selected_dir="$(fzfdirs | fzf-tmux -p -- --reverse | cut -f 1)"
+	fi
+	# selected_name="$(basename "$selected_dir" | tr . _)"
+	create_session "$selected_dir"
+fi
+
+load_buffers
+
+log "Attach session: $session_to_attach"
+if [ -n "${TMUX:-}" ]; then
+	cmd tmux switch-client -t "$session_to_attach"
+else
+	cmd tmux attach-session -t "$session_to_attach"
+fi
