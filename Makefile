@@ -22,7 +22,7 @@ endif
 
 # check existence of programs in prog_list, define m4 macros "HAVE_prog" for
 # those that exist.
-prog_list := xclip tmux bat fzf git realpath jq check_version pidcmd delta rg fd nvim vimx
+prog_list := xclip tmux bat fzf git realpath jq check_version pidcmd delta rg fd nvim vimx zoxide
 check_program = $(if $(shell command -v $(prog) 2> /dev/null), -D HAVE_$(prog))
 have_progs := $(foreach prog, $(prog_list), $(check_program))
 

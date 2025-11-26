@@ -13,6 +13,10 @@ fi
 # Solarized dircolors
 eval $(dircolors DOTFILES_DIR/bash/dircolors-solarized/dircolors.ansi-dark)
 
+ifdef(`HAVE_zoxide', `
+eval "$(zoxide init --cmd cd bash)"
+')
+
 # ---------------------------------
 # Functions
 # ---------------------------------
