@@ -1,0 +1,55 @@
+#!/bin/bash
+# vim: noet
+set -euo pipefail
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(basename "$BASEDIR")"
+
+COLOR_CYAN="0;36"
+COLOR_GREEN="0;32"
+COLOR_RED="0;31"
+COLOR_YELLOW="0;33"
+COLOR_RESET="0"
+
+verbose=false
+
+usage() {
+	cat <<-EOF
+	Setup dotfiles.
+
+	 -v, --verbose
+	EOF
+	exit
+}
+
+log() {
+	echo -e "\e[${COLOR_CYAN}mINFO: ""$@""\e[0m" >&2
+}
+
+error() {
+	echo -e "\e[${COLOR_RED}mERROR: ""$@""\e[0m" >&2
+	exit 1
+}
+
+debug() {
+	$verbose && echo -e "\e[${COLOR_YELLOW}mDEBUG: ""$@""\e[0m" >&2
+	return 0
+}
+
+orig_args=( "$@" )
+while [ -n "${1:-}" ]; do
+	case "$1" in
+		-v|--verbose)		verbose=true; shift; break ;;
+		-h|--help)          usage ;;
+		-*)
+			echo "unknown option: $1" >&2
+			usage
+			;;
+	esac
+done
+
+debug "Ensure things run from home dir"
+cd
+
+debug "Setup dotfiles predictable link"
+rm -f .dotfiles && ln -s "$DOTFILES_DIR" .dotfiles
