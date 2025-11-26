@@ -1,9 +1,0 @@
----
-# vim: filetype=yaml
-Language:          Cpp
-BasedOnStyle:      LLVM
-IndentWidth:       8
-UseTab:            ForIndentation
-Standard:          Auto
-ColumnLimit:       100
-BreakBeforeBraces: Linux
