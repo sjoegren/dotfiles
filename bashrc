@@ -54,6 +54,8 @@ export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
 export HISTSIZE=10000
 
+dotfiles_os_id="$(. /etc/os-release && echo $ID)"  # fedora, rocky
+export dotfiles_os_id
 if [ -d ~/.bashrc.d ]; then
 	shopt -s nullglob
 	for rcfile in ~/.bashrc.d/*.bash; do
@@ -62,3 +64,4 @@ if [ -d ~/.bashrc.d ]; then
 	unset rcfile
 	shopt -u nullglob
 fi
+unset dotfiles_os_id

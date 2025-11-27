@@ -12,6 +12,7 @@ COLOR_RED="0;31"
 COLOR_YELLOW="0;33"
 COLOR_RESET="0"
 
+username="$(id -un)"
 verbose=""
 vflag=""
 clone_git_repos=1
@@ -116,7 +117,7 @@ symlink_file tmux/tmux.conf
 
 mkdir -p $vflag $XDG_CONFIG_HOME/tmux-{buffers,sessions}
 if ! [ -e $XDG_CONFIG_HOME/tmux-sessions/index ]; then
-    sed -e "s/%USERNAME%/$USER/" $DOTFILES_DIR/tmux/sessions-index.sample > $XDG_CONFIG_HOME/tmux-sessions/index
+    sed -e "s/%USERNAME%/$username/" $DOTFILES_DIR/tmux/sessions-index.sample > $XDG_CONFIG_HOME/tmux-sessions/index
 fi
 # end tmux
 
@@ -128,7 +129,7 @@ symlink_file gitconfig
 if ! [ -e .gitconfig_local ]; then
     cat > .gitconfig_local <<EOF
 [user]
-	name = "$(getent passwd $USER | cut -d: -f5)"
+	name = "$(getent passwd $username | cut -d: -f5)"
 	#email = "22745764+sjoegren@users.noreply.github.com"
 EOF
     log "wrote new .gitconfig_local - please update with email"

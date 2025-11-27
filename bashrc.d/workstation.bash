@@ -1,3 +1,7 @@
+# vim: ft=bash noexpandtab
+
+[ "${dotfiles_os_id:-}" == "fedora" ] || return
+
 # Solarized dircolors
 eval $(dircolors ~/.dotfiles/dircolors)
 
