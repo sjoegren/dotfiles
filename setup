@@ -58,7 +58,7 @@ symlink_file() {
     fi
     target="$DOTFILES_DIR/$1"
     link="${2:-.$1}"
-    # log "Create link to $1"
+    debug "install symlink to $1"
     if [ -z "${force:-}" ] && [ -e "$link" ] && ! [ -h "$link" ]; then
         log "will not overwrite normal file: $link"
     else
@@ -105,3 +105,5 @@ for rcfile in $DOTFILES_DIR/bashrc.d/*; do
 done
 
 symlink_file liquidpromptrc
+symlink_file inputrc
+symlink_file pdbrc
