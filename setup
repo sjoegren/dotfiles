@@ -5,6 +5,8 @@ set -euo pipefail
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(basename "$BASEDIR")"
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
+VIMRUNTIME="$XDG_CONFIG_HOME/nvim"
+VIM_PLUGIN_DIR="$VIMRUNTIME/pack/git/start"
 
 COLOR_CYAN="0;36"
 COLOR_GREEN="0;32"
@@ -64,7 +66,7 @@ symlink_file() {
     if [ -z "${force:-}" ] && [ -e "$link" ] && ! [ -h "$link" ]; then
         log "will not overwrite normal file: $link"
     else
-        ln -sf $vflag $target $link
+        ln -srf $vflag $target $link
     fi
 }
 
@@ -89,6 +91,9 @@ debug "Setup dotfiles predictable link"
 rm -f .dotfiles && ln -s "$DOTFILES_DIR" .dotfiles
 
 if [ $clone_git_repos -eq 1 ]; then
+    log "download git dependencies..."
+    export VIM_PLUGIN_DIR  # for clone_git
+    mkdir -p $vflag $VIM_PLUGIN_DIR
     . $DOTFILES_DIR/clone_git.sh
 fi
 
@@ -136,6 +141,30 @@ EOF
 fi
 # end git
 
+#
+# neovim
+#
+debug "setup neovim"
+symlink_file vim/init.lua $VIMRUNTIME/init.lua
+debug "generate any missing helptags for vim plugins"
+for docpath in $(find $VIM_PLUGIN_DIR -type d -name doc); do
+    if ! [ -e "$docpath/tags" ]; then
+        log "generate vim helptags for $docpath"
+        nvim -u NONE -c "helptags $docpath" -c q
+        sleep 0.1
+    else
+        debug "$docpath already has tags"
+    fi
+done
+
+mkdir -p $vflag $VIMRUNTIME/after/ftplugin
+for f in $DOTFILES_DIR/vim/ftplugin/*.vim; do
+    ln -srf $vflag "$f" "$VIMRUNTIME/after/ftplugin/$(basename $f)"
+done
+# end neovim
+
 symlink_file liquidpromptrc
 symlink_file inputrc
 symlink_file pdbrc
+
+mkdir -p $vflag tmp
