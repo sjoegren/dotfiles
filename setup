@@ -13,22 +13,30 @@ COLOR_RESET="0"
 
 verbose=""
 vflag=""
+clone_git_repos=1
 
 usage() {
-    cat <<-EOF
-    Setup dotfiles.
+	cat <<-EOF
+	Setup dotfiles.
 
-    environment vars:
-        DOTFILES_ENABLE_FD
-        DOTFILES_FZF_BASH_BINDINGS (path)
+	environment vars:
+		DOTFILES_ENABLE_FD
+		DOTFILES_ENABLE_GIT_PULL
+		DOTFILES_FZF_BASH_BINDINGS (path)
 
-     -v, --verbose
-EOF
-    exit
+	  --no-git          don't clone git dependencies
+	  -v, --verbose
+	EOF
+	exit
 }
 
 log() {
     echo -e "\e[${COLOR_CYAN}mINFO: ""$@""\e[0m" >&2
+}
+
+runlog() {
+    echo -e "\e[${COLOR_GREEN}mrun: ""$@""\e[0m" >&2
+    $@
 }
 
 error() {
@@ -61,7 +69,8 @@ symlink_file() {
 orig_args=( "$@" )
 while [ -n "${1:-}" ]; do
     case "$1" in
-        -v|--verbose)		verbose=1; shift; break ;;
+        --no-git)           clone_git_repos=0; shift; break ;;
+        -v|--verbose)       verbose=1; shift; break ;;
         -h|--help)          usage ;;
         -*)
             echo "unknown option: $1" >&2
@@ -76,6 +85,10 @@ cd
 
 debug "Setup dotfiles predictable link"
 rm -f .dotfiles && ln -s "$DOTFILES_DIR" .dotfiles
+
+if [ $clone_git_repos -eq 1 ]; then
+    . $DOTFILES_DIR/clone_git.sh
+fi
 
 log "setup bash files..."
 symlink_file -f bashrc
