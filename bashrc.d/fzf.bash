@@ -1,5 +1,8 @@
 # vim: ft=bash noexpandtab
 
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --bash)"
+
 DOTFILES_FZF_BASH_BINDINGS=${DOTFILES_FZF_BASH_BINDINGS:-/usr/share/fzf/shell/key-bindings.bash}
 if ! [ -f $DOTFILES_FZF_BASH_BINDINGS ]; then
 	return
