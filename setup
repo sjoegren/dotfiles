@@ -58,7 +58,7 @@ symlink_file() {
         shift
     fi
     target="$DOTFILES_DIR/$1"
-    link="${2:-.$1}"
+    link="${2:-.$(basename $1)}"
     debug "install symlink to $1"
     if [ -z "${force:-}" ] && [ -e "$link" ] && ! [ -h "$link" ]; then
         log "will not overwrite normal file: $link"
@@ -111,17 +111,8 @@ done
 #
 # tmux
 #
-tmux_dir=$XDG_CONFIG_HOME/tmux
-debug "setup tmux, config: $tmux_dir"
-if [ -e $tmux_dir ] && ! [ -h $tmux_dir ]; then
-    log "$tmux_dir is not a symlink - will not overwrite"
-else
-    ln -srf --no-dereference $vflag $DOTFILES_DIR/tmux $tmux_dir
-fi
-if [ -e .tmux.conf ]; then
-    log "Move legacy .tmux.conf"
-    mv -v .tmux.conf .tmux.conf.backup
-fi
+# Older tmux versions don't use XDG_CONFIG_HOME, therefor keep config at ~/.tmux.conf
+symlink_file tmux/tmux.conf
 
 mkdir -p $vflag $XDG_CONFIG_HOME/tmux-{buffers,sessions}
 if ! [ -e $XDG_CONFIG_HOME/tmux-sessions/index ]; then
