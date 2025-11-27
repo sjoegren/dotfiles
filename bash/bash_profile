@@ -1,6 +1,0 @@
-# ~/.bash_profile, executed for login shells
-
-[ -e ~/.bash_profile_local ] && . ~/.bash_profile_local
-
-# Source .bashrc for login shells too
-. ~/.bashrc

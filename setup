@@ -79,6 +79,7 @@ rm -f .dotfiles && ln -s "$DOTFILES_DIR" .dotfiles
 
 log "setup bash files..."
 symlink_file -f bashrc
+
 # Create .bashrc.d and link files, to enable mixing in local files too.
 mkdir $vflag -p .bashrc.d
 for rcfile in $DOTFILES_DIR/bashrc.d/*; do
@@ -89,3 +90,5 @@ for rcfile in $DOTFILES_DIR/bashrc.d/*; do
     fi
     ln -sfr $vflag $rcfile .bashrc.d/
 done
+
+symlink_file liquidpromptrc
