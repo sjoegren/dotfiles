@@ -104,7 +104,7 @@ else
 	if [ -n "${1:-}" ]; then
 		selected_dir="$1"
 	else
-		selected_dir="$(fd -H -t d -g --format '{//}' .git | fzf-tmux -p -- --reverse)"
+		selected_dir="$(fd -H -t d -g --base-directory $HOME --format '{//}' .git | fzf-tmux -p -- --reverse)"
 	fi
 	create_session "$selected_dir"
 fi
