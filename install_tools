@@ -1,0 +1,59 @@
+#!/bin/bash
+# vim: et ts=4 sw=4
+# Install software dependencies for config in this repo.
+set -euo pipefail
+
+BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(basename "$BASEDIR")"
+
+COLOR_CYAN="0;36"
+COLOR_GREEN="0;32"
+COLOR_RED="0;31"
+COLOR_YELLOW="0;33"
+COLOR_RESET="0"
+
+FEDORA_APPS=(
+    # neovim
+    neovim
+    python3-lsp-server
+    python3-neovim
+    vim-ansible
+    vim-commentary
+    vim-fugitive
+    vim-gitgutter
+    vim-gv
+    vim-trailing-whitespace
+
+    # shell/tools
+    bash-completion
+    bat
+    fd-find
+    fzf
+    git
+    git-delta
+    powerline
+    powerline-fonts
+    ripgrep
+    tmux
+    wl-clipboard
+    zoxide
+)
+
+log() {
+    echo -e "\e[${COLOR_CYAN}mINFO: ""$@""\e[0m" >&2
+}
+
+error() {
+    echo -e "\e[${COLOR_RED}mERROR: ""$@""\e[0m" >&2
+    exit 1
+}
+
+os_id="$(. /etc/os-release && echo $ID)"
+if [ "$os_id" == fedora ]; then
+    sudo dnf -y remove nano-default-editor
+    log "install tools: ${FEDORA_APPS[*]}"
+    sudo dnf -y install ${FEDORA_APPS[*]}
+
+else
+    error "only Fedora is supported for now"
+fi
