@@ -1,16 +1,5 @@
-# Built files
-bash/bashrc
-bash/fzf.bash
-bash/liquidpromptrc
-bin/pidcmd
-gitconfig
-mdlrc
-ripgreprc
-tmux.conf
-
 # Downloaded
 *.tar.gz
-bin/check_version
 
 # vim
 .netrwhist

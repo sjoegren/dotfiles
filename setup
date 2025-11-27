@@ -4,6 +4,7 @@ set -euo pipefail
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(basename "$BASEDIR")"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
 
 COLOR_CYAN="0;36"
 COLOR_GREEN="0;32"
@@ -90,7 +91,7 @@ if [ $clone_git_repos -eq 1 ]; then
     . $DOTFILES_DIR/clone_git.sh
 fi
 
-log "setup bash files..."
+log "setup bash..."
 symlink_file -f bashrc
 
 # Create .bashrc.d and link files, to enable mixing in local files too.
@@ -107,3 +108,21 @@ done
 symlink_file liquidpromptrc
 symlink_file inputrc
 symlink_file pdbrc
+
+tmux_dir=$XDG_CONFIG_HOME/tmux
+log "setup tmux, config: $tmux_dir"
+if [ -e $tmux_dir ] && ! [ -h $tmux_dir ]; then
+    log "$tmux_dir is not a symlink - will not overwrite"
+else
+    ln -srf --no-dereference $vflag $DOTFILES_DIR/tmux $tmux_dir
+fi
+if [ -e .tmux.conf ]; then
+    log "Move legacy .tmux.conf"
+    mv -v .tmux.conf .tmux.conf.backup
+fi
+
+log "setup tmux-sessionizer"
+mkdir -p $vflag $XDG_CONFIG_HOME/tmux-{buffers,sessions}
+if ! [ -e $XDG_CONFIG_HOME/tmux-sessions/index ]; then
+    sed -e "s/%USERNAME%/$USER/" $DOTFILES_DIR/tmux/sessions-index.sample > $XDG_CONFIG_HOME/tmux-sessions/index
+fi

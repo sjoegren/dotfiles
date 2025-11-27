@@ -1,0 +1,5 @@
+# tmux sessions to create with `tmux-sessionizer --sessions`
+# PATH[:NAME]
+
+# /home/%USERNAME%:home
+# /home/%USERNAME%/project

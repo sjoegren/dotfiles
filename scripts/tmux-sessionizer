@@ -41,9 +41,11 @@ cmd() {
 }
 
 load_buffers() {
+	shopt -s nullglob
 	for buffer in "$BUFFER_DIR"/*; do
 		tmux load-buffer -b "$(basename "$buffer")" "$buffer"
 	done
+	shopt -u nullglob
 }
 
 create_session() {
@@ -102,9 +104,8 @@ else
 	if [ -n "${1:-}" ]; then
 		selected_dir="$1"
 	else
-		selected_dir="$(fzfdirs | fzf-tmux -p -- --reverse | cut -f 1)"
+		selected_dir="$(fd -H -t d -g --format '{//}' .git | fzf-tmux -p -- --reverse)"
 	fi
-	# selected_name="$(basename "$selected_dir" | tr . _)"
 	create_session "$selected_dir"
 fi
 
