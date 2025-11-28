@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=github-url
+Comment=fzf search repos and open repository URL
+Exec=sh -c '~/.dotfiles/scripts/github-url.sh && sleep 2'
+Icon=utilities-terminal
+Terminal=true
+Type=Application
+Categories=ConsoleOnly;Development;

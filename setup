@@ -179,3 +179,13 @@ symlink_file inputrc
 symlink_file pdbrc
 
 mkdir -p $vflag tmp
+
+#
+# desktop files
+#
+appdir="$HOME/.local/share/applications"
+mkdir -p $vflag $appdir
+for f in $DOTFILES_DIR/desktop/*.desktop; do
+    ln -srf $vflag "$f" "$appdir/$(basename $f)"
+done
+# end desktop
