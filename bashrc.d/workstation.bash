@@ -109,8 +109,4 @@ _fzf_setup_completion host sshfw
 #
 
 alias l='bat'
-
-# (neo)vim
-export EDITOR=nvim
-export GIT_EDITOR="$EDITOR --cmd 'let g:localvimrc_enable=0'"
 alias vim=nvim

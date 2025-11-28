@@ -1,18 +1,18 @@
-# vim: ft=bash noexpandtab
+# vim: ft=bash expandtab ts=4 sw=4
 
 # If not running interactively, don't do anything
 case $- in
-	*i*) stty -ixon ;;
-	*) return;;
+    *i*) stty -ixon ;;
+    *) return;;
 esac
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 
 if [ -e ~/.liquidprompt/liquidprompt ]; then
-	source ~/.liquidprompt/liquidprompt
+    source ~/.liquidprompt/liquidprompt
 fi
 
 DOTFILES="$HOME/.dotfiles"
@@ -23,13 +23,13 @@ DOTFILES="$HOME/.dotfiles"
 
 # Copy stdin to tmux buffer
 _capture_output() {
-	read out
-	local format
-	if [ -n "$TMUX" ]; then
-		echo -n "$out" | tmux load-buffer -
-		format="${format}\e[7m"
-	fi
-	echo -e "${format:-}${out}\e[0m"
+    read out
+    local format
+    if [ -n "$TMUX" ]; then
+        echo -n "$out" | tmux load-buffer -
+        format="${format}\e[7m"
+    fi
+    echo -e "${format:-}${out}\e[0m"
 }
 
 alias gd='git diff'
@@ -42,8 +42,8 @@ alias rm='rm -I'
 alias tree='tree -C'
 alias l='less -R'
 
-export EDITOR=vim
-export GIT_EDITOR=vim
+export EDITOR=nvim
+export GIT_EDITOR=$EDITOR
 
 shopt -s checkwinsize
 shopt -s globstar
@@ -57,11 +57,11 @@ export HISTSIZE=10000
 dotfiles_os_id="$(. /etc/os-release && echo $ID)"  # fedora, rocky
 export dotfiles_os_id
 if [ -d ~/.bashrc.d ]; then
-	shopt -s nullglob
-	for rcfile in ~/.bashrc.d/*.bash; do
-		source $rcfile
-	done
-	unset rcfile
-	shopt -u nullglob
+    shopt -s nullglob
+    for rcfile in ~/.bashrc.d/*.bash; do
+        source $rcfile
+    done
+    unset rcfile
+    shopt -u nullglob
 fi
 unset dotfiles_os_id
