@@ -1,13 +1,16 @@
 # vim: et ts=4 sw=4
+#
+# sourced from ./setup
 
 tmpdir="${XDG_RUNTIME_DIR:-/tmp}"
 cloned="$tmpdir/dotfiles.$(id -u).cloned"
+github="${DOTFILES_GITHUB_URL:-https://github.com}"
 
 test -d "${VIM_PLUGIN_DIR?}"
 
 gitclone() {
     local localdir
-    localdir="${2:-$(basename $1)}"
+    localdir="${2:-$(basename -s .git $1)}"
     if [ -e "$localdir" ]; then
         if [ "${DOTFILES_ENABLE_GIT_PULL:-1}" == 1 ]; then
             runlog git -C $localdir pull
@@ -24,25 +27,31 @@ if [ -e "$cloned" ]; then
     return
 fi
 
-gitclone https://github.com/junegunn/fzf-git.sh.git .fzf-git.sh
-gitclone https://github.com/liquidprompt/liquidprompt.git .liquidprompt
+gitclone $github/junegunn/fzf-git.sh.git .fzf-git.sh
+gitclone $github/liquidprompt/liquidprompt.git .liquidprompt
 
 # Neovim plugins
-gitclone https://github.com/psf/black $VIM_PLUGIN_DIR/black
-gitclone https://github.com/junegunn/fzf.vim $VIM_PLUGIN_DIR/fzf.vim
-gitclone https://github.com/junegunn/vim-easy-align $VIM_PLUGIN_DIR/vim-easy-align
-gitclone https://github.com/airblade/vim-gitgutter $VIM_PLUGIN_DIR/gitgutter
-gitclone https://github.com/morhetz/gruvbox $VIM_PLUGIN_DIR/gruvbox
-gitclone https://github.com/haya14busa/is.vim $VIM_PLUGIN_DIR/is.vim
-gitclone https://github.com/HiPhish/jinja.vim $VIM_PLUGIN_DIR/jinja.vim
-gitclone https://github.com/scrooloose/nerdtree $VIM_PLUGIN_DIR/nerdtree
-gitclone https://github.com/tpope/vim-commentary $VIM_PLUGIN_DIR/vim-commentary
-gitclone https://github.com/tpope/vim-eunuch $VIM_PLUGIN_DIR/vim-eunuch
-gitclone https://github.com/tpope/vim-repeat $VIM_PLUGIN_DIR/vim-repeat
-gitclone https://github.com/tpope/vim-surround $VIM_PLUGIN_DIR/vim-surround
-gitclone https://github.com/tpope/vim-unimpaired $VIM_PLUGIN_DIR/vim-unimpaired
-gitclone https://github.com/vim-airline/vim-airline $VIM_PLUGIN_DIR/vim-airline
-gitclone https://github.com/vim-airline/vim-airline-themes $VIM_PLUGIN_DIR/vim-airline-themes
-gitclone https://github.com/vimwiki/vimwiki $VIM_PLUGIN_DIR/vimwiki
+pushd $VIM_PLUGIN_DIR
+gitclone $github/HiPhish/jinja.vim
+gitclone $github/airblade/vim-gitgutter
+gitclone $github/bronson/vim-trailing-whitespace
+gitclone $github/haya14busa/is.vim
+gitclone $github/junegunn/fzf.vim
+gitclone $github/junegunn/gv.vim
+gitclone $github/junegunn/vim-easy-align
+gitclone $github/morhetz/gruvbox
+gitclone $github/pearofducks/ansible-vim
+gitclone $github/psf/black
+gitclone $github/scrooloose/nerdtree
+gitclone $github/tpope/vim-commentary
+gitclone $github/tpope/vim-eunuch
+gitclone $github/tpope/vim-fugitive
+gitclone $github/tpope/vim-repeat
+gitclone $github/tpope/vim-surround
+gitclone $github/tpope/vim-unimpaired
+gitclone $github/vim-airline/vim-airline
+gitclone $github/vim-airline/vim-airline-themes
+gitclone $github/vimwiki/vimwiki
+popd
 
 touch "$cloned"

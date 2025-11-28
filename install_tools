@@ -17,12 +17,6 @@ FEDORA_APPS=(
     neovim
     python3-lsp-server
     python3-neovim
-    vim-ansible
-    vim-commentary
-    vim-fugitive
-    vim-gitgutter
-    vim-gv
-    vim-trailing-whitespace
 
     # shell/tools
     bash-completion
