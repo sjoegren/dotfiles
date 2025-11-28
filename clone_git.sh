@@ -34,10 +34,8 @@ gitclone $github/liquidprompt/liquidprompt.git .liquidprompt
 pushd $VIM_PLUGIN_DIR
 gitclone $github/HiPhish/jinja.vim
 gitclone $github/airblade/vim-gitgutter
-gitclone $github/bronson/vim-trailing-whitespace
 gitclone $github/haya14busa/is.vim
 gitclone $github/junegunn/fzf.vim
-gitclone $github/junegunn/gv.vim
 gitclone $github/junegunn/vim-easy-align
 gitclone $github/morhetz/gruvbox
 gitclone $github/pearofducks/ansible-vim
