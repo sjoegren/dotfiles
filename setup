@@ -18,20 +18,24 @@ username="$(id -un)"
 verbose=""
 vflag=""
 clone_git_repos=1
+install_tools=""
 
 usage() {
-	cat <<-EOF
-	Setup dotfiles.
+    cat <<-EOF
+Setup dotfiles.
 
-	environment vars:
-		DOTFILES_ENABLE_FD
-		DOTFILES_ENABLE_GIT_PULL
-		DOTFILES_FZF_BASH_BINDINGS (path)
+environment vars:
+    DOTFILES_ENABLE_FD
+    DOTFILES_ENABLE_GIT_PULL
+    DOTFILES_FZF_BASH_BINDINGS (path)
+    DOTFILES_GITHUB_URL
 
-	  --no-git          don't clone git dependencies
-	  -v, --verbose
-	EOF
-	exit
+options:
+    --install-tools         also run install_tools
+    --no-git                don't clone git dependencies
+    -v, --verbose
+EOF
+    exit
 }
 
 log() {
@@ -73,6 +77,7 @@ symlink_file() {
 orig_args=( "$@" )
 while [ -n "${1:-}" ]; do
     case "$1" in
+        --install-tools)    install_tools=1; shift; break ;;
         --no-git)           clone_git_repos=0; shift; break ;;
         -v|--verbose)       verbose=1; shift; break ;;
         -h|--help)          usage ;;
@@ -86,6 +91,12 @@ vflag="${verbose:+-v}"
 
 debug "Ensure things run from home dir"
 cd
+
+if [ -n "$install_tools" ]; then
+    $BASEDIR/install_tools
+else
+    log "skip running ./install_tools"
+fi
 
 debug "Setup dotfiles predictable link"
 rm -f .dotfiles && ln -s "$DOTFILES_DIR" .dotfiles
