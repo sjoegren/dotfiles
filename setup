@@ -120,7 +120,7 @@ done
 # Older tmux versions don't use XDG_CONFIG_HOME, therefor keep config at ~/.tmux.conf
 symlink_file tmux/tmux.conf
 
-mkdir -p $vflag $XDG_CONFIG_HOME/tmux-{buffers,sessions}
+mkdir -p $vflag $XDG_CONFIG_HOME/tmux{,-buffers,-sessions}
 if ! [ -e $XDG_CONFIG_HOME/tmux-sessions/index ]; then
     sed -e "s/%USERNAME%/$username/" $DOTFILES_DIR/tmux/sessions-index.sample > $XDG_CONFIG_HOME/tmux-sessions/index
 fi
