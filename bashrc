@@ -16,6 +16,7 @@ if [ -e ~/.liquidprompt/liquidprompt ]; then
 fi
 
 DOTFILES="$HOME/.dotfiles"
+xdg_config_home="${XDG_CONFIG_HOME:-"$HOME/.config"}"
 
 # ---------------------------------
 # Functions

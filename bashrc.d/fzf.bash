@@ -1,30 +1,30 @@
-# vim: ft=bash noexpandtab
+# vim: ft=bash expandtab
 
 # Set up fzf key bindings and fuzzy completion
 eval "$(fzf --bash)"
 
 DOTFILES_FZF_BASH_BINDINGS=${DOTFILES_FZF_BASH_BINDINGS:-/usr/share/fzf/shell/key-bindings.bash}
 if ! [ -f $DOTFILES_FZF_BASH_BINDINGS ]; then
-	return
+    return
 fi
 
 # Disable fd use with DOTFILES_ENABLE_FD=0
 if [ "${DOTFILES_ENABLE_FD:-1}" == "1" ]; then
-	export FZF_DEFAULT_COMMAND="fd --type f"
-	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_DEFAULT_COMMAND="fd --type f"
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-	# Use fd (https://github.com/sharkdp/fd) instead of the default find
-	# command for listing path candidates.
-	# - The first argument to the function ($1) is the base path to start traversal
-	# - See the source code (completion.{bash,zsh}) for the details.
-	_fzf_compgen_path() {
-		fd --hidden --follow --exclude ".git" . "$1"
-	}
+    # Use fd (https://github.com/sharkdp/fd) instead of the default find
+    # command for listing path candidates.
+    # - The first argument to the function ($1) is the base path to start traversal
+    # - See the source code (completion.{bash,zsh}) for the details.
+    _fzf_compgen_path() {
+        fd --hidden --follow --exclude ".git" . "$1"
+    }
 
-	# Use fd to generate the list for directory completion
-	_fzf_compgen_dir() {
-		fd --type d --hidden --follow --exclude ".git" . "$1"
-	}
+    # Use fd to generate the list for directory completion
+    _fzf_compgen_dir() {
+        fd --type d --hidden --follow --exclude ".git" . "$1"
+    }
 fi
 
 export FZF_DEFAULT_OPTS="--ansi --no-mouse --height=~75%"
@@ -55,15 +55,26 @@ source $DOTFILES_FZF_BASH_BINDINGS
 
 # man ** - fzf completion
 _fzf_complete_man() {
-	_fzf_complete -i -- "$@" < <(
-		fd --max-depth 2 --type f --extension gz . \
-			$(manpath -g | tr ':' ' ') \
-			--exec echo "{/.}" 2>/dev/null
-		)
-	}
+    _fzf_complete -i -- "$@" < <(
+        fd --max-depth 2 --type f --extension gz . \
+            $(manpath -g | tr ':' ' ') \
+            --exec echo "{/.}" 2>/dev/null
+        )
+    }
 _fzf_complete_man_post() {
-	perl -pe 's/\.\d$//'
+    perl -pe 's/\.\d$//'
 }
 complete -F _fzf_complete_man -o default -o bashdefault man
 
 _fzf_setup_completion path l bat
+
+# Navigate to bookmarked and git directories with fzf.
+# Bookmarks file: $xdg_config_home/cdg_bookmarks.txt
+cdg() {
+    local dir
+    dir="$(
+        (cat "$xdg_config_home/cdg_bookmarks.txt" 2>/dev/null; 
+        fd -H -t d -g --base-directory $HOME --absolute-path --format '{//}' .git | grep -v '^\.') | fzf --reverse
+    )"
+    cd "$dir"
+}
