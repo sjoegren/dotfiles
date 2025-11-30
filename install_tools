@@ -33,6 +33,26 @@ FEDORA_APPS=(
     zoxide
 )
 
+UBUNTU_APPS=(
+    # neovim
+    neovim
+    python3-pylsp
+    python3-neovim
+
+    # shell/tools
+    bash-completion
+    bat
+    fd-find
+    fzf
+    git
+    delta
+    powerline
+    ripgrep
+    tmux
+    wl-clipboard
+    zoxide
+)
+
 log() {
     echo -e "\e[${COLOR_CYAN}mINFO: ""$@""\e[0m" >&2
 }
@@ -47,7 +67,9 @@ if [ "$os_id" == fedora ]; then
     sudo dnf -y remove nano-default-editor
     log "install tools: ${FEDORA_APPS[*]}"
     sudo dnf -y install ${FEDORA_APPS[*]}
-
+elif [ "$os_id" == ubuntu ]; then
+    log "install tools: ${UBUNTU_APPS[*]}"
+    sudo apt-get install -y ${UBUNTU_APPS[*]}
 else
-    error "only Fedora is supported for now"
+    error "unsupported os id: $os_id"
 fi
