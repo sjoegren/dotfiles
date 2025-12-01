@@ -77,13 +77,13 @@ symlink_file() {
 orig_args=( "$@" )
 while [ -n "${1:-}" ]; do
     case "$1" in
-        --install-tools)    install_tools=1; shift; break ;;
-        --no-git)           clone_git_repos=0; shift; break ;;
-        -v|--verbose)       verbose=1; shift; break ;;
-        -h|--help)          usage ;;
+        --install-tools)    install_tools=1; shift ;;
+        --no-git)           clone_git_repos=0; shift ;;
+        -v|--verbose)       verbose=1; shift ;;
+        -h|--help)          usage; break ;;
         -*)
-            echo "unknown option: $1" >&2
-            usage
+            error "unknown option: $1" >&2
+            break
             ;;
     esac
 done
