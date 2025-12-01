@@ -66,6 +66,17 @@ _fzf_complete_man_post() {
 }
 complete -F _fzf_complete_man -o default -o bashdefault man
 
+# ansible-doc ** - fzf completion
+_fzf_complete_ansible_doc() {
+    _fzf_complete --with-nth=1 --exact --no-sort -- "$@" < <(
+        ansible-doc --type module --list
+    )
+}
+_fzf_complete_ansible_doc_post() {
+    awk '{ print $1 }'
+}
+complete -F _fzf_complete_ansible_doc -o default -o bashdefault ansible-doc
+
 _fzf_setup_completion path l bat
 
 # Navigate to bookmarked and git directories with fzf.
