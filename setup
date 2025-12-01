@@ -189,3 +189,13 @@ for f in $DOTFILES_DIR/desktop/*.desktop; do
     ln -srf $vflag "$f" "$appdir/$(basename $f)"
 done
 # end desktop
+
+#
+# gnome
+#
+if [ -n "${gnome_focus_workspace_cloned_dir:-}" ] && [ -d "$gnome_focus_workspace_cloned_dir" ]; then
+    pushd $gnome_focus_workspace_cloned_dir
+    ./bundle.sh -i
+    popd
+fi
+# end gnome
