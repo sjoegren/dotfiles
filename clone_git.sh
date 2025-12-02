@@ -52,7 +52,7 @@ gitclone $github/vim-airline/vim-airline-themes
 gitclone $github/vimwiki/vimwiki
 popd
 
-if [[ "$XDG_CURRENT_DESKTOP" == GNOME* ]]; then
+if [[ "${XDG_CURRENT_DESKTOP:-}" == GNOME* ]]; then
     gnome_focus_workspace_cloned_dir=.focus-follows-workspace.git
     gitclone $github/christopher-l/focus-follows-workspace.git $gnome_focus_workspace_cloned_dir
 fi
