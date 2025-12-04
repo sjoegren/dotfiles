@@ -1,6 +1,5 @@
 [alias]
 	alias = !git config --global --list | grep ^alias
-	amend = commit --all --amend
 	br = branch
 	ci = commit
 	co = checkout
