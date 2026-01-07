@@ -9,8 +9,18 @@ github="${DOTFILES_GITHUB_URL:-https://github.com}"
 test -d "${VIM_PLUGIN_DIR?}"
 
 gitclone() {
-    local localdir
-    localdir="${2:-$(basename -s .git $1)}"
+    local remote localdir branch
+    while [ -n "${1:-}" ]; do
+        case "$1" in
+            -b)                 branch="$2"; shift 2 ;;
+            -*)
+                error "unknown option: $1" >&2
+                break ;;
+            *)  break ;;
+        esac
+    done
+    remote="$1"
+    localdir="${2:-$(basename -s .git $remote)}"
     if [ -e "$localdir" ]; then
         if [ "${DOTFILES_ENABLE_GIT_PULL:-1}" == 1 ]; then
             runlog git -C $localdir pull
@@ -18,7 +28,11 @@ gitclone() {
             log would run git -C $localdir pull
         fi
     else
-        runlog git clone --depth 5 "$1" "$localdir"
+        if [ -n "${branch:-}" ]; then
+            runlog git clone --branch "$branch" "$remote" "$localdir"
+        else
+            runlog git clone --depth 5 "$remote" "$localdir"
+        fi
     fi
 }
 
@@ -39,7 +53,7 @@ gitclone $github/junegunn/fzf.vim
 gitclone $github/junegunn/vim-easy-align
 gitclone $github/morhetz/gruvbox
 gitclone $github/pearofducks/ansible-vim
-gitclone $github/psf/black
+gitclone -b stable $github/psf/black
 gitclone $github/scrooloose/nerdtree
 gitclone $github/tpope/vim-commentary
 gitclone $github/tpope/vim-eunuch
