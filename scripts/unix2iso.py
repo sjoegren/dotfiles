@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
-"""
+r"""
 Convert any POSIX timestamps within specified bounds in input to a human
 readable timestamp format, defaults to ISO 8601 in the systems localtime.
+
+Example usage:
+Given a logfile with unix timestamps:
+    while true; do
+        echo "$(date +%s) msg: $(shuf -n 3 /usr/share/dict/words | xargs echo)" >> /tmp/test.log;
+        sleep $(($RANDOM % 10));
+    done
+Watch it with: `tail -f /tmp/test.log | unix2iso.py` to convert timestamps to ISO timestamps.
+
 """
 
 import argparse
@@ -64,6 +73,11 @@ def main():
         action="store_true",
         help="Quote the formatted timestamp",
     )
+    parser.add_argument(
+        "--no-line-buffering",
+        action="store_false",
+        dest="line_buffering",
+    )
     args, filenames = parser.parse_known_args()
 
     log.basicConfig(
@@ -74,6 +88,8 @@ def main():
         else "%(asctime)s %(levelname)-8s %(message)s",
     )
     log.debug("args: %s", args)
+
+    sys.stdout.reconfigure(line_buffering=args.line_buffering)
 
     now = time.time()
     limit_past = now - args.limit_past * 86400
