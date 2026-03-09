@@ -38,8 +38,8 @@ vim.g.airline_powerline_fonts = 1
 vim.g['airline#extensions#branch#enabled'] = 0
 vim.g['airline#extensions#virtualenv#enabled'] = 0
 
--- Do not register the default markdown file extensions as vimwiki files.
-vim.g.vimwiki_ext2syntax = nil
+-- Restrict Vimwiki's operation from other text files
+vim.g.vimwiki_global_ext = 0
 
 vim.g.localvimrc_name = {'.lvimrc', '_vimrc_local.vim'}
 vim.g.localvimrc_sandbox = 0
