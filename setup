@@ -70,7 +70,7 @@ symlink_file() {
     if [ -z "${force:-}" ] && [ -e "$link" ] && ! [ -h "$link" ]; then
         log "will not overwrite normal file: $link"
     else
-        ln -srf $vflag $target $link
+        ln -snrf $vflag $target $link
     fi
 }
 
@@ -156,7 +156,9 @@ fi
 # neovim
 #
 debug "setup neovim"
-symlink_file vim/init.lua $VIMRUNTIME/init.lua
+mkdir -p $vflag $VIMRUNTIME/lua
+symlink_file nvim/init.lua $VIMRUNTIME/init.lua
+symlink_file nvim/myconf $VIMRUNTIME/lua/myconf
 debug "generate any missing helptags for vim plugins"
 for docpath in $(find $VIM_PLUGIN_DIR -type d -name doc); do
     if ! [ -e "$docpath/tags" ]; then
@@ -169,7 +171,7 @@ for docpath in $(find $VIM_PLUGIN_DIR -type d -name doc); do
 done
 
 mkdir -p $vflag $VIMRUNTIME/after/ftplugin
-for f in $DOTFILES_DIR/vim/ftplugin/*.vim; do
+for f in $DOTFILES_DIR/nvim/ftplugin/*.vim; do
     ln -srf $vflag "$f" "$VIMRUNTIME/after/ftplugin/$(basename $f)"
 done
 # end neovim

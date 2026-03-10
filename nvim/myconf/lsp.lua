@@ -1,0 +1,17 @@
+-- dnf install python-lsp-server flake8
+vim.lsp.config("python-lsp-server", {
+	cmd = {'pylsp'},
+	filetypes = {'python'},
+	root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git" },
+	settings = {
+		pylsp = {
+			plugins = {
+				flake8 = {
+					enabled = true,
+					maxLineLength = 88,
+				}
+			}
+		}
+	}
+})
+vim.lsp.enable("python-lsp-server")
