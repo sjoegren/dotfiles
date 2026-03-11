@@ -9,6 +9,9 @@ vim.lsp.config("python-lsp-server", {
 				flake8 = {
 					enabled = true,
 					maxLineLength = 88,
+				},
+				pycodestyle = {
+					enabled = false
 				}
 			}
 		}
