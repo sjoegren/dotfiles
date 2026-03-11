@@ -15,3 +15,10 @@ vim.lsp.config("python-lsp-server", {
 	}
 })
 vim.lsp.enable("python-lsp-server")
+
+-- dnf install nodejs-bash-language-server
+vim.lsp.config("bashls", {
+	cmd = { 'bash-language-server', 'start' },
+	filetypes = { 'bash', 'sh' }
+})
+vim.lsp.enable("bashls")

@@ -25,6 +25,7 @@ FEDORA_APPS=(
     fzf
     git
     git-delta
+    nodejs-bash-language-server
     powerline
     powerline-fonts
     ripgrep
