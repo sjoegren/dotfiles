@@ -14,8 +14,6 @@ vim.keymap.set('i', '<C-L>', '<C-X><C-L>')
 
 vim.keymap.set('n', 'Y', 'y$')
 
-vim.keymap.set('n', 'Y', 'y$')
-
 vim.keymap.set('n', '<C-n>', ':NERDTreeToggle<CR>')
 vim.keymap.set('n', '<Leader>n', ':NERDTreeFind<CR>')
 

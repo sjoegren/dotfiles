@@ -25,3 +25,5 @@ vim.lsp.config("bashls", {
 	filetypes = { 'bash', 'sh' }
 })
 vim.lsp.enable("bashls")
+
+vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end)
