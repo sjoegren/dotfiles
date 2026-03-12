@@ -26,4 +26,10 @@ vim.lsp.config("bashls", {
 })
 vim.lsp.enable("bashls")
 
+-- npm install @ansible/ansible-language-server, update PATH
+vim.lsp.config("ansiblels", {
+	cmd = { "ansible-language-server", "--stdio" }
+})
+vim.lsp.enable("ansiblels")
+
 vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end)
