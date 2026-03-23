@@ -30,6 +30,7 @@ FEDORA_APPS=(
     powerline-fonts
     ripgrep
     tmux
+    uv
     wl-clipboard
     zoxide
 )

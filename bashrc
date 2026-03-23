@@ -49,7 +49,7 @@ export GIT_EDITOR=$EDITOR
 shopt -s checkwinsize
 shopt -s globstar
 
-export PATH="$($DOTFILES/scripts/mergepaths.pl $PATH $DOTFILES/scripts $HOME/.local/bin)"
+export PATH="$($DOTFILES/scripts/mergepaths.pl $HOME/.local/bin $PATH $DOTFILES/scripts)"
 export HISTIGNORE='&:ls:ll:history*'
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTTIMEFORMAT="[%F %T] "
