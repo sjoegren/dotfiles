@@ -40,6 +40,33 @@ vim.api.nvim_create_user_command(
 	{ bang = true, nargs = '*' }
 )
 
+-- Like :Rg defined by fzf-vim, except without --smart-case and with --fixed-strings
+local function fzf_rg(query)
+	vim.call(
+		'fzf#vim#grep',
+		'rg --column --line-number --no-heading --color=always --fixed-strings -- ' .. vim.fn.shellescape(query),
+		0, -- no live-reload
+		vim.fn['fzf#vim#with_preview'](),
+		0  -- no fullscreen (fzf <bang>)
+	)
+end
+
+-- Ripgrep word under cursor
+vim.keymap.set('n', '<Leader>r', function()
+	fzf_rg(vim.fn.expand('<cword>'))
+end, { noremap = true, silent = true })
+
+-- Ripgrep WORD under cursor
+vim.keymap.set('n', '<Leader>R', function()
+	fzf_rg(vim.fn.expand('<cWORD>'))
+end, { noremap = true, silent = true })
+
+-- Ripgrep first line of visual selection
+vim.keymap.set('v', '<Leader>r', function()
+	local lines = vim.fn.getregion(vim.fn.getpos('v'), vim.fn.getpos('.'))
+	fzf_rg(lines[1])
+end, { noremap = true, silent = true })
+
 -- Start interactive EasyAlign in visual mode (e.g. vipga)
 vim.keymap.set('x', 'ga', '<Plug>(EasyAlign)')
 vim.keymap.set('v', '<Enter>', '<Plug>(EasyAlign)')
