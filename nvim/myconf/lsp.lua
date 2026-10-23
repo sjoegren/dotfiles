@@ -29,7 +29,7 @@ vim.lsp.enable("bashls")
 -- npm install @ansible/ansible-language-server, update PATH
 vim.lsp.config("ansiblels", {
 	cmd = { "ansible-language-server", "--stdio" },
-	filetypes = {'yaml.ansible'},
+	filetypes = {'yaml.ansible', 'ansible'},
 	root_markers = { "ansible.cfg", ".git" },
 })
 vim.lsp.enable("ansiblels")
